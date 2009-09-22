@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<flexLibProperties version="1">
+  <includeClasses>
+    <classEntry path="mockolate.errors.StubMissingError"/>
+    <classEntry path="mockolate.ingredients.faux.FauxFloxyInvocation"/>
+    <classEntry path="mockolate.ingredients.MockolatierMaster"/>
+    <classEntry path="mockolate.ingredients.faux.FauxInvocation"/>
+    <classEntry path="mockolate.ingredients.Mockolate"/>
+    <classEntry path="mockolate.ingredients.Couverture"/>
+    <classEntry path="mockolate.ingredients.answers.ThrowsAnswer"/>
+    <classEntry path="mockolate.errors.VerifyFailedError"/>
+    <classEntry path="mockolate.ingredients.mockolate_ingredient"/>
+    <classEntry path="mockolate.strict"/>
+    <classEntry path="mockolate.ingredients.Invocation"/>
+    <classEntry path="mockolate.ingredients.floxy.FloxyMockolateFactory"/>
+    <classEntry path="mockolate.verify"/>
+    <classEntry path="mockolate.ingredients.floxy.FloxyMockolate"/>
+    <classEntry path="mockolate.nice"/>
+    <classEntry path="mockolate.ingredients.answers.DispatchesEventAnswer"/>
+    <classEntry path="mockolate.ingredients.answers.CallsAnswer"/>
+    <classEntry path="mockolate.prepare"/>
+    <classEntry path="mockolate.ingredients.answers.ReturnsValueAnswer"/>
+    <classEntry path="mockolate.ingredients.InvocationType"/>
+    <classEntry path="mockolate.ingredients.VerifyingCouverture"/>
+    <classEntry path="mockolate.ingredients.StubbingCouverture"/>
+    <classEntry path="mockolate.ingredients.faux.FauxMockolate"/>
+    <classEntry path="mockolate.errors.MockolateError"/>
+    <classEntry path="mockolate.ingredients.MockolateFactory"/>
+    <classEntry path="mockolate.stub"/>
+    <classEntry path="mockolate.ingredients.floxy.FloxyInvocation"/>
+    <classEntry path="mockolate.ingredients.Mockolatier"/>
+    <classEntry path="mockolate.ingredients.faux.FauxFloxyInterceptor"/>
+    <classEntry path="mockolate.ingredients.answers.ReturnsCallAnswer"/>
+    <classEntry path="mockolate.ingredients.answers.Answer"/>
+    <classEntry path="mockolate.ingredients.floxy.InterceptingCouverture"/>
+    <classEntry path="mockolate.ingredients.answers.ReturnsAnswer"/>
+    <classEntry path="mockolate.ingredients.RecordingCouverture"/>
+  </includeClasses>
+  <includeResources/>
+  <namespaceManifests/>
+</flexLibProperties>

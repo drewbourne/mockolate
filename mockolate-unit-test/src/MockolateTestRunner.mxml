@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Application 
+    layout="absolute"
+    creationComplete="run()"
+    xmlns:flexui="org.flexunit.flexui.*"
+    xmlns:mx="http://www.adobe.com/2006/mxml">
+
+    <mx:Script>
+        <![CDATA[
+            import mockolate.PreparingMockolates;
+            import mockolate.UsingNiceMockolates;
+            import mockolate.UsingStrictMockolates;
+            import mockolate.StubbingMockolates;
+            import mockolate.VerifyingMockolates;
+            
+            import mockolate.MockolateSandbox;
+            
+            import org.flexunit.listeners.UIListener;
+            import org.flexunit.runner.FlexUnitCore;
+            
+            private var core:FlexUnitCore;
+            
+            public function run():void
+            {
+                core = new FlexUnitCore();
+                core.addListener(new UIListener(uiListener));
+                core.run(
+                    // sandbox for testing floxy, flemit, loom, whatever
+//                    MockolateSandbox
+//                    ,
+                    // mockolate
+//                    MockolatierTest,
+//                    CouvertureTest,
+//                    RecordingCouvertureTest,
+//                    StubbingCouvertureTest,
+//                    VerifyingCouvertureTest,
+                    // asmock integration
+//                    InterceptingCouvertureTest
+//                    ,
+                    // examples
+                    // MockolateExamples
+                    PreparingMockolates
+                    ,
+                    UsingNiceMockolates
+                    ,
+                    UsingStrictMockolates
+//                    ,
+//                    StubbingMockolates,
+//                    VerifyingMockolates
+                    );
+            }
+        ]]>
+    </mx:Script>
+
+    <flexui:TestRunnerBase 
+        id="uiListener"
+        width="100%"
+        height="100%" />
+
+</mx:Application>

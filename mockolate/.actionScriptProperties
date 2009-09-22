@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<actionScriptProperties mainApplicationPath="mockolate.as" version="3">
+  <compiler additionalCompilerArguments="" copyDependentFiles="false" enableModuleDebug="true" generateAccessible="false" htmlExpressInstall="true" htmlGenerate="false" htmlHistoryManagement="false" htmlPlayerVersion="9.0.124" htmlPlayerVersionCheck="true" outputFolderPath="bin" sourceFolderPath="src" strict="true" useApolloConfig="false" verifyDigests="true" warn="true">
+    <compilerSourcePath/>
+    <libraryPath defaultLinkType="1">
+      <libraryPathEntry kind="4" path=""/>
+      <libraryPathEntry kind="3" linkType="1" path="/asx/bin/asx.swc" useDefaultLinkType="false"/>
+      <libraryPathEntry kind="3" linkType="1" path="/hamcrest/bin/hamcrest.swc" useDefaultLinkType="false"/>
+      <libraryPathEntry kind="3" linkType="1" path="/FLoxy/bin/FLoxy.swc" sourcepath="${DOCUMENTS}/floxy/source/FLoxy/src" useDefaultLinkType="false"/>
+    </libraryPath>
+    <sourceAttachmentPath>
+      <sourceAttachmentPathEntry kind="3" linkType="1" path="/FLoxy/bin/FLoxy.swc" sourcepath="${DOCUMENTS}/floxy/source/FLoxy/src" useDefaultLinkType="false"/>
+    </sourceAttachmentPath>
+  </compiler>
+  <applications>
+    <application path="mockolate.as"/>
+  </applications>
+  <modules/>
+  <buildCSSFiles/>
+</actionScriptProperties>
