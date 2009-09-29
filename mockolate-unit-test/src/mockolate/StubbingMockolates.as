@@ -69,7 +69,7 @@ package mockolate
             var instance:Flavour = nice(Flavour);
             var answer:Object = "Butterscotch";
             
-            stub(instance, "name").returns(answer);
+            stub(instance).property("name").returns(answer);
             
             assertThat(instance.name, strictlyEqualTo(answer));
         }
@@ -80,7 +80,7 @@ package mockolate
             var instance:Flavour = nice(Flavour);
             var answer:Object = nice(Flavour);
             
-            stub(instance, "combine").args(nullValue()).returns(answer);
+            stub(instance).method("combine").args(nullValue()).returns(answer);
             
             assertThat(instance.combine(null), strictlyEqualTo(answer));
         }
@@ -92,7 +92,7 @@ package mockolate
             var arg:Flavour = new DarkChocolate();
             var answer:Flavour = nice(Flavour);
             
-            stub(instance, "combine").args(arg).returns(answer);
+            stub(instance).method("combine").args(arg).returns(answer);
             
             assertThat(instance.combine(arg), strictlyEqualTo(answer));
         }
@@ -104,7 +104,7 @@ package mockolate
             var arg:Flavour = new DarkChocolate();
             var answer:Flavour = nice(Flavour);
             
-            stub(instance, "combine").args(strictlyEqualTo(arg)).returns(answer);
+            stub(instance).method("combine").args(strictlyEqualTo(arg)).returns(answer);
             
             assertThat(instance.combine(arg), strictlyEqualTo(answer));
         }

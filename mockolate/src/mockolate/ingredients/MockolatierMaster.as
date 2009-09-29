@@ -37,14 +37,14 @@ package mockolate.ingredients
             return mockolatier.strict(klass, name, constructorArgs);
         }
         
-        public static function stub(target:*, propertyOrMethod:String):StubbingCouverture
+        public static function stub(target:* /*, propertyOrMethod:String*/):StubbingCouverture
         {
-            return mockolatier.stub(target, propertyOrMethod);
+            return mockolatier.stub(target /*, propertyOrMethod*/);
         }
         
-        public static function verify(target:*, propertyOrMethod:String=null):VerifyingCouverture
+        public static function verify(target:* /*, propertyOrMethod:String=null*/):VerifyingCouverture
         {
-            return mockolatier.verify(target, propertyOrMethod);
+            return mockolatier.verify(target /*, propertyOrMethod*/);
         }
     }
 }

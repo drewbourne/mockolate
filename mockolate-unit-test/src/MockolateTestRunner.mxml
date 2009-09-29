@@ -38,15 +38,15 @@
 //                    InterceptingCouvertureTest
 //                    ,
                     // examples
-                    // MockolateExamples
                     PreparingMockolates
                     ,
                     UsingNiceMockolates
                     ,
                     UsingStrictMockolates
-//                    ,
-//                    StubbingMockolates,
-//                    VerifyingMockolates
+                    ,
+                    StubbingMockolates
+                    ,
+                    VerifyingMockolates
                     );
             }
         ]]>

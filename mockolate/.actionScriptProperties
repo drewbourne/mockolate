@@ -7,9 +7,13 @@
       <libraryPathEntry kind="3" linkType="1" path="/asx/bin/asx.swc" useDefaultLinkType="false"/>
       <libraryPathEntry kind="3" linkType="1" path="/hamcrest/bin/hamcrest.swc" useDefaultLinkType="false"/>
       <libraryPathEntry kind="3" linkType="1" path="/FLoxy/bin/FLoxy.swc" sourcepath="${DOCUMENTS}/floxy/source/FLoxy/src" useDefaultLinkType="false"/>
+      <libraryPathEntry kind="1" linkType="1" path="libs"/>
     </libraryPath>
     <sourceAttachmentPath>
       <sourceAttachmentPathEntry kind="3" linkType="1" path="/FLoxy/bin/FLoxy.swc" sourcepath="${DOCUMENTS}/floxy/source/FLoxy/src" useDefaultLinkType="false"/>
+      <sourceAttachmentPathEntry kind="3" linkType="1" path="/Users/drew/Development/workspace/mockolate/mockolate/libs/asx.swc" sourcepath="${DOCUMENTS}/asx/src" useDefaultLinkType="false"/>
+      <sourceAttachmentPathEntry kind="3" linkType="1" path="/Users/drew/Development/workspace/mockolate/mockolate/libs/FLoxy.swc" sourcepath="${DOCUMENTS}/floxy/source/FLoxy/src" useDefaultLinkType="false"/>
+      <sourceAttachmentPathEntry kind="3" linkType="1" path="/Users/drew/Development/workspace/mockolate/mockolate/libs/hamcrest.swc" sourcepath="${DOCUMENTS}/hamcrest-as3/hamcrest/src" useDefaultLinkType="false"/>
     </sourceAttachmentPath>
   </compiler>
   <applications>

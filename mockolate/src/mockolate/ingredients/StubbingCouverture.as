@@ -54,24 +54,33 @@ package mockolate.ingredients
         
         public function method(name:String, ns:String=null):StubbingCouverture
         {
+            // FIXME this _really_ should check that the method actually exists on the Class we are mocking 
+            
             createMethodStub(name, ns);
             return this;
         }
         
         public function property(name:String, ns:String=null):StubbingCouverture
         {
+            // FIXME this _really_ should check that the property actually exists on the Class we are mocking
+            
             createPropertyStub(name, ns);
             return this;
         }
         
         public function args(... rest):StubbingCouverture
         {
+            // FIXME this _really_ should check that the method or property accepts the number of matchers given.
+            // we can ignore the types of the matchers though, it will fail when run if given incorrect values.
+            
             setArgs(rest);
             return this;
         }
         
         public function noArgs():StubbingCouverture
         {
+            // FIXME this _really_ should check that the method or property accepts no arguments.
+            
             setNoArgs();
             return this;
         }
@@ -175,10 +184,12 @@ package mockolate.ingredients
             
             for each (var expectation:StubExpectation in _methodExpectations)
             {
+                // FIXME check that the argsMatcher actually exists
                 if (expectation.name == invocation.name
                     && expectation.argsMatcher.matches(invocation.arguments))
                 {
-                    var results:Array = expectation.answers.map(function(answer:Answer):* {
+                    // it is possible that one of the Answers will throw an error
+                    var results:Array = expectation.answers.map(function(answer:Answer, i:int, a:Array):* {
                         return answer.invoke();
                     });
                     
@@ -209,10 +220,10 @@ package mockolate.ingredients
             
             for each (var expectation:StubExpectation in _propertyExpectations)
             {
-                if (expectation.name == invocation.name
-                    && expectation.argsMatcher.matches(invocation.arguments))
+                // getters do not receive args so we dont need to check the argsMatcher here
+                if (expectation.name == invocation.name)
                 {
-                    var results:Array = expectation.answers.map(function(answer:Answer):* {
+                    var results:Array = expectation.answers.map(function(answer:Answer, i:int, a:Array):* {
                         return answer.invoke();
                     });
                     
@@ -242,10 +253,11 @@ package mockolate.ingredients
             
             for each (var expectation:StubExpectation in _propertyExpectations)
             {
+                // FIXME check that the argsMatcher actually exists                
                 if (expectation.name == invocation.name
                     && expectation.argsMatcher.matches(invocation.arguments))
                 {
-                    var results:Array = expectation.answers.map(function(answer:Answer):* {
+                    var results:Array = expectation.answers.map(function(answer:Answer, i:int, a:Array):* {
                         return answer.invoke();
                     });
                     
@@ -289,7 +301,9 @@ package mockolate.ingredients
         }
         
         protected function setArgs(args:Array):void
-        {            
+        {          
+            trace('Stubber args', args);  
+            trace('Stubber expe', _currentExpectation);
             _currentExpectation.argsMatcher = array(args.map(partial(valueToMatcher, _)));
         }
         

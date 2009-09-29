@@ -38,13 +38,23 @@ package mockolate
          */
         
         [Test]
-        public function verifying():void
+        public function verifyingStubsAsPassing():void
         {
-            var instance:Flavour = nice(Flavour);
+            var instance:Flavour = strict(Flavour);
             
-            stub(instance, "combine").args(nullValue());
+            stub(instance).method("combine").args(nullValue());
             
             instance.combine(null);
+            
+            verify(instance);
+        }
+        
+        [Test]
+        public function verifyingStubsAsFailingAsNotCalled():void
+        {
+            var instance:Flavour = strict(Flavour);
+            
+            stub(instance).method("combine").args(nullValue());
             
             verify(instance);
         }
@@ -76,7 +86,7 @@ package mockolate
             
             instance.combine(null);
             
-            verify(instance, "combine").args(nullValue()).once();
+            verify(instance).method("combine").args(nullValue()).once();
         }
     
     }

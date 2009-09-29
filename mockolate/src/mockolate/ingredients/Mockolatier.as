@@ -107,7 +107,7 @@ package mockolate.ingredients
         /**
          *
          */
-        public function stub(instance:*, methodOrPropertyName:String=null, args:Array=null):StubbingCouverture
+        public function stub(instance:* /*, methodOrPropertyName:String=null, args:Array=null*/):StubbingCouverture
         {
             // supported signatures:
             // stub(Object)                     -> partial(stub, _, null, null)(instance)
@@ -122,7 +122,7 @@ package mockolate.ingredients
         /**
          *
          */
-        public function verify(instance:*, methodOrPropertyName:String=null, args:Array=null):VerifyingCouverture
+        public function verify(instance:* /*, methodOrPropertyName:String=null, args:Array=null*/):VerifyingCouverture
         {
             // supported signatures:
             // verify(Object)                   -> partial(verify, _, null, null)(instance)
