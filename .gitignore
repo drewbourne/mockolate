@@ -1,0 +1,10 @@
+# ignore the bin directory of swfs, and swcs
+bin/
+bin-debug/
+bin-release/
+
+# ignore the asdoc output
+doc/
+
+# ignore the eclipse .settings folder, irrelevant
+.settings/
