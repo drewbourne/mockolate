@@ -52,6 +52,7 @@ package mockolate.ingredients
             _methodExpectations = [];
         }
         
+        // FIXME should return a MethodStubbingCouverture that hides method() and property()
         public function method(name:String, ns:String=null):StubbingCouverture
         {
             // FIXME this _really_ should check that the method actually exists on the Class we are mocking 
@@ -60,6 +61,7 @@ package mockolate.ingredients
             return this;
         }
         
+        // Should return a PropertyStubbingCouverture that hides method() and property() and provides only arg() not args()
         public function property(name:String, ns:String=null):StubbingCouverture
         {
             // FIXME this _really_ should check that the property actually exists on the Class we are mocking
