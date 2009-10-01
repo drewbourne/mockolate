@@ -126,5 +126,20 @@ package mockolate.ingredients
             if (_stubber)
                 _stubber.invoked(invocation);
         }
+        
+        /**
+         *
+         */
+        mockolate_ingredient function verify():void
+        {
+            if (_recorder)
+                _recorder.verify();
+            
+            if (_verifier)
+                _verifier.verify();
+            
+            if (_stubber)
+                _stubber.verify();
+        }
     }
 }

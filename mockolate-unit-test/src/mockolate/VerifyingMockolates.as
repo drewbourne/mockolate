@@ -49,7 +49,7 @@ package mockolate
             verify(instance);
         }
         
-        [Test]
+        [Test(expected="mockolate.mistakes.VerifyFailedError")]
         public function verifyingStubsAsFailingAsNotCalled():void
         {
             var instance:Flavour = strict(Flavour);
@@ -80,7 +80,7 @@ package mockolate
          */
         
         [Test]
-        public function verifyingAsTestSpy():void
+        public function verifyingAsTestSpyAsPassing():void
         {
             var instance:Flavour = nice(Flavour);
             
@@ -88,6 +88,26 @@ package mockolate
             
             verify(instance).method("combine").args(nullValue()).once();
         }
-    
+        
+        [Test(expected="mockolate.mistakes.VerifyFailedError")]
+        public function verifyingAsTestSpyAsFailing():void
+        {
+            var instance:Flavour = nice(Flavour);
+            
+            verify(instance).method("combine").args(nullValue()).once();
+        }
+        
+        [Test(expected="mockolate.mistakes.VerifyFailedError")]
+        public function verifyingAsTestSpyAsFailingInvokedCount():void
+        {
+            var instance:Flavour = nice(Flavour);
+            
+            instance.combine(null);
+            
+            verify(instance)
+                .method("combine")
+                .args(nullValue())
+                .twice();
+        }
     }
 }

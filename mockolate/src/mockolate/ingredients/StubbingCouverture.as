@@ -6,7 +6,8 @@ package mockolate.ingredients
     
     import flash.events.Event;
     
-    import mockolate.errors.StubMissingError;
+    import mockolate.mistakes.StubMissingError;
+    import mockolate.mistakes.VerifyFailedError;
     import mockolate.ingredients.answers.Answer;
     import mockolate.ingredients.answers.CallsAnswer;
     import mockolate.ingredients.answers.DispatchesEventAnswer;
@@ -190,6 +191,8 @@ package mockolate.ingredients
                 if (expectation.name == invocation.name
                     && expectation.argsMatcher.matches(invocation.arguments))
                 {
+                    expectation.invokedCount++;
+                    
                     // it is possible that one of the Answers will throw an error
                     var results:Array = expectation.answers.map(function(answer:Answer, i:int, a:Array):* {
                         return answer.invoke();
@@ -225,6 +228,8 @@ package mockolate.ingredients
                 // getters do not receive args so we dont need to check the argsMatcher here
                 if (expectation.name == invocation.name)
                 {
+                    expectation.invokedCount++;
+                    
                     var results:Array = expectation.answers.map(function(answer:Answer, i:int, a:Array):* {
                         return answer.invoke();
                     });
@@ -259,6 +264,8 @@ package mockolate.ingredients
                 if (expectation.name == invocation.name
                     && expectation.argsMatcher.matches(invocation.arguments))
                 {
+                    expectation.invokedCount++;
+                    
                     var results:Array = expectation.answers.map(function(answer:Answer, i:int, a:Array):* {
                         return answer.invoke();
                     });
@@ -369,8 +376,22 @@ package mockolate.ingredients
          */
         override mockolate_ingredient function verify():void
         {
+            // when its a strict mockolate
+            // then we must fail if the stubs were not called at least once
+            
+            if (mockolate.isStrict)
+            {
+                 _expectations.forEach(verifyExpectation);
+            }
+        }   
         
-        }        
+        protected function verifyExpectation(expectation:StubExpectation, i:int, a:Array):void 
+        {
+            if (expectation.invokedCount == 0)
+            {
+                throw new VerifyFailedError("Not invoked " + expectation);
+            }                     
+        }
     }
 }
 
@@ -381,6 +402,8 @@ import flash.utils.setTimeout;
 import asx.number.bound;
 import mockolate.ingredients.answers.Answer;
 import mockolate.ingredients.InvocationType;
+import asx.string.substitute;
+import org.hamcrest.StringDescription;
 
 /**
  *
@@ -405,5 +428,10 @@ internal class StubExpectation
     public function addAnswer(answer:Answer):void
     {
         answers.push(answer);
+    }
+    
+    public function toString():String 
+    {
+        return substitute("#{} {}", name, argsMatcher ? StringDescription.toString(argsMatcher) : "");
     }
 }

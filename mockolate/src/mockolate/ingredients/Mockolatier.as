@@ -109,13 +109,6 @@ package mockolate.ingredients
          */
         public function stub(instance:* /*, methodOrPropertyName:String=null, args:Array=null*/):StubbingCouverture
         {
-            // supported signatures:
-            // stub(Object)                     -> partial(stub, _, null, null)(instance)
-            // stub(Object, String)             -> partial(stub, _, _, null)(instance, String)
-            // stub(Object, String, [args])     -> mockolateByTarget(instance).stubber.method(String).args(Array)
-            // unsupported signatures: 
-            // stub(Object, String, ...args)    -> partial(stub, _, _, _)(instance, String, Array)
-            
             return mockolateByTarget(instance).stubber;
         }
         
@@ -124,19 +117,7 @@ package mockolate.ingredients
          */
         public function verify(instance:* /*, methodOrPropertyName:String=null, args:Array=null*/):VerifyingCouverture
         {
-            // supported signatures:
-            // verify(Object)                   -> partial(verify, _, null, null)(instance)
-            // verify(Object, String)           -> partial(verify, _, _, null)(instance, String)
-            // verify(Object, String, [args])   -> mockolateByTarget(instance).verifier.method(String).args(Array)
-            // unsupported signatures: 
-            // verify(Object, String, ...args)  -> partial(verify, _, _, _)(instance, String, Array)
-            
-            // pattern matching
-//            when(optional)
-//                .are(arrayWithSize(greaterThan(1)))
-//                .then(verify, instance, methodOrPropertyName, _)
-//                .are()
-//                .then();
+            mockolateByTarget(instance).verify();
             
             return mockolateByTarget(instance).verifier;
         }
