@@ -1,7 +1,8 @@
 package mockolate.sample
 {
-    
-    public class DarkChocolate implements Flavour
+	import flash.events.EventDispatcher;
+	
+    public class DarkChocolate extends EventDispatcher implements Flavour
     {
         public function DarkChocolate()
         {
@@ -30,10 +31,9 @@ package mockolate.sample
             return this;
         }
         
-        public function toString():String
+        override public function toString():String
         {
             return name;
         }
-    
     }
 }

@@ -1,18 +1,22 @@
 package mockolate.ingredients
 {    
+    import asx.array.contains;
     import asx.array.detect;
     import asx.fn._;
     import asx.fn.partial;
     
     import flash.events.Event;
+    import flash.events.EventDispatcher;
+    import flash.events.IEventDispatcher;
     
-    import mockolate.mistakes.StubMissingError;
-    import mockolate.mistakes.VerifyFailedError;
     import mockolate.ingredients.answers.Answer;
     import mockolate.ingredients.answers.CallsAnswer;
     import mockolate.ingredients.answers.DispatchesEventAnswer;
     import mockolate.ingredients.answers.ReturnsAnswer;
     import mockolate.ingredients.answers.ThrowsAnswer;
+    import mockolate.mistakes.MockolateUsageError;
+    import mockolate.mistakes.StubMissingError;
+    import mockolate.mistakes.VerifyFailedError;
     
     import org.hamcrest.Matcher;
     import org.hamcrest.collection.array;
@@ -26,6 +30,8 @@ package mockolate.ingredients
     import org.hamcrest.text.re;
     
     use namespace mockolate_ingredient;
+    
+	// FIXME the eventDispatcher stuff is hacky, unusable for other similar cases where we want to proceed.
     
     /**
      * Stub behaviour of the target, such as:
@@ -42,6 +48,9 @@ package mockolate.ingredients
         private var _propertyExpectations:Array
         private var _methodExpectations:Array;
         
+        private var _eventDispatcher:IEventDispatcher; 
+        private var _eventDispatcherExpectations:Array;
+        
         private var _currentExpectation:StubExpectation;
         
         public function StubbingCouverture(mockolate:Mockolate)
@@ -51,6 +60,8 @@ package mockolate.ingredients
             _expectations = [];
             _propertyExpectations = [];
             _methodExpectations = [];
+            
+            _eventDispatcherExpectations = [];
         }
         
         // FIXME should return a MethodStubbingCouverture that hides method() and property()
@@ -179,6 +190,20 @@ package mockolate.ingredients
         
         protected function invokedAsMethod(invocation:Invocation):void
         {
+        	// when the invocation is for an IEventDispatcher method
+        	// then call that method on the _eventDispatcher
+        	// yay hacks
+        	if (this.mockolate.target is IEventDispatcher
+        	&& contains(['addEventListener', 'dispatchEvent', 'hasEventListener', 'removeEventListener', 'willTrigger'], invocation.name))
+        	{
+        		if (!_eventDispatcher)
+        		{
+        			_eventDispatcher = new EventDispatcher(this.mockolate.target);
+        		}
+        		
+        		_eventDispatcher[invocation.name].apply(null, invocation.arguments);	
+        	}
+        	
             // find the first matching expectation
             // TODO find the first "eligible" matching expectation
             // FIXME rather ugly
@@ -188,21 +213,10 @@ package mockolate.ingredients
             for each (var expectation:StubExpectation in _methodExpectations)
             {
                 // FIXME check that the argsMatcher actually exists
-                if (expectation.name == invocation.name
-                    && expectation.argsMatcher.matches(invocation.arguments))
+                if (expectation.eligible(invocation))
                 {
-                    expectation.invokedCount++;
-                    
-                    // it is possible that one of the Answers will throw an error
-                    var results:Array = expectation.answers.map(function(answer:Answer, i:int, a:Array):* {
-                        return answer.invoke();
-                    });
-                    
-                    // use the first result that is not undefined, else undefined.
-                    invocation.returnValue = detect(results, function(value:*, i:int, a:Array):Boolean {
-                        return value !== undefined;
-                    });
-                    
+                	expectation.invoke(invocation);
+                	
                     foundAndInvoked = true;
                     break;
                 }
@@ -226,19 +240,10 @@ package mockolate.ingredients
             for each (var expectation:StubExpectation in _propertyExpectations)
             {
                 // getters do not receive args so we dont need to check the argsMatcher here
-                if (expectation.name == invocation.name)
+                if (expectation.eligible(invocation))
                 {
-                    expectation.invokedCount++;
-                    
-                    var results:Array = expectation.answers.map(function(answer:Answer, i:int, a:Array):* {
-                        return answer.invoke();
-                    });
-                    
-                    // use the first result that is not undefined, else undefined.
-                    invocation.returnValue = detect(results, function(value:*, i:int, a:Array):Boolean {
-                        return value !== undefined;
-                    });
-                    
+					expectation.invoke(invocation);
+					
                     foundAndInvoked = true;
                     break;
                 }
@@ -256,24 +261,14 @@ package mockolate.ingredients
             // find the first matching expectation
             // TODO find the first "eligible" matching expectation
             
-             var foundAndInvoked:Boolean = false;
+            var foundAndInvoked:Boolean = false;
             
             for each (var expectation:StubExpectation in _propertyExpectations)
             {
                 // FIXME check that the argsMatcher actually exists                
-                if (expectation.name == invocation.name
-                    && expectation.argsMatcher.matches(invocation.arguments))
+                if (expectation.eligible(invocation))
                 {
-                    expectation.invokedCount++;
-                    
-                    var results:Array = expectation.answers.map(function(answer:Answer, i:int, a:Array):* {
-                        return answer.invoke();
-                    });
-                    
-                    // use the first result that is not undefined, else undefined.
-                    invocation.returnValue = detect(results, function(value:*, i:int, a:Array):Boolean {
-                        return value !== undefined;
-                    });
+                	expectation.invoke(invocation);
                     
                     foundAndInvoked = true;
                     break;
@@ -358,7 +353,17 @@ package mockolate.ingredients
         
         protected function addDispatches(event:Event, delay:Number=0):void
         {
-            addAnswer(new DispatchesEventAnswer(null, event, delay));
+        	if (!(this.mockolate.target is IEventDispatcher))
+        	{
+        		throw new MockolateUsageError("Mockolate target is not an IEventDispatcher", mockolate, mockolate.target);
+        	}
+        	
+        	if (!_eventDispatcher)
+        	{
+        		_eventDispatcher = new EventDispatcher(this.mockolate.target);
+        	}
+        	
+            addAnswer(new DispatchesEventAnswer(_eventDispatcher, event, delay));
         }
         
         protected function addCalls(fn:Function, args:Array=null):void
@@ -404,6 +409,8 @@ import mockolate.ingredients.answers.Answer;
 import mockolate.ingredients.InvocationType;
 import asx.string.substitute;
 import org.hamcrest.StringDescription;
+import mockolate.ingredients.Invocation;
+import asx.array.detect;
 
 /**
  *
@@ -428,6 +435,38 @@ internal class StubExpectation
     public function addAnswer(answer:Answer):void
     {
         answers.push(answer);
+    }
+    
+    public function eligible(invocation:Invocation):Boolean 
+    {
+    	if (invocation.name != name)
+    	{
+    		return false;
+    	}
+    	
+    	if (invocation.invocationType == InvocationType.GETTER)
+    	{
+    		return true;
+    	}
+    	else
+    	{
+    		return argsMatcher.matches(invocation.arguments);
+    	}	
+    }
+    
+    public function invoke(invocation:Invocation):void 
+    {
+    	invokedCount++;
+                    
+        // it is possible that one of the Answers will throw an error
+        var results:Array = answers.map(function(answer:Answer, i:int, a:Array):* {
+            return answer.invoke();
+        });
+        
+        // use the first result that is not undefined, else undefined.
+        invocation.returnValue = detect(results, function(value:*, i:int, a:Array):Boolean {
+            return value !== undefined;
+        });
     }
     
     public function toString():String 

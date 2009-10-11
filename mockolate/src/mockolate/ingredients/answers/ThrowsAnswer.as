@@ -13,7 +13,7 @@ package mockolate.ingredients.answers
         
         public function ThrowsAnswer(error:Error)
         {
-            _error;
+            _error = error;
         }
         
         public function invoke():*

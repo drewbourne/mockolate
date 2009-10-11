@@ -1,5 +1,8 @@
 package mockolate.ingredients
 {
+	import flash.events.EventDispatcher;
+	import flash.events.IEventDispatcher;
+	
     use namespace mockolate_ingredient;
     
     /**
@@ -103,7 +106,7 @@ package mockolate.ingredients
                 throw new ArgumentError("This Mockolate already has a target, received:" + value);
             }
             
-            _target = value;
+            _target = value;            
         }
         
         /**

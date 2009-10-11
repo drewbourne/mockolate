@@ -1,4 +1,4 @@
-package mockolate.errors
+package mockolate.mistakes
 {
     import mockolate.ingredients.Mockolate;
     

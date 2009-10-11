@@ -9,9 +9,11 @@ package mockolate
     import mockolate.ingredients.Mockolate;
     import mockolate.sample.DarkChocolate;
     import mockolate.sample.Flavour;
+    import mockolate.sample.FlavourMismatchError;
     
     import org.flexunit.assertThat;
     import org.flexunit.async.Async;
+    import org.hamcrest.core.anything;
     import org.hamcrest.core.not;
     import org.hamcrest.object.equalTo;
     import org.hamcrest.object.nullValue;
@@ -73,7 +75,14 @@ package mockolate
             
             assertThat(instance.name, strictlyEqualTo(answer));
         }
-        
+
+        // getter throws
+        // setter throws
+        // getter calls
+        // setter calls
+        // getter dispatches event
+        // setter dispatches event
+         
         [Test]
         public function stubbingMethod():void
         {
@@ -108,5 +117,50 @@ package mockolate
             
             assertThat(instance.combine(arg), strictlyEqualTo(answer));
         }
+        
+        [Test(expected='mockolate.sample.FlavourMismatchError')]
+        public function stubbingMethodToThrowError():void 
+        {
+            var instance:Flavour = nice(Flavour);
+            var arg1:Flavour = nice(Flavour, 'Anchovies');
+            var arg2:Flavour = nice(Flavour, 'IceCream');
+            var answer:Flavour = nice(Flavour);
+            
+            stub(instance).method("combine").args(arg1, arg2).throws(new FlavourMismatchError("Eww, Anchovies and IceCream dont mix"));
+            
+            instance.combine(arg1, arg2);        	
+        }
+        
+        [Test]
+        public function stubbingMethodToCallFunction():void 
+        {
+        	var called:Boolean = false;
+        	var instance:Flavour = nice(Flavour);
+        	
+        	stub(instance).method("combine").args(anything()).calls(function():void {
+        		called = true;	
+        	});	
+        	
+        	instance.combine(null);
+        	
+        	assertThat(called, equalTo(true));
+        }
+        
+        [Test]
+        public function stubbingMethodToDispatchEvent():void 
+        {
+        	var dispatched:Boolean = false;
+			var instance:DarkChocolate = nice(DarkChocolate);
+			
+			stub(instance).method("combine").args(anything()).dispatches(new Event("flavoursCombined"));
+			
+			instance.addEventListener("flavoursCombined", function(event:Event):void {
+				dispatched = true;
+			});
+			
+			instance.combine(null);
+			
+			assertThat(dispatched, equalTo(true));
+        }        
     }
 }
