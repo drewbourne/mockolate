@@ -8,8 +8,8 @@ package mockolate.ingredients
     import flash.utils.Dictionary;
     import flash.utils.setTimeout;
     
+    import mockolate.errors.MockolateError;
     import mockolate.ingredients.floxy.FloxyMockolateFactory;
-    import mockolate.mistakes.MockolateError;
     
     import org.hamcrest.Matcher;
     import org.hamcrest.collection.emptyArray;
@@ -188,10 +188,10 @@ package mockolate.ingredients
         {
             var mockolate:Mockolate = _mockolatesByTarget[target];
             if (!mockolate)
-            {
-                // FIXME create a custom error type
-                throw new MockolateError("No Mockolate for that target, received " + target, null, target);
-            }
+                throw new MockolateError(
+					["No Mockolate for that target, received:{}", [target]], 
+					null, target);
+            
             return mockolate;
         }
     }

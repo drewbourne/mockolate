@@ -7,10 +7,7 @@
 
     <mx:Script>
         <![CDATA[
-        	import mockolate.*;
-        	import mockolate.ingredients.*;
-        	import mockolate.ingredients.floxy.InterceptingCouvertureTest;
-            
+        	import mockolate.MockolateSuite;
             import org.flexunit.listeners.UIListener;
             import org.flexunit.runner.FlexUnitCore;
             
@@ -20,27 +17,7 @@
             {
                 core = new FlexUnitCore();
                 core.addListener(new UIListener(uiListener));
-                core.run(
-                    // sandbox for testing floxy, flemit, loom, whatever
-//                    MockolateSandbox,
-                    // mockolate
-                    MockolatierTest,
-                    CouvertureTest,
-                    RecordingCouvertureTest,
-//                    MockingCouvertureTest,
-//                    StubbingCouvertureTest,
-//                    VerifyingCouvertureTest,
-                    // asmock integration
-                    InterceptingCouvertureTest,
-                    // examples
-                    PreparingMockolates,
-//                    UsingNiceMockolates,
-//                    UsingStrictMockolates,
-					UsingMockolate,
-                    StubbingMockolates,
-                    MockingMockolates,
-                    VerifyingMockolates
-                    );
+                core.run(MockolateSuite);
             }
         ]]>
     </mx:Script>

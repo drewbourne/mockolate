@@ -22,6 +22,8 @@ package mockolate
      * <listing version="3.0">
      *	prepare(Chocolate, Milk, Sugar);
      * </listing> 
+     * 
+     * @author drewbourne
      */
     public function prepare(... rest):IEventDispatcher
     {

@@ -4,11 +4,12 @@ package mockolate.ingredients
     import asx.fn._;
     import asx.fn.partial;
     
-    import mockolate.mistakes.VerifyFailedError;
+    import mockolate.errors.VerificationError;
     
     import org.hamcrest.Matcher;
     import org.hamcrest.collection.array;
     import org.hamcrest.collection.arrayWithSize;
+    import org.hamcrest.collection.emptyArray;
     import org.hamcrest.core.anyOf;
     import org.hamcrest.date.dateEqual;
     import org.hamcrest.number.greaterThan;
@@ -45,7 +46,7 @@ package mockolate.ingredients
          * 	verify(instance).method("toString");
          * </listing>
          */
-        public function method(name:String, ns:String=null):VerifyingCouverture
+        public function method(name:String/*, ns:String=null*/):VerifyingCouverture
         {
             _currentVerification = new Verification();
             _currentVerification.invocationType = InvocationType.METHOD;
@@ -65,7 +66,7 @@ package mockolate.ingredients
          * 	verify(instance).getter("toString");
          * </listing>
          */
-        public function getter(name:String, ns:String=null):VerifyingCouverture
+        public function getter(name:String/*, ns:String=null*/):VerifyingCouverture
         {
             _currentVerification = new Verification();
             _currentVerification.invocationType = InvocationType.GETTER;
@@ -85,7 +86,7 @@ package mockolate.ingredients
          * 	verify(instance).getter("toString");
          * </listing>
          */
-        public function setter(name:String, ns:String=null):VerifyingCouverture
+        public function setter(name:String/*, ns:String=null*/):VerifyingCouverture
         {
             _currentVerification = new Verification();
             _currentVerification.invocationType = InvocationType.SETTER;
@@ -123,15 +124,29 @@ package mockolate.ingredients
         	// FIXME ensure there is a currentVerification
         	
             if (_currentVerification.invocationType == InvocationType.GETTER)
-            {
-                throw new VerifyFailedError("getters do not accept arguments", mockolate, mockolate.target);
-            }
+                throw new VerificationError(
+                	"getters do not accept arguments", 
+                	_currentVerification, mockolate, mockolate.target);
             
             _currentVerification.arguments = rest;
             _currentVerification.argumentsMatcher = hasProperty("arguments", array(rest.map(partial(valueToMatcher, _))));
             
             doVerify();
             return this;
+        }
+        
+        public function noArgs():VerifyingCouverture
+        {
+            if (_currentVerification.invocationType == InvocationType.GETTER)
+                throw new VerificationError(
+                	"getters do not accept arguments", 
+                	_currentVerification, mockolate, mockolate.target);
+            
+            _currentVerification.arguments = null;
+            _currentVerification.argumentsMatcher = hasProperty("arguments", emptyArray());
+        	
+        	doVerify();
+        	return this;
         }
         
 		/**
@@ -326,7 +341,8 @@ package mockolate.ingredients
          */
         protected function fail(description:String):void 
         {
-            throw new VerifyFailedError(description, mockolate, mockolate.target);    
+            throw new VerificationError(
+            	description, _currentVerification, mockolate, mockolate.target);    
         }
     }
 }

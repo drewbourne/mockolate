@@ -30,7 +30,9 @@ package mockolate
      * 	stub(flavour1).method('combine').args(flavour2).returns(combined);
      * 
      *  var result:Flavour = flavour.combine(flavour2); 
-     * </listing> 
+     * </listing>
+     * 
+     * @author drewbourne 
      */
     public function stub(target:*):MockingCouverture
     {

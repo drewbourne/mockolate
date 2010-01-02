@@ -6,7 +6,6 @@ package mockolate
     import flash.events.IEventDispatcher;
     import flash.utils.describeType;
     
-    import mockolate.mistakes.StubMissingError;
     import mockolate.ingredients.Mockolate;
     import mockolate.sample.DarkChocolate;
     import mockolate.sample.Flavour;
@@ -57,14 +56,14 @@ package mockolate
             assertThat(instance, instanceOf(DarkChocolate));
         }
         
-        [Test(expected="mockolate.mistakes.StubMissingError")]
+        [Test(expected="mockolate.errors.InvocationError")]
         public function strictMockComplainOnUnexpectedPropertySet():void
         {
             var instance:Flavour = strict(Flavour);
             instance.ingredients = [];
         }
         
-        [Test(expected="mockolate.mistakes.StubMissingError")]
+        [Test(expected="mockolate.errors.InvocationError")]
         public function strictMockComplainOnUnexpectedPropertyGet():void
         {
             var instance:Flavour = strict(Flavour);
@@ -72,7 +71,7 @@ package mockolate
         }
         
         
-        [Test(expected="mockolate.mistakes.StubMissingError")]
+        [Test(expected="mockolate.errors.InvocationError")]
         public function strictMocksComplainOnUnexpectedMethodCalls():void
         {
             var instance:Flavour = strict(Flavour);

@@ -37,6 +37,7 @@ package mockolate.ingredients
             super();
             
             _name = name;
+            _isStrict = true;
         }
         
         /**
@@ -107,7 +108,7 @@ package mockolate.ingredients
          * Given <code>isStrict</code> is <code>true</code>
          * when a method or property is invoked that does not have a 
          * <code>mock()</code> or <code>stub()</code> expectation set
-         * then an UnexpectedBehaviourError will be thrown.
+         * then an ExpectationError will be thrown.
          * 
          * Given <code>isStrict</code> is <code>false</code>
          * when a method or property is invoked that does not have a

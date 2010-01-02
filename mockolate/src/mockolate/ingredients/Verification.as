@@ -13,7 +13,7 @@ package mockolate.ingredients
 	 * 
 	 * @author drewbourne
 	 */
-	internal class Verification
+	public class Verification
 	{    
 	    /**
 	     * Constructor. 

@@ -12,12 +12,12 @@ package mockolate.ingredients
         [Before]
         public function create():void
         {
-            mockolate = new Mockolate();
+            this.mockolate = new Mockolate();
             mocker = new MockingCouverture(mockolate);
         }
         
         // method, no args, no return
-        [Test(expected="Error")]
+        [Test(expected="mockolate.errors.ExpectationError")]
         public function mockMethodShouldFailIfNotInvoked():void
         {
             mocker.method("example");
@@ -30,6 +30,37 @@ package mockolate.ingredients
             mocker.method("example");
             mocker.invoked(new FauxInvocation({ name: "example" }));
             mocker.verify();
+        }
+        
+        [Test]
+        public function method_once():void 
+        {
+        	mocker.method("example").once();
+        	mocker.invoked(new FauxInvocation({ name: "example" }));
+        	mocker.verify();
+        }
+        
+        [Test]
+        public function method_twice():void 
+        {
+        	mocker.method("example").twice();
+        	mocker.invoked(new FauxInvocation({ name: "example" }));
+        	mocker.verify();
+        }
+        
+        [Test]
+        public function method_thrice():void 
+        {
+        	mocker.method("example").twice();
+        	mocker.invoked(new FauxInvocation({ name: "example" }));
+        	mocker.verify();
+        }
+        
+        [Test(expected="mockolate.errors.InvocationError")]
+        public function method_never():void 
+        {
+        	mocker.method("example").never();
+        	mocker.invoked(new FauxInvocation({ name: "example" }));
         }
     
         // method, args, no return

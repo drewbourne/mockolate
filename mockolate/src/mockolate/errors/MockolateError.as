@@ -1,13 +1,25 @@
-package mockolate.mistakes 
+package mockolate.errors 
 {
+	import asx.string.substitute;
+	
 	import mockolate.ingredients.Mockolate;
 	
+	/**
+	 * Mockolate-related Error
+	 */
 	public class MockolateError extends Error 
 	{
 		private var _mockolate:Mockolate;
 		private var _target:Object;
 		
-		public function MockolateError(message:String, mockolate:Mockolate, target:Object) {
+		/**
+		 * Constructor.
+		 */
+		public function MockolateError(message:Object, mockolate:Mockolate, target:Object) {
+			
+			if (message is Array)
+				message = substitute(message[0], message[1] || []);
+				
 			super(message);
 			
 			_mockolate = mockolate;

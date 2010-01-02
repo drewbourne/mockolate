@@ -35,6 +35,8 @@ package mockolate
      * 
      *  var result:Flavour = flavour.combine(flavour2); 
      * </listing> 
+     * 
+     * @author drewbourne
      */
     public function mock(target:*):MockingCouverture
     {

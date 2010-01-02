@@ -43,7 +43,7 @@ package mockolate
         	verify(flavour).setter("liked").arg(true);
         }
         
-        [Test(expected="mockolate.mistakes.UnexpectedBehaviourError")]
+        [Test(expected="mockolate.errors.InvocationError")]
         public function usingMockolateWithFailingMockBehaviour():void 
         {
         	var flavour:Flavour = strict(Flavour);
@@ -57,7 +57,7 @@ package mockolate
         	flavour.combine(null);
         }
         
-        [Test(expected="mockolate.mistakes.VerifyFailedError")]
+        [Test(expected="mockolate.errors.VerificationError")]
         public function usingMockolateWithFailingStubBehaviour():void 
         {
         	var flavour:Flavour = strict(Flavour);

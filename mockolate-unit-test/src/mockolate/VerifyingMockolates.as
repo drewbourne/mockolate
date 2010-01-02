@@ -49,7 +49,7 @@ package mockolate
             verify(instance);
         }
         
-        [Test(expected="mockolate.mistakes.VerifyFailedError")]
+        [Test(expected="mockolate.errors.ExpectationError")]
         public function verifyingMockBehaviourAsFailingAsNotCalled():void
         {
             var instance:Flavour = strict(Flavour);
@@ -89,7 +89,7 @@ package mockolate
             verify(instance).method("combine").args(nullValue()).once();
         }
         
-        [Test(expected="mockolate.mistakes.VerifyFailedError")]
+        [Test(expected="mockolate.errors.VerificationError")]
         public function verifyingAsTestSpyAsFailing():void
         {
             var instance:Flavour = nice(Flavour);
@@ -97,7 +97,7 @@ package mockolate
             verify(instance).method("combine").args(nullValue()).once();
         }
         
-        [Test(expected="mockolate.mistakes.VerifyFailedError")]
+        [Test(expected="mockolate.errors.VerificationError")]
         public function verifyingAsTestSpyAsFailingInvokedCount():void
         {
             var instance:Flavour = nice(Flavour);

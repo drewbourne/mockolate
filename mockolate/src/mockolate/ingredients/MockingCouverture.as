@@ -4,23 +4,22 @@ package mockolate.ingredients
     import asx.array.detect;
     import asx.array.filter;
     import asx.array.map;
-    import asx.fn._;
     import asx.fn.getProperty;
-    import asx.fn.partial;
+    import asx.string.substitute;
     
     import flash.events.Event;
     import flash.events.EventDispatcher;
     import flash.events.IEventDispatcher;
     
+    import mockolate.errors.ExpectationError;
+    import mockolate.errors.InvocationError;
+    import mockolate.errors.MockolateError;
+    import mockolate.errors.VerificationError;
     import mockolate.ingredients.answers.Answer;
     import mockolate.ingredients.answers.CallsAnswer;
     import mockolate.ingredients.answers.DispatchesEventAnswer;
     import mockolate.ingredients.answers.ReturnsAnswer;
     import mockolate.ingredients.answers.ThrowsAnswer;
-    import mockolate.mistakes.MockolateUsageError;
-    import mockolate.mistakes.StubMissingError;
-    import mockolate.mistakes.UnexpectedBehaviourError;
-    import mockolate.mistakes.VerifyFailedError;
     
     import org.hamcrest.Matcher;
     import org.hamcrest.collection.array;
@@ -544,7 +543,9 @@ package mockolate.ingredients
         		expectation = findEligibleExpectation(filter(_stubExpectations, isMethodExpectation), invocation); 
 
         	if (!expectation && this.mockolate.isStrict)
-            	throw new UnexpectedBehaviourError(this.mockolate, this.mockolate.target, invocation);
+            	throw new InvocationError(
+            		["No method Expectations defined for Invocation:{}", [invocation]], 
+            		invocation, this.mockolate, this.mockolate.target);
         	
         	return expectation;
         }
@@ -568,7 +569,9 @@ package mockolate.ingredients
         		expectation = findEligibleExpectation(filter(_stubExpectations, isPropertyExpectation), invocation); 
         	
         	if (!expectation && this.mockolate.isStrict)
-            	throw new UnexpectedBehaviourError(this.mockolate, this.mockolate.target, invocation);
+            	throw new InvocationError(
+            		["No property Expectation defined for Invocation:{}", [invocation]],
+            		invocation, this.mockolate, this.mockolate.target);
         	
         	return expectation;
  
@@ -582,10 +585,6 @@ package mockolate.ingredients
          */
         override mockolate_ingredient function invoked(invocation:Invocation):void
         {
-            // proceed with return value if matches a specified stub
-            // else if nice return a false-y value
-            // else if strict throw an UnexpectedBehaviourError
-            
             // FIXME move to constructor
             var invokedAs:Object = {};
             invokedAs[ InvocationType.METHOD ] = invokedAsMethod;
@@ -809,14 +808,10 @@ package mockolate.ingredients
         protected function addDispatches(event:Event, delay:Number=0):void
         {
         	if (!(this.mockolate.target is IEventDispatcher))
-        	{
-        		throw new MockolateUsageError("Mockolate target is not an IEventDispatcher", mockolate, mockolate.target);
-        	}
+        		throw new MockolateError(["Mockolate target is not an IEventDispatcher, target: {}", [mockolate.target]], mockolate, mockolate.target);
         	
         	if (!_eventDispatcher)
-        	{
         		_eventDispatcher = new EventDispatcher(this.mockolate.target);
-        	}
         	
             addAnswer(new DispatchesEventAnswer(_eventDispatcher, event, delay));
         }
@@ -853,8 +848,11 @@ package mockolate.ingredients
          */
         protected function verifyExpectation(expectation:Expectation):void 
         {
-        	if (!expectation.invokeCountMatcher.matches(expectation.invokedCount))
-        		throw new VerifyFailedError("Unmet Expectation"); 
+        	if (expectation.invokeCountMatcher 
+        		&& !expectation.invokeCountMatcher.matches(expectation.invokedCount))
+        		throw new ExpectationError(
+        			["Unmet Expectation: {}", [expectation]], 
+        			expectation, this.mockolate, this.mockolate.target); 
         }
     }
 }
