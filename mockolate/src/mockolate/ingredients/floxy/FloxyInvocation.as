@@ -5,11 +5,19 @@ package mockolate.ingredients.floxy
     import mockolate.ingredients.Invocation;
     import mockolate.ingredients.InvocationType;
     
+    /**
+     * Wraps the FLoxy IInvocation type in the Mockolate Invocation interface.
+     * 
+     * @author drewbourne. 
+     */
     public class FloxyInvocation implements Invocation
     {
         private var _invocation:IInvocation;
         private var _invocationType:InvocationType;
         
+        /**
+         * Constructor. 
+         */
         public function FloxyInvocation(invocation:IInvocation)
         {
             _invocation = invocation;

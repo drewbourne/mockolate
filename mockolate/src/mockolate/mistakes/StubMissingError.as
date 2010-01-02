@@ -6,14 +6,14 @@ package mockolate.mistakes
 	
 	public class StubMissingError extends MockolateError 
 	{
-		private var _invocation:Invocation;
-		
 		public function StubMissingError(mockolate:Mockolate, target:Object, invocation:Invocation) 
 		{
 			super("Stub Missing", mockolate, target);
 			
 			_invocation = invocation;
 		}
+
+		private var _invocation:Invocation;
 		
 		public function get invocation():Invocation 
 		{

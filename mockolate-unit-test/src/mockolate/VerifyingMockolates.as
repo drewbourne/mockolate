@@ -38,11 +38,11 @@ package mockolate
          */
         
         [Test]
-        public function verifyingStubsAsPassing():void
+        public function verifyingMockBehaviourAsPassing():void
         {
             var instance:Flavour = strict(Flavour);
             
-            stub(instance).method("combine").args(nullValue());
+            mock(instance).method("combine").args(nullValue());
             
             instance.combine(null);
             
@@ -50,11 +50,11 @@ package mockolate
         }
         
         [Test(expected="mockolate.mistakes.VerifyFailedError")]
-        public function verifyingStubsAsFailingAsNotCalled():void
+        public function verifyingMockBehaviourAsFailingAsNotCalled():void
         {
             var instance:Flavour = strict(Flavour);
             
-            stub(instance).method("combine").args(nullValue());
+            mock(instance).method("combine").args(nullValue());
             
             verify(instance);
         }

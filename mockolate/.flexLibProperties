@@ -1,41 +1,46 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <flexLibProperties version="1">
   <includeClasses>
-    <classEntry path="mockolate.ingredients.faux.FauxFloxyInvocation"/>
     <classEntry path="mockolate.ingredients.MockolatierMaster"/>
+    <classEntry path="mockolate.ingredients.faux.FauxFloxyInvocation"/>
     <classEntry path="mockolate.mistakes.MockolateError"/>
+    <classEntry path="mockolate.ingredients.MockingCouverture"/>
     <classEntry path="mockolate.ingredients.faux.FauxInvocation"/>
-    <classEntry path="mockolate.ingredients.Mockolate"/>
     <classEntry path="mockolate.ingredients.Couverture"/>
+    <classEntry path="mockolate.ingredients.Mockolate"/>
     <classEntry path="mockolate.ingredients.answers.ThrowsAnswer"/>
+    <classEntry path="mockolate.ingredients.Expectation"/>
     <classEntry path="mockolate.ingredients.mockolate_ingredient"/>
     <classEntry path="mockolate.strict"/>
+    <classEntry path="mockolate.mock"/>
     <classEntry path="mockolate.ingredients.Invocation"/>
     <classEntry path="mockolate.ingredients.floxy.FloxyMockolateFactory"/>
     <classEntry path="mockolate.verify"/>
     <classEntry path="mockolate.ingredients.floxy.FloxyMockolate"/>
     <classEntry path="mockolate.nice"/>
-    <classEntry path="mockolate.ingredients.answers.DispatchesEventAnswer"/>
     <classEntry path="mockolate.ingredients.answers.CallsAnswer"/>
+    <classEntry path="mockolate.ingredients.answers.DispatchesEventAnswer"/>
+    <classEntry path="mockolate.ingredients.answers.PassThroughAnswer"/>
     <classEntry path="mockolate.prepare"/>
-    <classEntry path="mockolate.ingredients.answers.ReturnsValueAnswer"/>
     <classEntry path="mockolate.ingredients.InvocationType"/>
+    <classEntry path="mockolate.ingredients.answers.ReturnsValueAnswer"/>
     <classEntry path="mockolate.ingredients.VerifyingCouverture"/>
-    <classEntry path="mockolate.ingredients.StubbingCouverture"/>
     <classEntry path="mockolate.ingredients.faux.FauxMockolate"/>
     <classEntry path="mockolate.mistakes.VerifyFailedError"/>
+    <classEntry path="mockolate.ingredients.Verification"/>
     <classEntry path="mockolate.ingredients.MockolateFactory"/>
     <classEntry path="mockolate.stub"/>
+    <classEntry path="mockolate.mistakes.UnmetExpectationError"/>
     <classEntry path="mockolate.ingredients.floxy.FloxyInvocation"/>
     <classEntry path="mockolate.ingredients.Mockolatier"/>
-    <classEntry path="mockolate.mistakes.StubMissingError"/>
     <classEntry path="mockolate.ingredients.faux.FauxFloxyInterceptor"/>
+    <classEntry path="mockolate.mistakes.StubMissingError"/>
     <classEntry path="mockolate.ingredients.answers.ReturnsCallAnswer"/>
     <classEntry path="mockolate.mistakes.MockolateUsageError"/>
     <classEntry path="mockolate.ingredients.answers.Answer"/>
     <classEntry path="mockolate.ingredients.floxy.InterceptingCouverture"/>
-    <classEntry path="mockolate.ingredients.answers.ReturnsAnswer"/>
     <classEntry path="mockolate.ingredients.RecordingCouverture"/>
+    <classEntry path="mockolate.ingredients.answers.ReturnsAnswer"/>
   </includeClasses>
   <includeResources/>
   <namespaceManifests/>

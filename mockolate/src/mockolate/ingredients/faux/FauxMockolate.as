@@ -20,9 +20,10 @@ package mockolate.ingredients.faux
             _invokedHandler = invokedHandler;
         }
         
-        override mockolate_ingredient function invoked(invocation:Invocation):void
+        override mockolate_ingredient function invoked(invocation:Invocation):Mockolate
         {
             _invokedHandler(invocation);
+            return this;
         }
     }
 }

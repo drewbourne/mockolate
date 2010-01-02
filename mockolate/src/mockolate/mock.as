@@ -4,7 +4,7 @@ package mockolate
     import mockolate.ingredients.MockolatierMaster;
     
     /**
-     * Create an expectation of possible behaviour on a target instance.
+     * Create an expectation of required behaviour on a target instance.
      * 
      * When the target instance was created using <code>nice()</code>
      * and a method or property on the target instance is called
@@ -15,8 +15,12 @@ package mockolate
      * and a method or property on the target instance is called
      * and no expectations have been set using <code>mock()</code> or <code>stub()</code>
      * then an <code>UnspecifiedBehaiourError</code> will be thrown. 
+     * 
+     * When <code>verify()</code> is called for the target instance 
+     * and the expectation has not been met 
+     * then an <code>UnmetExpectationError</code> will be thrown. 
      *  
-     * @see mockolate#mock()
+     * @see mockolate#stub()
      * 
      * @see mockolate#nice()
      * @see mockolate#strict()
@@ -27,13 +31,13 @@ package mockolate
      *  var flavour2:Flavour = make(Flavour);
      *  var combined:Flavour = make(Flavour);
      *  
-     * 	stub(flavour1).method('combine').args(flavour2).returns(combined);
+     * 	mock(flavour1).method('combine').args(flavour2).returns(combined);
      * 
      *  var result:Flavour = flavour.combine(flavour2); 
      * </listing> 
      */
-    public function stub(target:*):MockingCouverture
+    public function mock(target:*):MockingCouverture
     {
-        return MockolatierMaster.stub(target);
+        return MockolatierMaster.mock(target);
     }
 }

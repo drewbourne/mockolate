@@ -12,13 +12,24 @@ package mockolate.ingredients.floxy
     
     use namespace mockolate_ingredient;
     
+    /**
+     * FLoxy IInterceptor implementation for Mockolate. 
+     */
     public class InterceptingCouverture extends Couverture implements IInterceptor
     {
+    	/**
+    	 * Constructor.
+    	 */
         public function InterceptingCouverture(mockolate:Mockolate)
         {
             super(mockolate);
         }
         
+        /**
+         * Called by FLoxy proxy instances.
+         * 
+         * @private  
+         */
         public function intercept(invocation:IInvocation):void
         {
             mockolate.mockolate_ingredient::invoked(new FloxyInvocation(invocation));

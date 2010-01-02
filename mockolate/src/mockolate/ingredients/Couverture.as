@@ -5,12 +5,13 @@ package mockolate.ingredients
     /**
      * Couverture.
      *
+     * @see RecordingCouverture
+     * @see MockingCouverture
+     * 
      * @author drewbourne
      */
     public class Couverture
     {
-        private var _mockolate:Mockolate;
-        
         /**
          * Constructor.
          */
@@ -31,6 +32,8 @@ package mockolate.ingredients
         {
             return _mockolate;
         }
+        
+        private var _mockolate:Mockolate;
         
         /**
          * Called by the Mockolate when an Invocation is received.

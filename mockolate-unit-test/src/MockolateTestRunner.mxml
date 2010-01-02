@@ -7,13 +7,9 @@
 
     <mx:Script>
         <![CDATA[
-            import mockolate.PreparingMockolates;
-            import mockolate.UsingNiceMockolates;
-            import mockolate.UsingStrictMockolates;
-            import mockolate.StubbingMockolates;
-            import mockolate.VerifyingMockolates;
-            
-            import mockolate.MockolateSandbox;
+        	import mockolate.*;
+        	import mockolate.ingredients.*;
+        	import mockolate.ingredients.floxy.InterceptingCouvertureTest;
             
             import org.flexunit.listeners.UIListener;
             import org.flexunit.runner.FlexUnitCore;
@@ -26,26 +22,23 @@
                 core.addListener(new UIListener(uiListener));
                 core.run(
                     // sandbox for testing floxy, flemit, loom, whatever
-//                    MockolateSandbox
-//                    ,
+//                    MockolateSandbox,
                     // mockolate
-//                    MockolatierTest,
-//                    CouvertureTest,
-//                    RecordingCouvertureTest,
+                    MockolatierTest,
+                    CouvertureTest,
+                    RecordingCouvertureTest,
+//                    MockingCouvertureTest,
 //                    StubbingCouvertureTest,
 //                    VerifyingCouvertureTest,
                     // asmock integration
-//                    InterceptingCouvertureTest
-//                    ,
+                    InterceptingCouvertureTest,
                     // examples
-                    PreparingMockolates
-                    ,
-                    UsingNiceMockolates
-                    ,
-                    UsingStrictMockolates
-                    ,
-                    StubbingMockolates
-                    ,
+                    PreparingMockolates,
+//                    UsingNiceMockolates,
+//                    UsingStrictMockolates,
+					UsingMockolate,
+                    StubbingMockolates,
+                    MockingMockolates,
                     VerifyingMockolates
                     );
             }

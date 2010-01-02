@@ -9,6 +9,7 @@ package mockolate.ingredients
     import flash.utils.setTimeout;
     
     import mockolate.ingredients.floxy.FloxyMockolateFactory;
+    import mockolate.mistakes.MockolateError;
     
     import org.hamcrest.Matcher;
     import org.hamcrest.collection.emptyArray;
@@ -20,6 +21,12 @@ package mockolate.ingredients
     
     /**
      * Maker of the Mockolates.
+     * 
+     * Used by MockolatierMaster and the <code>mockolate.*</code> package-level functions.
+     * 
+     * Do not reference directly.  
+     * 
+     * @author drewbourne
      */
     public class Mockolatier extends EventDispatcher
     {
@@ -40,17 +47,20 @@ package mockolate.ingredients
             _mockolatesByTarget = new Dictionary();
             _mockolateFactory = new FloxyMockolateFactory();
         }
+
+		// TODO implement Mockolatier#hasPrepared(Class)        
+//        /**
+//         * Indicates if the given Class has been prepared by this Mockolatier instance.
+//         */
+//        public function hasPrepared(klass:Class):Boolean
+//        {
+//            return false;
+//        }
         
         /**
-         * Indicates if the given Class has been prepared by this Mockolatier instance.
-         */
-        public function hasPrepared(klass:Class):Boolean
-        {
-            return false;
-        }
-        
-        /**
-         *
+         * Prepares the given Class references for creating proxy instances. 
+         *  
+         * @see mockolate#prepare()
          */
         public function prepare(... rest):IEventDispatcher
         {
@@ -75,7 +85,7 @@ package mockolate.ingredients
         }
         
         /**
-         *
+         * @private
          */
         protected function prepareCompleted(event:Event):void
         {
@@ -89,7 +99,7 @@ package mockolate.ingredients
         }
         
         /**
-         *
+         * @private
          */
         public function nice(klass:Class, name:String=null, constructorArgs:Array=null):*
         {
@@ -97,29 +107,35 @@ package mockolate.ingredients
         }
         
         /**
-         *
+         * @private
          */
         public function strict(klass:Class, name:String=null, constructorArgs:Array=null):*
         {
             return createTarget(klass, constructorArgs, true, name);
         }
-        
+
         /**
-         *
+         * @private
          */
-        public function stub(instance:* /*, methodOrPropertyName:String=null, args:Array=null*/):StubbingCouverture
+        public function mock(instance:*):MockingCouverture
         {
-            return mockolateByTarget(instance).stubber;
+            return mockolateByTarget(instance).mocker.mock();
         }
         
         /**
-         *
+         * @private
          */
-        public function verify(instance:* /*, methodOrPropertyName:String=null, args:Array=null*/):VerifyingCouverture
+        public function stub(instance:*):MockingCouverture
         {
-            mockolateByTarget(instance).verify();
-            
-            return mockolateByTarget(instance).verifier;
+            return mockolateByTarget(instance).mocker.stub();
+        }
+        
+        /**
+         * @private
+         */
+        public function verify(instance:*):VerifyingCouverture
+        {
+        	return mockolateByTarget(instance).verify().verifier;
         }
         
         /**
@@ -139,7 +155,15 @@ package mockolate.ingredients
         }
         
         /**
-         *
+         * Creates a proxied instance of the given Class and an associated 
+         * Mockolate instance.
+         * 
+         * @param klass
+         * @param constructorArgs
+         * @param asStrict
+         * @param name  
+         * 
+         * @private
          */
         protected function createTarget(klass:Class, constructorArgs:Array=null, asStrict:Boolean=true, name:String=null):*
         {
@@ -154,7 +178,11 @@ package mockolate.ingredients
         }
         
         /**
-         *
+         * Finds a Mockolate instance by its target instance.
+         * 
+         * Throws a MockolateNotFoundError when there is no Mockolate for the given target. 
+         * 
+         * @private
          */
         protected function mockolateByTarget(target:*):Mockolate
         {
@@ -162,7 +190,7 @@ package mockolate.ingredients
             if (!mockolate)
             {
                 // FIXME create a custom error type
-                throw new Error("No Mockolate for that target, received" + target);
+                throw new MockolateError("No Mockolate for that target, received " + target, null, target);
             }
             return mockolate;
         }

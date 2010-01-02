@@ -1,11 +1,14 @@
 package mockolate.ingredients.answers
 {
+	import mockolate.ingredients.Invocation;
     
     /**
-     * @example
-     * <listing version="3.0">
-     *  stub.returns(1)
-     * </listing>
+     * Returns a value. 
+     * 
+     * @see mockolate.ingredients.Invocation#returnValue
+     * @see mockolate.ingredients.MockingCouverture#returns()
+     * 
+     * @author drewbourne
      */
     public class ReturnsValueAnswer implements Answer
     {
@@ -16,7 +19,7 @@ package mockolate.ingredients.answers
             _value = value;
         }
         
-        public function invoke():*
+        public function invoke(invocation:Invocation):*
         {
             return _value;
         }

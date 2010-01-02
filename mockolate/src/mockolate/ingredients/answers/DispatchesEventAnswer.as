@@ -4,11 +4,15 @@ package mockolate.ingredients.answers
     import flash.events.IEventDispatcher;
     import flash.utils.setTimeout;
     
+    import mockolate.ingredients.Invocation;
+    
     /**
+     * Dispatches an Event with an optional delay. 
+     * 
      * @example
      * <listing version="3.0">
-     *  stub.dispatches(new Event("now"));
-     *  stub.dispatches(new Event("eventually"), 100);
+     *  mock(instance).method("update").dispatches(new Event("now"));
+     *  mock(instance).method("update").dispatches(new Event("eventually"), 100);
      * </listing>
      */
     public class DispatchesEventAnswer implements Answer
@@ -18,6 +22,9 @@ package mockolate.ingredients.answers
         private var _delay:Number;
         private var _timeout:uint;
         
+        /**
+         * Constructor. 
+         */
         public function DispatchesEventAnswer(dispatcher:IEventDispatcher, event:Event, delay:Number=0)
         {
             _dispatcher = dispatcher;
@@ -25,7 +32,10 @@ package mockolate.ingredients.answers
             _delay = delay;
         }
         
-        public function invoke():*
+        /**
+         * @inheritDoc 
+         */
+        public function invoke(invocation:Invocation):*
         {
             if (_delay == 0)
             {
@@ -35,9 +45,13 @@ package mockolate.ingredients.answers
             {
                 _timeout = setTimeout(dispatchEvent, _delay);
             }
+            
             return undefined;
         }
         
+        /**
+         * @private 
+         */
         protected function dispatchEvent():void
         {
             _dispatcher.dispatchEvent(_event);

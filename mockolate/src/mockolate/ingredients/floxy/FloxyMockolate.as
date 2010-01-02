@@ -5,6 +5,9 @@ package mockolate.ingredients.floxy
     
     use namespace mockolate_ingredient;
     
+    /**
+     * Mockolate extension for use with FLoxy proxies.
+     */
     public class FloxyMockolate extends Mockolate
     {
         // couvertures 
@@ -16,7 +19,7 @@ package mockolate.ingredients.floxy
         }
         
         /**
-         *
+         * FLoxy IInterceptor.
          */
         mockolate_ingredient function get interceptor():InterceptingCouverture
         {

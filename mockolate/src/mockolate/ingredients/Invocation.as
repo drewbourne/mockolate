@@ -1,8 +1,9 @@
 package mockolate.ingredients
 {
-    
     /**
      * Interface implemented by facades to the invocation objects provided by ASMock and Loom.
+     * 
+     * @author drewbourne
      */
     public interface Invocation
     {
@@ -49,7 +50,7 @@ package mockolate.ingredients
         function set returnValue(value:*):void;
         
         /**
-         * Proceed with the
+         * Proceed with the original implementation.
          */
         function proceed():void;
     }

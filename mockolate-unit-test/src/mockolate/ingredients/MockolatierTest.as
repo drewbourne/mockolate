@@ -11,7 +11,6 @@ package mockolate.ingredients
     import org.hamcrest.core.isA;
     import org.hamcrest.object.notNullValue;
     
-    
     public class MockolatierTest
     {
         public var mockolatier:Mockolatier;
@@ -35,37 +34,39 @@ package mockolate.ingredients
         [Test(expected="ArgumentError")]
         public function prepareWithInstancesThrowsError():void
         {
-            mockolatier.prepare();
+        	var event:Event = new Event("test");
+            mockolatier.prepare(event);
         }
         
-        [Test(expected="ArgumentError")]
+        [Ignore(description="as the VerifyError is async we cannot catch it.")]
+        [Test(async, expected="VerifyError")]
         public function prepareWithPrimitivesThrowsError():void
-        {
-            // TODO convert to a Theory
+        { 
             mockolatier.prepare(Number);
         }
         
-        [Test(expected="ArgumentError")]
+        [Ignore(description="as the VerifyError is async we cannot catch it.")]
+        [Test(async, expected="VerifyError")]
         public function prepareWithFinalClassThrowsError():void
         {
-            mockolatier.prepare(URLRequest);
+			mockolatier.prepare(URLRequest);
         }
         
-        [Test(async)]
+        [Test(async, timeout=5000)]
         public function prepareWithClassDispatchesCompleteEvent():void
         {
             Async.proceedOnEvent(this, mockolatier, Event.COMPLETE);
             mockolatier.prepare(Flavour);
         }
         
-        [Test(async)]
+        [Test(async, timeout=5000)]
         public function prepareWithManyClassesDispatchesCompleteEvent():void
         {
             Async.proceedOnEvent(this, mockolatier, Event.COMPLETE);
             mockolatier.prepare(Flavour);
         }
         
-        [Test(async)]
+        [Test(async, timeout=5000)]
         public function prepareIgnoresAlreadyPreparedClasses():void
         {
             Async.proceedOnEvent(this, mockolatier, Event.COMPLETE);
@@ -76,27 +77,27 @@ package mockolate.ingredients
         //  Nice
         //
         
-        [Test(async)]
+        [Test(async, timeout=5000)]
         public function niceWithInterface():void
         {
-            Async.handleEvent(this, mockolatier, Event.COMPLETE, niceWithInterface_shouldCreateInstance);
+            Async.handleEvent(this, mockolatier, Event.COMPLETE, niceWithInterface_shouldCreateInstance, 5000);
             mockolatier.prepare(Flavour);
         }
         
-        private function niceWithInterface_shouldCreateInstance(event:Event):void
+        private function niceWithInterface_shouldCreateInstance(event:Event, data:Object=null):void
         {
             var flavour:Flavour = mockolatier.nice(Flavour);
             assertThat(flavour, isA(Flavour));
         }
         
-        [Test(async)]
+        [Test(async, timeout=5000)]
         public function niceWithClass():void
         {
-            Async.handleEvent(this, mockolatier, Event.COMPLETE, niceWithClass_shouldCreateInstance);
+            Async.handleEvent(this, mockolatier, Event.COMPLETE, niceWithClass_shouldCreateInstance, 5000);
             mockolatier.prepare(DarkChocolate);
         }
         
-        public function niceWithClass_shouldCreateInstance(event:Event):void
+        public function niceWithClass_shouldCreateInstance(event:Event, data:Object=null):void
         {
             var flavour:Flavour = mockolatier.nice(DarkChocolate);
             assertThat(flavour, isA(DarkChocolate));
@@ -106,27 +107,27 @@ package mockolate.ingredients
         //  Strict
         //
         
-        [Test(async)]
+        [Test(async, timeout=5000)]
         public function strictWithInterface():void
         {
-            Async.handleEvent(this, mockolatier, Event.COMPLETE, strictWithInterface_shouldCreateInstance);
+            Async.handleEvent(this, mockolatier, Event.COMPLETE, strictWithInterface_shouldCreateInstance, 5000);
             mockolatier.prepare(Flavour);
         }
         
-        private function strictWithInterface_shouldCreateInstance(event:Event):void
+        private function strictWithInterface_shouldCreateInstance(event:Event, data:Object=null):void
         {
             var flavour:Flavour = mockolatier.strict(Flavour);
             assertThat(flavour, isA(Flavour));
         }
         
-        [Test(async)]
+        [Test(async, timeout=5000)]
         public function strictWithClass():void
         {
-            Async.handleEvent(this, mockolatier, Event.COMPLETE, strictWithClass_shouldCreateInstance);
+            Async.handleEvent(this, mockolatier, Event.COMPLETE, strictWithClass_shouldCreateInstance, 5000);
             mockolatier.prepare(DarkChocolate);
         }
         
-        private function strictWithClass_shouldCreateInstance(event:Event):void
+        private function strictWithClass_shouldCreateInstance(event:Event, data:Object=null):void
         {
             var flavour:Flavour = mockolatier.strict(DarkChocolate);
             assertThat(flavour, isA(DarkChocolate));
@@ -136,17 +137,17 @@ package mockolate.ingredients
         //  Stubbing Nicely
         //
         
-        [Test(async)]
+        [Test(async, timeout=5000)]
         public function stubWithNice():void
         {
-            Async.handleEvent(this, mockolatier, Event.COMPLETE, stubWithNice);
-            mockolatier.prepare(Flavour);
+            Async.handleEvent(this, mockolatier, Event.COMPLETE, stubWithNice_shouldCreateStubbingCouverture, 5000);
+            mockolatier.prepare(DarkChocolate);
         }
         
-        private function stubWithNice_shouldCreateStubbingCouverture(event:Event):void
+        private function stubWithNice_shouldCreateStubbingCouverture(event:Event, data:Object=null):void
         {
             var flavour:Flavour = mockolatier.nice(DarkChocolate);
-            mockolatier.stub(flavour, "name").returns("VeryDarkChocolate");
+            mockolatier.stub(flavour).method("name").returns("VeryDarkChocolate");
         }
     }
 }
