@@ -53,7 +53,7 @@
 			<keep-as3-metadata name="Mock" />
 			<library-path dir="${lib.loc}" append="true">
 				<include name="asx.swc" />
-				<include name="FlexUnit4.swc" />
+				<include name="flexunit-4.0.0.swc" />
 				<include name="hamcrest.swc" />
 			</library-path>
 			<compiler.external-library-path dir="${lib.loc}" append="true">
