@@ -1,20 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<actionScriptProperties mainApplicationPath="mockolate.as" version="3">
-  <compiler additionalCompilerArguments="" copyDependentFiles="false" enableModuleDebug="true" generateAccessible="false" htmlExpressInstall="true" htmlGenerate="false" htmlHistoryManagement="false" htmlPlayerVersion="9.0.124" htmlPlayerVersionCheck="true" outputFolderPath="bin" sourceFolderPath="src" strict="true" useApolloConfig="false" verifyDigests="true" warn="true">
+<actionScriptProperties mainApplicationPath="mockolate.as" projectUUID="fbfe498a-8411-46dc-a362-2ea7bd223b9d" version="6">
+  <compiler additionalCompilerArguments="-keep-as3-metadata+=Mock" autoRSLOrdering="true" copyDependentFiles="false" generateAccessible="false" htmlExpressInstall="true" htmlGenerate="false" htmlHistoryManagement="false" htmlPlayerVersionCheck="true" includeNetmonSwc="false" outputFolderPath="bin" sourceFolderPath="src" strict="true" targetPlayerVersion="0.0.0" useApolloConfig="false" useDebugRSLSwfs="true" verifyDigests="true" warn="true">
     <compilerSourcePath/>
     <libraryPath defaultLinkType="1">
       <libraryPathEntry kind="4" path=""/>
-      <libraryPathEntry kind="3" linkType="1" path="/asx/bin/asx.swc" useDefaultLinkType="false"/>
-      <libraryPathEntry kind="3" linkType="1" path="/hamcrest/bin/hamcrest.swc" useDefaultLinkType="false"/>
-      <libraryPathEntry kind="3" linkType="1" path="/FLoxy/bin/FLoxy.swc" sourcepath="${DOCUMENTS}/floxy/source/FLoxy/src" useDefaultLinkType="false"/>
       <libraryPathEntry kind="1" linkType="1" path="libs"/>
     </libraryPath>
-    <sourceAttachmentPath>
-      <sourceAttachmentPathEntry kind="3" linkType="1" path="/FLoxy/bin/FLoxy.swc" sourcepath="${DOCUMENTS}/floxy/source/FLoxy/src" useDefaultLinkType="false"/>
-      <sourceAttachmentPathEntry kind="3" linkType="1" path="/Users/drew/Development/workspace/mockolate/mockolate/libs/asx.swc" sourcepath="${DOCUMENTS}/asx/src" useDefaultLinkType="false"/>
-      <sourceAttachmentPathEntry kind="3" linkType="1" path="/Users/drew/Development/workspace/mockolate/mockolate/libs/FLoxy.swc" sourcepath="${DOCUMENTS}/floxy/source/FLoxy/src" useDefaultLinkType="false"/>
-      <sourceAttachmentPathEntry kind="3" linkType="1" path="/Users/drew/Development/workspace/mockolate/mockolate/libs/hamcrest.swc" sourcepath="${DOCUMENTS}/hamcrest-as3/hamcrest/src" useDefaultLinkType="false"/>
-    </sourceAttachmentPath>
+    <sourceAttachmentPath/>
   </compiler>
   <applications>
     <application path="mockolate.as"/>

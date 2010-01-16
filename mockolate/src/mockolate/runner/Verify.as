@@ -22,6 +22,7 @@ package mockolate.runner
       {
          this.properties = names;
          this.verifyMethod = parseVerifyMetadata(method);
+         this.target = target;
       }
 
       private function parseVerifyMetadata (method : FrameworkMethod) : Boolean
@@ -44,15 +45,18 @@ package mockolate.runner
                   return target[property];
                }));
 
-            try
+            for each(var mock : Object in mocksToVerify)
             {
-               verify(mocksToVerify);
-            }
-            catch(error : MockolateError)
-            {
-               //if error is thrown catch it and pass it onto the parentToken
-               parentToken.sendResult(error);
-               return;
+               try
+               {
+                  verify(mock);
+               }
+               catch(error : MockolateError)
+               {
+                  //if error is thrown catch it and pass it onto the parentToken
+                  parentToken.sendResult(error);
+                  return;
+               }
             }
          }
 

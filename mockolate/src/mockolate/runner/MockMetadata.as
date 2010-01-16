@@ -61,7 +61,7 @@ package mockolate.runner
             var injectableValue : String = argument.value;
 
             //possible string values
-            if (!contains([TRUE,  FALSE],  injectable))
+            if (!contains([TRUE,  FALSE],  injectableValue))
             {
                throw new Error(substitute("Property '{}' must declare the attribute inject as either 'true' or 'false'; '{}' is NOT valid.",  this.name,  injectable));
             }
