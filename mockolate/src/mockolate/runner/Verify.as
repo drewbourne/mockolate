@@ -6,6 +6,7 @@ package mockolate.runner
    import mockolate.verify;
    
    import org.flexunit.internals.runners.statements.IAsyncStatement;
+   import org.flexunit.runners.model.FrameworkMethod;
    import org.flexunit.token.AsyncTestToken;
 
    public class Verify implements IAsyncStatement
@@ -17,15 +18,20 @@ package mockolate.runner
 
       private var target : Object;
 
-      public function Verify (metadataValue : String,  names : Array,  target : Object)
+      public function Verify (method : FrameworkMethod,  names : Array,  target : Object)
       {
          this.properties = names;
-         this.verifyMethod = parseVerifyMetadata(metadataValue);
+         this.verifyMethod = parseVerifyMetadata(method);
       }
 
-      private function parseVerifyMetadata (value : String) : Boolean
+      private function parseVerifyMetadata (method : FrameworkMethod) : Boolean
       {
-         return!value || value == "true";
+         const TEST_METADATA : String = "Test";
+         const VERIFY_ARGUMENT : String = "verify";
+         
+         var value : String = method.getSpecificMetaDataArgValue(TEST_METADATA, VERIFY_ARGUMENT);
+         
+         return (!value || value == "true");
       }
 
       public function evaluate (parentToken : AsyncTestToken) : void

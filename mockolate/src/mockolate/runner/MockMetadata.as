@@ -2,13 +2,16 @@ package mockolate.runner
 {
    import asx.array.contains;
    import asx.string.substitute;
-
+   
    import flex.lang.reflect.Klass;
    import flex.lang.reflect.metadata.MetaDataAnnotation;
    import flex.lang.reflect.metadata.MetaDataArgument;
 
    public class MockMetadata
    {
+      private const MOCK_TYPE_ARGUMENT : String = "type";
+      private const INJECT_ARGUMENT : String = "inject";
+      
       public var name : String;
       public var type : Class;
       public var mockType : String;
@@ -18,21 +21,24 @@ package mockolate.runner
       {
          this.name = name;
          this.type = type;
-         this.mockType = parseMockType(metadata.getArgument("type"));
-         this.injectable = parseInject(metadata.getArgument("inject"));
+         this.mockType = parseMockType(metadata.getArgument(MOCK_TYPE_ARGUMENT));
+         this.injectable = parseInject(metadata.getArgument(INJECT_ARGUMENT));
       }
 
       private function parseMockType (argument : MetaDataArgument) : String
       {
+         const NICE : String = "nice";
+         const STRICT : String = "strict";
+         
          //default value
-         var type : String = "nice";
+         var type : String = NICE;
 
          if (argument)
          {
             type = argument.value;
 
             //possible string values
-            if (!contains(["nice",  "strict"],  type))
+            if (!contains([NICE,  STRICT],  type))
             {
                var message : String = substitute("Property '{}' must declare a mock type of either 'nice' or 'strict'; '{}' is NOT a valid type.",  this.name,  type);
                throw new Error(message);
@@ -44,6 +50,9 @@ package mockolate.runner
 
       private function parseInject (argument : MetaDataArgument) : Boolean
       {
+         const TRUE : String = "true";
+         const FALSE : String = "false";
+         
          //default value
          var injectable : Boolean = true;
 
@@ -52,12 +61,12 @@ package mockolate.runner
             var injectableValue : String = argument.value;
 
             //possible string values
-            if (!contains(["true",  "false"],  injectable))
+            if (!contains([TRUE,  FALSE],  injectable))
             {
                throw new Error(substitute("Property '{}' must declare the attribute inject as either 'true' or 'false'; '{}' is NOT valid.",  this.name,  injectable));
             }
 
-            injectable = injectableValue == "true";
+            injectable = injectableValue == TRUE;
 
             if (injectable)
             {

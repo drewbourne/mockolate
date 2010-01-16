@@ -96,8 +96,7 @@ package mockolate.runner
 
          //verify mocks after all afters executes
          var propertiesToVerify : Array = pluck(this.mockMetadatas,  "name");
-         var verifyMetadataValue : String = method.getSpecificMetaDataArgValue("Test", "verify");
-         sequencer.addStep(new Verify(verifyMetadataValue, propertiesToVerify, test));
+         sequencer.addStep(new Verify(method, propertiesToVerify, test));
 
          return sequencer;
       }
