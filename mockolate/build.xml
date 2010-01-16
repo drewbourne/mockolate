@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+	Suggested Usage:
+		ant -v clean package
+	
+	The goal of this build is compile the library SWC, generate FlexPMD reports, generate ASDocs, and 
+	bundle a binary distribution.  Please note that FLoxy.swc is a runtime dependency of this library 
+	so it should be included on the classpath along with this library during compilation. 
+-->
+<project name="mockolate" basedir="." default="package">
+	<property environment="env" />
+
+	<!-- Version config -->
+	<property name="build.groupId" value="mockolate" />
+	<property name="build.artifactId" value="mockolate" />
+	<property name="build.version" value="1.0.0" />
+	<property name="build.finalName" value="${build.artifactId}-${build.version}" />
+
+	<!-- Existing -->
+	<property name="src.loc" location="${basedir}/src" />
+	<property name="lib.loc" location="${basedir}/libs" />
+	<property name="build.lib.loc" location="${basedir}/libs/build" />
+
+	<!-- Generated -->
+	<property name="bin.loc" location="${basedir}/target" />
+	<property name="doc.loc" location="${bin.loc}/doc" />
+	<property name="report.loc" location="${bin.loc}/report" />
+
+	<!-- SDK config -->
+	<property name="FLEX_HOME" location="${env.FLEX_HOME}" />
+	<taskdef resource="flexTasks.tasks" classpath="${FLEX_HOME}/ant/lib/flexTasks.jar" />
+
+	<target name="clean">
+		<delete dir="${bin.loc}" />
+		<delete dir="${doc.loc}" />
+		<delete dir="${report.loc}" />
+		<delete file="${bin.loc}/${build.finalName}.bin.zip" />
+	</target>
+
+	<target name="init">
+		<mkdir dir="${bin.loc}" />
+		<mkdir dir="${doc.loc}" />
+		<mkdir dir="${report.loc}" />
+	</target>
+
+	<target name="compile" depends="init">
+		<!-- Compile SWC -->
+		<compc output="${bin.loc}/${build.finalName}.swc">
+			<include-sources dir="${src.loc}">
+				<include name="**/*" />
+			</include-sources>
+			<source-path path-element="${src.loc}" />
+			<keep-as3-metadata name="Mock" />
+			<library-path dir="${lib.loc}" append="true">
+				<include name="asx.swc" />
+				<include name="FlexUnit4.swc" />
+				<include name="hamcrest.swc" />
+			</library-path>
+			<compiler.external-library-path dir="${lib.loc}" append="true">
+				<include name="FLoxy.swc" />
+			</compiler.external-library-path>
+			<compiler.external-library-path dir="${FLEX_HOME}/frameworks/libs" append="true">
+				<include name="flex.swc" />
+				<include name="framework.swc" />
+				<include name="rpc.swc" />
+				<include name="utilities.swc" />
+			</compiler.external-library-path>
+			<compiler.verbose-stacktraces>true</compiler.verbose-stacktraces>
+			<compiler.headless-server>true</compiler.headless-server>
+		</compc>
+	</target>
+
+	<target name="report" depends="compile">
+		<!-- FlexPMD config -->
+		<property name="flexpmd.version" value="1.0" />
+		<path id="flexpmd.base">
+			<pathelement location="${build.lib.loc}/as3-parser-${flexpmd.version}.jar" />
+			<pathelement location="${build.lib.loc}/as3-parser-api-${flexpmd.version}.jar" />
+			<pathelement location="${build.lib.loc}/as3-plugin-utils-${flexpmd.version}.jar" />
+			<pathelement location="${build.lib.loc}/flex-pmd-files-${flexpmd.version}.jar" />
+			<pathelement location="${build.lib.loc}/pmd-4.2.5.jar" />
+		</path>
+
+		<taskdef name="pmd" classname="com.adobe.ac.pmd.ant.FlexPmdAntTask" classpath="${build.lib.loc}/flex-pmd-ant-task-${flexpmd.version}.jar">
+			<classpath>
+				<path refid="flexpmd.base" />
+				<pathelement location="${build.lib.loc}/commons-lang-2.4.jar" />
+				<pathelement location="${build.lib.loc}/flex-pmd-core-${flexpmd.version}.jar" />
+				<pathelement location="${build.lib.loc}/flex-pmd-ruleset-api-${flexpmd.version}.jar" />
+				<pathelement location="${build.lib.loc}/flex-pmd-ruleset-${flexpmd.version}.jar" />
+				<pathelement location="${build.lib.loc}/plexus-utils-1.0.2.jar" />
+			</classpath>
+		</taskdef>
+
+		<taskdef name="cpd" classname="com.adobe.ac.cpd.ant.FlexCpdAntTask" classpath="${build.lib.loc}/flex-pmd-cpd-ant-task-${flexpmd.version}.jar">
+			<classpath>
+				<path refid="flexpmd.base" />
+				<pathelement location="${build.lib.loc}/flex-pmd-cpd-${flexpmd.version}.jar" />
+			</classpath>
+		</taskdef>
+
+		<taskdef name="metrics" classname="com.adobe.ac.pmd.metrics.ant.FlexMetricsAntTask" classpath="${build.lib.loc}/flex-pmd-metrics-ant-task-${flexpmd.version}.jar">
+			<classpath>
+				<path refid="flexpmd.base" />
+				<pathelement location="${build.lib.loc}/commons-lang-2.4.jar" />
+				<pathelement location="${build.lib.loc}/dom4j-1.6.1.jar" />
+				<pathelement location="${build.lib.loc}/flex-pmd-metrics-${flexpmd.version}.jar" />
+				<pathelement location="${build.lib.loc}/flex-pmd-ruleset-api-${flexpmd.version}.jar" />
+			</classpath>
+		</taskdef>
+
+		<!-- Executions -->
+		<pmd sourceDirectory="${src.loc}" outputDirectory="${report.loc}" />
+
+		<cpd minimumTokenCount="50" outputFile="${report.loc}/cpd.xml">
+			<fileset dir="${src.loc}">
+				<include name="**/*.as" />
+				<include name="**/*.mxml" />
+			</fileset>
+		</cpd>
+
+		<metrics sourcedirectory="${src.loc}" outputfile="${report.loc}/javancss.xml" />
+
+		<!-- Generate asdocs -->
+		<java jar="${FLEX_HOME}/lib/asdoc.jar" fork="true" failonerror="true">
+			<arg line="+flexlib '${FLEX_HOME}/frameworks'" />
+			<arg line="-doc-sources '${src.loc}'" />
+			<arg line="-source-path+='${src.loc}'" />
+			<arg line="-output '${doc.loc}'" />
+			<arg line="-library-path+='${lib.loc}'" />
+			<arg line="-main-title 'mockolate API Documentation'" />
+			<arg line="-window-title 'mockolate API Documentation'" />
+		</java>
+	</target>
+
+	<target name="package" depends="report">
+		<!-- Create distribution for binaries with docs -->
+		<zip destfile="${bin.loc}/${build.finalName}.bin.zip">
+			<zipfileset dir="${doc.loc}" prefix="docs" />
+			<zipfileset dir="${bin.loc}">
+				<include name="${build.finalName}.swc" />
+			</zipfileset>
+			<zipfileset dir="${lib.loc}" prefix="libs">
+				<include name="FLoxy.swc" />
+			</zipfileset>
+		</zip>
+	</target>
+</project>
