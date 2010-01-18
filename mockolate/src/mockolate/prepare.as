@@ -1,5 +1,9 @@
 package mockolate
 {
+    import asx.array.filter;
+    import asx.array.reject;
+    import asx.object.isA;
+    
     import flash.events.EventDispatcher;
     import flash.events.IEventDispatcher;
     

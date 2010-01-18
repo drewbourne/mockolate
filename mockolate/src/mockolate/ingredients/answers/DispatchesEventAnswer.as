@@ -54,6 +54,7 @@ package mockolate.ingredients.answers
          */
         protected function dispatchEvent():void
         {
+        	trace('dispatchesEvent', _event);
             _dispatcher.dispatchEvent(_event);
         }
     }

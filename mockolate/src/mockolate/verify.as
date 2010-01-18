@@ -3,6 +3,8 @@ package mockolate
     import mockolate.ingredients.MockolatierMaster;
     import mockolate.ingredients.VerifyingCouverture;
     
+    // TODO verify() with no targets verifies all the mockolates
+    
     /**
      * Verify Expectations and Invocations.
      * 

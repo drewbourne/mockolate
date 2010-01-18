@@ -1,9 +1,11 @@
 package mockolate.ingredients.floxy
 {
-    import org.floxy.IInvocation;
+    import asx.string.formatToString;
     
     import mockolate.ingredients.Invocation;
     import mockolate.ingredients.InvocationType;
+    
+    import org.floxy.IInvocation;
     
     /**
      * Wraps the FLoxy IInvocation type in the Mockolate Invocation interface.
@@ -87,6 +89,11 @@ package mockolate.ingredients.floxy
         public function proceed():void
         {
             _invocation.proceed();
+        }
+        
+        public function toString():String 
+        {
+        	return formatToString(this, 'FloxyInvocation', ['target', 'name', 'arguments']);
         }
     }
 }

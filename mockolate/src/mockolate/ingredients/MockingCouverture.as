@@ -23,6 +23,7 @@ package mockolate.ingredients
     
     import org.hamcrest.Matcher;
     import org.hamcrest.collection.array;
+    import org.hamcrest.collection.emptyArray;
     import org.hamcrest.core.anyOf;
     import org.hamcrest.core.anything;
     import org.hamcrest.date.dateEqual;
@@ -252,12 +253,11 @@ package mockolate.ingredients
          * 	// "[Instance]" 
          * </listing>
          */
-        public function returns(value:*):MockingCouverture
+        public function returns(value:*, ...values):MockingCouverture
         {
         	// FIXME first set returns() value wins, should be last.
-        	// FIMXE support return value sequence.
         
-            addReturns(value);
+            addReturns.apply(null, [ value ].concat(values));
             return this;
         }
         
@@ -544,7 +544,7 @@ package mockolate.ingredients
 
         	if (!expectation && this.mockolate.isStrict)
             	throw new InvocationError(
-            		["No method Expectations defined for Invocation:{}", [invocation]], 
+            		["No method Expectation defined for Invocation:{}", [invocation]], 
             		invocation, this.mockolate, this.mockolate.target);
         	
         	return expectation;
@@ -608,6 +608,8 @@ package mockolate.ingredients
         	// EventDispatcher instance than the proxied instance in order to
         	// actually dispatch events and avoid recursive stack overflows. 
         	//
+        	trace('invokedAsMethod', invocation.name, (this.mockolate.target is IEventDispatcher));
+        	
         	if (this.mockolate.target is IEventDispatcher
         	&& contains(['addEventListener', 'dispatchEvent', 'hasEventListener', 'removeEventListener', 'willTrigger'], invocation.name))
         	{
@@ -615,6 +617,8 @@ package mockolate.ingredients
         		{
         			_eventDispatcher = new EventDispatcher(this.mockolate.target);
         		}
+        		
+        		trace('invokedAsMethod', invocation.name, invocation.arguments);
         		
         		_eventDispatcher[invocation.name].apply(null, invocation.arguments);	
         	}
@@ -717,7 +721,7 @@ package mockolate.ingredients
          */
         protected function setNoArgs():void
         {
-            _currentExpectation.argsMatcher = nullValue();
+            _currentExpectation.argsMatcher = emptyArray();
         }
         
         /**
@@ -733,10 +737,10 @@ package mockolate.ingredients
          */
         protected function valueToMatcher(value:*):Matcher
         {
-        	// when the value is RegExp
-        	// then match either a reference to the given RegExp
-        	// or create a Matcher for that RegExp
-        	//
+        	  // when the value is RegExp
+        	  // then match either a reference to the given RegExp
+        	  // or create a Matcher for that RegExp
+        	  //
             if (value is RegExp)
             {
                 return anyOf(equalTo(value), re(value as RegExp));
@@ -777,6 +781,7 @@ package mockolate.ingredients
             return equalTo(value);
         }
         
+        // FIXME rename setReceiveCount to something better
         /**
          * @private
          */
@@ -827,9 +832,9 @@ package mockolate.ingredients
         /**
          * @private
          */
-        protected function addReturns(value:*):void
+        protected function addReturns(value:*, ...values):void
         {
-            addAnswer(new ReturnsAnswer([ value ]));
+            addAnswer(new ReturnsAnswer([ value ].concat(values)));
         }
         
         /**
