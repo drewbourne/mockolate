@@ -1,13 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--
-	Suggested Usage:
-		ant -v clean package
-	
-	The goal of this build is compile the library SWC, generate FlexPMD reports, generate ASDocs, and 
-	bundle a binary distribution.  Please note that FLoxy.swc is a runtime dependency of this library 
-	so it should be included on the classpath along with this library during compilation. 
--->
-<project name="mockolate" basedir="." default="package">
+<project name="mockolate-library" basedir="." default="report">
 	<property environment="env" />
 
 	<!-- Version config -->
@@ -131,18 +123,5 @@
 			<arg line="-main-title 'mockolate API Documentation'" />
 			<arg line="-window-title 'mockolate API Documentation'" />
 		</java>
-	</target>
-
-	<target name="package" depends="report">
-		<!-- Create distribution for binaries with docs -->
-		<zip destfile="${bin.loc}/${build.finalName}.bin.zip">
-			<zipfileset dir="${doc.loc}" prefix="docs" />
-			<zipfileset dir="${bin.loc}">
-				<include name="${build.finalName}.swc" />
-			</zipfileset>
-			<zipfileset dir="${lib.loc}" prefix="libs">
-				<include name="FLoxy.swc" />
-			</zipfileset>
-		</zip>
 	</target>
 </project>

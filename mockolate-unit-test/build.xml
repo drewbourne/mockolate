@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="mockolate-unit-test" basedir="." default="report">
+	<property environment="env" />
+
+	<!-- Version config -->
+	   <property name="build.groupId" value="mockolate" />
+	   <property name="build.artifactId" value="mockolate" />
+	   <property name="build.version" value="1.0.0" />
+	   <property name="build.finalName" value="${build.artifactId}-${build.version}" />
+	
+	<!-- Existing -->
+	<property name="test.loc" location="${basedir}/src" />
+	<property name="lib.loc" location="${basedir}/libs" />
+	<property name="build.lib.loc" location="${basedir}/libs/build" />
+
+	<!-- Generated -->
+	<property name="bin.loc" location="${basedir}/target" />
+	<property name="report.loc" location="${bin.loc}/report" />
+
+	<target name="clean">
+		<delete dir="${bin.loc}" />
+		<delete dir="${report.loc}" />
+	</target>
+
+	<target name="init">
+		<mkdir dir="${bin.loc}" />
+		<mkdir dir="${report.loc}" />
+	</target>
+
+	<target name="compile" depends="init">
+		<property name="FLEX_HOME" location="${env.FLEX_HOME}" />
+		<taskdef resource="flexTasks.tasks" classpath="${FLEX_HOME}/ant/lib/flexTasks.jar" />
+
+		<!-- Compile test SWF -->
+		<mxmlc file="${test.loc}/MockolateTestRunner.mxml" output="${bin.loc}/MockolateTestRunner.swf">
+			<library-path dir="${bin.loc}" append="true">
+				<include name="${build.finalName}.swc" />
+			</library-path>
+			<library-path dir="${lib.loc}" append="true">
+				<include name="*.swc" />
+			</library-path>
+			<compiler.verbose-stacktraces>true</compiler.verbose-stacktraces>
+			<compiler.headless-server>true</compiler.headless-server>
+		</mxmlc>
+	</target>
+
+	<target name="test" depends="compile">
+		<taskdef resource="flexUnitTasks.tasks" classpath="${build.lib.loc}/flexUnitTasks-4.0.0.jar" />
+		<flexunit swf="${bin.loc}/MockolateTestRunner.swf" toDir="${report.loc}" haltonfailure="false" verbose="true" localTrusted="true" />
+	</target>
+
+	<target name="report" depends="test">
+		<junitreport todir="${report.loc}">
+			<fileset dir="${report.loc}">
+				<include name="TEST-*.xml" />
+			</fileset>
+			<report format="frames" todir="${report.loc}/html" />
+		</junitreport>
+	</target>
+</project>
