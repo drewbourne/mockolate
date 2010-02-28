@@ -6,6 +6,7 @@ package mockolate.ingredients
     import flash.utils.getTimer;
     
     import mockolate.ingredients.answers.CallsAnswer;
+    import mockolate.ingredients.answers.CallsWithInvocationAnswer;
     import mockolate.ingredients.answers.ThrowsAnswer;
     import mockolate.ingredients.faux.FauxInvocation;
     
@@ -13,6 +14,7 @@ package mockolate.ingredients
     import org.flexunit.async.Async;
     import org.hamcrest.collection.array;
     import org.hamcrest.number.greaterThanOrEqualTo;
+    import org.hamcrest.object.equalTo;
     import org.hamcrest.object.hasProperty;
     import org.hamcrest.object.isTrue;
     
@@ -33,7 +35,6 @@ package mockolate.ingredients
             this.mockolate.target = target;
             
             mocker = new MockingCouverture(mockolate);
-            invocation = new FauxInvocation({ name: "example" })
         }
         
         public function invoke(options:Object):Invocation 
@@ -41,11 +42,6 @@ package mockolate.ingredients
             var invocation:Invocation = new FauxInvocation(options);
             mocker.invoked(invocation);
             return invocation;
-        }
-        
-        public function invocation(options:Object):Invocation
-        {
-            return new FauxInvocation(options);
         }
         
         // method, no args, no return
@@ -62,140 +58,6 @@ package mockolate.ingredients
             mocker.method("example");
             invoke({ name: "example" });
             mocker.verify();
-        }
-        
-        //
-        //	methods
-        //
-        
-        //
-        //	properties
-        //
-        
-        //
-        //	args
-        //
-        
-        //
-        //	answers
-        //
-        
-        // 	returns
-                
-        [Test]
-        public function method_returns():void 
-        {
-        	mocker.method("example").returns(42);
-        	mocker.invoked(invocation);
-        	assertThat(invocation.returnValue, equalTo(42));
-        }
-        
-        [Test]
-        public function method_returns_sequence():void 
-        {
-        	mocker.method("example").returns(1, 3, 5);
-        	// should return each value in the sequence
-        	mocker.invoked(invocation);
-        	assertThat(invocation.returnValue, equalTo(1));
-        	mocker.invoked(invocation);
-        	assertThat(invocation.returnValue, equalTo(3));
-        	mocker.invoked(invocation);
-        	assertThat(invocation.returnValue, equalTo(5));
-        	// should repeat last sequence value
-        	mocker.invoked(invocation);
-        	assertThat(invocation.returnValue, equalTo(5));
-        }
-        
-        //	calls
-        
-        [Test]
-        public function method_calls():void 
-        {
-        	var called:Boolean = false;
-        	var callee:Function = function():void { called = true; }
-        	
-        	mocker.method("example").calls(callee);
-        	mocker.invoked(invocation);
-        	assertThat(called, equalTo(true));
-        }
-        
-        [Test]
-        public function method_calls_withArgs():void 
-        {
-        	var result:int;
-        	var called:Boolean = false;
-        	var callee:Function = function(a:int, b:int):void { result = a + b; }
-        	
-        	mocker.method("example").calls(callee, [1, 2]);
-        	mocker.invoked(invocation);
-        	assertThat(result, equalTo(3));
-        }
-        
-        //	dispatches
-        
-        [Test(async, timeout=1000)]
-        public function method_dispatches():void 
-        {
-			this.mockolate.target = new EventDispatcher();
-			(this.mockolate.target as IEventDispatcher).addEventListener(Event.COMPLETE, function(event:Event):void {
-				trace('method_dispatches', event.target);
-			});
-			      	
-        	Async.proceedOnEvent(this, this.mockolate.target, Event.COMPLETE);
-        	mocker.method("example").dispatches(new Event(Event.COMPLETE));
-        	mocker.invoked(invocation);
-        }
-        
-        [Test(expected="mockolate.errors.ExpectationError")]
-        public function method_dispatches_complainsWhenTargetIsNotIEventDispatcher():void 
-        {
-        	this.mockolate.target = { example: function():void {} };         	
-        	Async.proceedOnEvent(this, this.mockolate.target, Event.COMPLETE);
-        	mocker.method("example").dispatches(new Event(Event.COMPLETE));
-        }
-        
-        [Test(async, timeout=1000)]
-        public function method_dispatches_withDelay():void 
-        {
-        	var start:int = getTimer();
-        	var assert:Function = function(event:Event, data:Object=null):void {
-        		assertThat(getTimer() - start, greaterThanOrEqualTo(300));
-        	};
-        	
-        	this.mockolate.target = new EventDispatcher();      	
-        	Async.handleEvent(this, this.mockolate.target, Event.COMPLETE, assert, 500);
-        	mocker.method("example").dispatches(new Event(Event.COMPLETE), 300);
-        	mocker.invoked(invocation);
-        }
-        
-        // 	throws
-        
-        [Test(expected="Error")]
-        public function method_throws():void 
-        {
-        	mocker.method("example").throws(new Error("Oh No!"));
-        	mocker.invoked(invocation);
-        }
-        
-        // proceeds
-        
-        [Test]
-        public function method_proceeds():void
-        {
-//        	mocker.method("example").proceeds();
-//        	mocker.invoked(invocation);
-        }
-        
-        // 	answers
-        
-        [Test]
-        public function method_answers():void 
-        {
-        	var called:Invocation = null;
-        	var callee:Function = function(value:Invocation):void { called = value; }
-        	
-        	mocker.method("example").answers(new CallsWithInvocationAnswer(callee));
-        	mocker.invoked(invocation);        	
         }
         
         //
@@ -283,20 +145,16 @@ package mockolate.ingredients
         	mocker.verify();
         }
 
-        [Test]
-        public function method_times():void 
-        {
-        	mocker.method("example").once();
-        	mocker.invoked(invocation);
-        	mocker.verify();
-        }
-       
         [Test(expected="mockolate.errors.InvocationError")]
         public function never():void 
         {
         	mocker.method("example").never();
         	invoke({ name: "example" });
         }
+        
+        //
+        //    args
+        //
         
         [Test]
         public function noArgs_shouldPassIfInvokedWithNoArguments():void 
@@ -331,6 +189,10 @@ package mockolate.ingredients
             invoke({ name: "example", arguments: [ 1, 2 ] });
             mocker.verify();
         }
+        
+        //
+        //    returns
+        //
     
         [Test]
         public function return_shouldReturnValue():void 
@@ -348,12 +210,38 @@ package mockolate.ingredients
             mocker.verify();
         }
         
+        [Test]
+        public function returns_sequence():void 
+        {
+            var invocation:Invocation;
+            
+        	mocker.method("example").returns(1, 3, 5);
+        	// should return each value in the sequence
+        	invocation = invoke({ name: "example" });
+        	assertThat(invocation.returnValue, equalTo(1));
+        	invocation = invoke({ name: "example" });
+        	assertThat(invocation.returnValue, equalTo(3));
+        	invocation = invoke({ name: "example" });
+        	assertThat(invocation.returnValue, equalTo(5));
+        	// should repeat last sequence value
+        	invocation = invoke({ name: "example" });
+        	assertThat(invocation.returnValue, equalTo(5));
+        }
+        
+        //
+        //    throws
+        //
+        
         [Test(expected="Error")]
         public function throws_shouldThrowError():void 
         {
             mocker.method("example").throws(new Error("Oh no!"));
             invoke({ name: "example" });
         }
+        
+        //
+        //    calls
+        //
         
         [Test]
         public function calls_shouldCallFunction():void 
@@ -389,6 +277,10 @@ package mockolate.ingredients
             
             mocker.verify();
         }
+        
+        //
+        //    dispatches
+        //
         
         [Test(async)]
         public function dispatches_shouldDispatchEvent():void 
@@ -487,6 +379,10 @@ package mockolate.ingredients
             mocker.verify();
         }
         
+        //
+        //    pass
+        //
+        
         [Test(async)]
         public function pass_shouldProceedWithOriginalImplementation():void 
         {
@@ -503,6 +399,10 @@ package mockolate.ingredients
             
             mocker.verify();
         }
+        
+        //
+        //    answers
+        //
         
         [Test(expected="Error")]
         public function answers_callsAnswerInvokeWithInvocation():void 

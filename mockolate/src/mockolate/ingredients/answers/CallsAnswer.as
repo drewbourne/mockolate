@@ -37,7 +37,7 @@ package mockolate.ingredients.answers
          */
         public function invoke(invocation:Invocation):*
         {
-            _function.apply(null, _args.slice(0, _function.length));
+            _function.apply(null, _args);
             return undefined;
         }
     }
