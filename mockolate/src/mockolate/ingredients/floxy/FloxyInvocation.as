@@ -93,7 +93,7 @@ package mockolate.ingredients.floxy
         
         public function toString():String 
         {
-        	return formatToString(this, 'FloxyInvocation', ['target', 'name', 'arguments']);
+            return formatToString(this, "FloxyInvocation", ["invocationType", "name", "arguments"]);
         }
     }
 }

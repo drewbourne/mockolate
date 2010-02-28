@@ -134,33 +134,33 @@ package mockolate
         [Test]
         public function stubbingMethodToCallFunction():void 
         {
-        	var called:Boolean = false;
-        	var instance:Flavour = nice(Flavour);
-        	
-        	stub(instance).method("combine").args(anything()).calls(function():void {
-        		called = true;	
-        	});	
-        	
-        	instance.combine(null);
-        	
-        	assertThat(called, equalTo(true));
+            var called:Boolean = false;
+            var instance:Flavour = nice(Flavour);
+            
+            stub(instance).method("combine").args(anything()).calls(function():void {
+                called = true;	
+            });
+            
+            instance.combine(null);
+            
+            assertThat(called, equalTo(true));
         }
         
         [Test]
         public function stubbingMethodToDispatchEvent():void 
         {
-        	var dispatched:Boolean = false;
-			var instance:DarkChocolate = nice(DarkChocolate);
-			
-			stub(instance).method("combine").args(anything()).dispatches(new Event("flavoursCombined"));
-			
-			instance.addEventListener("flavoursCombined", function(event:Event):void {
-				dispatched = true;
-			});
-			
-			instance.combine(null);
-			
-			assertThat(dispatched, equalTo(true));
-        }        
+            var dispatched:Boolean = false;
+            var instance:DarkChocolate = nice(DarkChocolate);
+          
+            stub(instance).method("combine").args(anything()).dispatches(new Event("flavoursCombined"));
+          
+            instance.addEventListener("flavoursCombined", function(event:Event):void {
+                dispatched = true;
+            });
+            
+            instance.combine(null);
+            
+            assertThat(dispatched, equalTo(true));
+        }
     }
 }

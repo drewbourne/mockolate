@@ -2,9 +2,10 @@ package mockolate
 {
 	import mockolate.ingredients.*;
 	import mockolate.ingredients.floxy.InterceptingCouvertureTest;
+	import mockolate.sample.MockolateRunnerExample;
 
 	[Suite]
-    [RunWith("org.flexunit.runners.Suite")]
+   [RunWith("org.flexunit.runners.Suite")]
 	public class MockolateSuite
 	{
 		//
@@ -36,5 +37,8 @@ package mockolate
 		public var usingStub:StubbingMockolates;
 		public var usingMock:MockingMockolates;
 		public var usingVerify:VerifyingMockolates;
+      
+      //runner
+      public var runnerExample : MockolateRunnerExample;
 	}
 }

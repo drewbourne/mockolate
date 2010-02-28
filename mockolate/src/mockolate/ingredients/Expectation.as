@@ -115,21 +115,38 @@ package mockolate.ingredients
 	    private var _argsMatcher:Matcher;
 	    
 	    /**
-	     * Matcher for the number of times this Expectation should be invoked. 
+	     * Matcher to check if this Expectation is eligible to be invoked. 
 	     * 
 	     * @see #eligible()
 	     */
-	    public function get invokeCountMatcher():Matcher
+	    public function get invokeCountEligiblityMatcher():Matcher 
 	    {
-	    	return _invokeCountMatcher;
+	        return _invokeCountEligibilityMatcher;
 	    }
 	    
-	    public function set invokeCountMatcher(value:Matcher):void 
+	    public function set invokeCountEligiblityMatcher(value:Matcher):void 
 	    {
-	    	_invokeCountMatcher = value;
+	        _invokeCountEligibilityMatcher = value;
 	    }
 	    
-	    private var _invokeCountMatcher:Matcher;
+	    private var _invokeCountEligibilityMatcher:Matcher;
+	    
+	    /**
+	     * Matcher for the number of times this Expectation should be invoked. 
+	     * 
+	     * @see #verify()
+	     */
+	    public function get invokeCountVerificationMatcher():Matcher
+	    {
+	    	return _invokeCountVerificationMatcher;
+	    }
+	    
+	    public function set invokeCountVerificationMatcher(value:Matcher):void 
+	    {
+	    	_invokeCountVerificationMatcher = value;
+	    }
+	    
+	    private var _invokeCountVerificationMatcher:Matcher;
 
 		/**
 	     * Indicates the number of times this Expectation has been invoked. 
@@ -236,8 +253,8 @@ package mockolate.ingredients
 	    		return false; 
 	    	}
 	    	
-	    	if (!invokeCountMatcher 
-	    	|| invokeCountMatcher.matches(invokedCount + 1))
+	    	if (!invokeCountEligiblityMatcher 
+	    	|| invokeCountEligiblityMatcher.matches(invokedCount + 1))
 	    	{
 				return true;
 	    	}	

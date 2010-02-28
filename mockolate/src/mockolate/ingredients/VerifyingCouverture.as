@@ -167,18 +167,18 @@ package mockolate.ingredients
             return this;
         }
         
-        /**
-         * Verifies if a method or property was not invoked. 
-         * 
-         * @example
-         * <listing version="3.0">
-         * 	verify(instance).property("enabled").never();
-         * </listing>
-         */
-        public function never():VerifyingCouverture
-        {
-            return times(0);
-        }
+//        /**
+//         * Verifies if a method or property was not invoked. 
+//         * 
+//         * @example
+//         * <listing version="3.0">
+//         * 	verify(instance).property("enabled").never();
+//         * </listing>
+//         */
+//        public function never():VerifyingCouverture
+//        {
+//            return times(0);
+//        }
         
         /**
          * Verifies if a method or property was invoked one time. 

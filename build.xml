@@ -1,0 +1,60 @@
+<!--
+   Suggested Usage:
+      ant -v clean package
+   
+   The goal of this build is compile the library SWC, generate FlexPMD reports, generate ASDocs, and 
+   bundle a binary distribution.  Please note that FLoxy.swc is a runtime dependency of this library 
+   so it should be included on the classpath along with this library during compilation. 
+-->
+<project name="mockolate" basedir="." default="package">
+	<!-- Version config -->
+	<property name="build.groupId" value="mockolate" />
+	<property name="build.artifactId" value="mockolate" />
+	<property name="build.version" value="1.0.0" />
+	<property name="build.finalName" value="${build.artifactId}-${build.version}" />
+
+	<!-- Existing -->
+	<property name="library.loc" location="${basedir}/mockolate" />
+	<property name="tests.loc" location="${basedir}/mockolate-unit-test" />
+
+	<target name="clean">
+		<ant dir="${library.loc}" target="clean" inheritall="false">
+			<propertyset>
+				<propertyref prefix="build" />
+			</propertyset>
+		</ant>
+		
+		<ant dir="${tests.loc}" target="clean" inheritall="false" />
+
+		<delete file="${tests.loc}/libs/${build.finalName}.swc" />
+		<delete file="${tests.loc}/libs/FLoxy.swc" />
+
+		<delete file="${basedir}/${build.finalName}.bin.zip" />
+	</target>
+
+	<!-- Generate all artifacts and reports -->
+	<target name="prepare">
+		<!-- Build library -->
+		<ant dir="${library.loc}" target="report" inheritall="false" />
+
+		<!-- Copy over library and FLoxy dependencies to run tests -->
+		<copy file="${library.loc}/target/${build.finalName}.swc" tofile="${tests.loc}/libs/${build.finalName}.swc" />
+		<copy file="${library.loc}/libs/FLoxy.swc" tofile="${tests.loc}/libs/FLoxy.swc" />
+
+		<!-- Run tests -->
+		<ant dir="${tests.loc}" target="report" inheritall="false" />
+	</target>
+
+	<!-- Create distribution for binaries with docs -->
+	<target name="package" depends="prepare">
+		<zip destfile="${basedir}/${build.finalName}.bin.zip">
+			<zipfileset dir="${library.loc}/target/doc" prefix="doc" />
+			<zipfileset dir="${library.loc}/target">
+				<include name="${build.finalName}.swc" />
+			</zipfileset>
+			<zipfileset dir="${library.loc}/libs" prefix="libs">
+				<include name="FLoxy.swc" />
+			</zipfileset>
+		</zip>
+	</target>
+</project>

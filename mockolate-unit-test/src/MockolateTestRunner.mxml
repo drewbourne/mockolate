@@ -1,30 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:Application 
-    layout="absolute"
+<mx:Application layout="absolute"
     creationComplete="run()"
     xmlns:flexui="org.flexunit.flexui.*"
     xmlns:mx="http://www.adobe.com/2006/mxml">
 
-    <mx:Script>
-        <![CDATA[
-        	import mockolate.MockolateSuite;
-            import org.flexunit.listeners.UIListener;
-            import org.flexunit.runner.FlexUnitCore;
-            
-            private var core:FlexUnitCore;
-            
-            public function run():void
-            {
-                core = new FlexUnitCore();
-                core.addListener(new UIListener(uiListener));
-                core.run(MockolateSuite);
-            }
-        ]]>
-    </mx:Script>
+   <mx:Script>
+      <![CDATA[
+          import org.flexunit.internals.TraceListener;
+         import mockolate.MockolateSuite;
+         import mockolate.runner.MockolateRunner;
+         
+         import org.flexunit.listeners.CIListener;
+         import org.flexunit.listeners.UIListener;
+         import org.flexunit.runner.FlexUnitCore;
 
-    <flexui:TestRunnerBase 
-        id="uiListener"
-        width="100%"
-        height="100%" />
+         private var core : FlexUnitCore;
+         private var runner : MockolateRunner;
+
+         public function run () : void
+         {
+            core = new FlexUnitCore();
+            core.addListener(new TraceListener());
+            core.addListener(new UIListener(uiListener));
+            core.addListener(new CIListener());
+            core.run(MockolateSuite);
+         }
+      ]]>
+   </mx:Script>
+
+   <flexui:TestRunnerBase id="uiListener"
+      width="100%"
+      height="100%"/>
 
 </mx:Application>
