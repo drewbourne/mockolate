@@ -152,7 +152,7 @@ Spying on Mockolates is a little bit like verifying and a lot more like stubbing
         // check that flavour.combine() was called with any args
         verify(flavour).method("combine").args(anything());
         
-        // check that flavour.combine() was called a specific instance of flavour
+        // check that flavour.combine() was called with a specific instance of flavour
         verify(flavour).method("combine").args(strictlyEqualTo(otherFlavour));        
         
         // check that flavour.combine() was called with a number of flavours, any instance.
@@ -171,6 +171,3 @@ Mockolate internals is currently a bit rough and are being whipped into shape ra
 Richard Szalay with [FLoxy](http://code.google.com/p/floxy/), and Maxim Porges with [Loom](http://code.google.com/p/loom-as3/) for their work on Class proxy generation. 
 
 Brian LeGros for hassling me about [mock-as3](http://code.google.com/p/mock-as3/) enough that I added class proxy generation to it. Except you can probably ignore that project in favour of Mockolate.
-
-
-

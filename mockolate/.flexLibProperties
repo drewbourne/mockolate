@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<flexLibProperties includeAllClasses="false" version="1">
+<flexLibProperties version="1">
   <includeClasses>
     <classEntry path="mockolate.ingredients.faux.FauxFloxyInvocation"/>
     <classEntry path="mockolate.ingredients.MockolatierMaster"/>
@@ -8,30 +8,36 @@
     <classEntry path="mockolate.ingredients.Mockolate"/>
     <classEntry path="mockolate.ingredients.Couverture"/>
     <classEntry path="mockolate.ingredients.answers.ThrowsAnswer"/>
-    <classEntry path="mockolate.errors.InvocationError"/>
     <classEntry path="mockolate.ingredients.Expectation"/>
+    <classEntry path="mockolate.errors.InvocationError"/>
     <classEntry path="mockolate.ingredients.mockolate_ingredient"/>
     <classEntry path="mockolate.strict"/>
+    <classEntry path="mockolate.runner.MockolateRunner"/>
     <classEntry path="mockolate.mock"/>
     <classEntry path="mockolate.ingredients.Invocation"/>
     <classEntry path="mockolate.ingredients.floxy.FloxyMockolateFactory"/>
     <classEntry path="mockolate.make"/>
     <classEntry path="mockolate.verify"/>
+    <classEntry path="mockolate.runner.Inject"/>
     <classEntry path="mockolate.ingredients.floxy.FloxyMockolate"/>
     <classEntry path="mockolate.nice"/>
     <classEntry path="mockolate.ingredients.answers.DispatchesEventAnswer"/>
     <classEntry path="mockolate.ingredients.answers.CallsAnswer"/>
     <classEntry path="mockolate.prepare"/>
     <classEntry path="mockolate.ingredients.answers.PassThroughAnswer"/>
+    <classEntry path="mockolate.ingredients.answers.MethodInvokingAnswer"/>
     <classEntry path="mockolate.ingredients.answers.ReturnsValueAnswer"/>
     <classEntry path="mockolate.ingredients.InvocationType"/>
     <classEntry path="mockolate.errors.VerificationError"/>
     <classEntry path="mockolate.ingredients.VerifyingCouverture"/>
+    <classEntry path="mockolate.runner.Prepare"/>
+    <classEntry path="mockolate.runner.Verify"/>
     <classEntry path="mockolate.ingredients.faux.FauxMockolate"/>
     <classEntry path="mockolate.errors.MockolateError"/>
     <classEntry path="mockolate.errors.ExpectationError"/>
     <classEntry path="mockolate.ingredients.Verification"/>
     <classEntry path="mockolate.ingredients.MockolateFactory"/>
+    <classEntry path="mockolate.runner.MockMetadata"/>
     <classEntry path="mockolate.stub"/>
     <classEntry path="mockolate.ingredients.floxy.FloxyInvocation"/>
     <classEntry path="mockolate.ingredients.Mockolatier"/>
@@ -41,10 +47,6 @@
     <classEntry path="mockolate.ingredients.floxy.InterceptingCouverture"/>
     <classEntry path="mockolate.ingredients.answers.ReturnsAnswer"/>
     <classEntry path="mockolate.ingredients.RecordingCouverture"/>
-    <classEntry path="mockolate.runner.Runner"/>
-    <classEntry path="mockolate.runner.Verify"/>
-    <classEntry path="mockolate.runner.Inject"/>
-    <classEntry path="mockolate.runner.Prepare"/>
   </includeClasses>
   <includeResources/>
   <namespaceManifests/>

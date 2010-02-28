@@ -1,5 +1,7 @@
 package mockolate.ingredients.faux
 {
+    import asx.string.formatToString;
+    
     import mockolate.ingredients.Invocation;
     import mockolate.ingredients.InvocationType;
     
@@ -59,6 +61,26 @@ package mockolate.ingredients.faux
         
         public function proceed():void
         {
+            if (target)
+            {
+                if (isMethod)
+                {
+                    target[name].apply(target, this.arguments || []);
+                }
+                else if (isGetter)
+                {
+                    returnValue = target[name];
+                }
+                else if (isSetter)
+                {
+                    target[name] = arguments ? arguments[0] : null;
+                }
+            }
+        }
+        
+        public function toString():String 
+        {
+            return formatToString(this, "FauxInvocation", ["invocationType", "name", "arguments"]);
         }
     }
 }

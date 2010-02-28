@@ -22,7 +22,7 @@ package mockolate.ingredients.answers
 		 */
 		public function invoke(invocation:Invocation):*
 		{
-			// return invocation.proceed();
+			invocation.proceed();
 			return undefined;
 		}
 	}

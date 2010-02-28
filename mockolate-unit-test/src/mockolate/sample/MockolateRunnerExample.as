@@ -7,8 +7,8 @@ package mockolate.sample
    import org.hamcrest.object.notNullValue;
    import org.hamcrest.object.nullValue;
 
-   [RunWith("mockolate.runner.Runner")]
-   public class RunnerExample
+   [RunWith("mockolate.runner.MockolateRunner")]
+   public class MockolateRunnerExample
    {
       [Mock]
       public var nicelyImplicitlyInjected : Example;
@@ -16,7 +16,7 @@ package mockolate.sample
       [Mock(type="strict")]
       public var strictlyImplicitlyInjected : Example;
 
-      [Mock(type="nice",  inject="true")]
+      [Mock(type="nice", inject="true")]
       public var nicelyExplicitlyInjected : Example;
       //
       [Mock(type="strict",  inject="true")]

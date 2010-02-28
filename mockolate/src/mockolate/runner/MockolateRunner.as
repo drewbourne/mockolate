@@ -16,14 +16,14 @@ package mockolate.runner
    import org.flexunit.runners.BlockFlexUnit4ClassRunner;
    import org.flexunit.runners.model.FrameworkMethod;
 
-   public class Runner extends BlockFlexUnit4ClassRunner
+   public class MockolateRunner extends BlockFlexUnit4ClassRunner
    {
       private const MOCK_METADATA : String = "Mock";
 
       [ArrayElementType("mockolate.runner.MockMetadata")]
       private var mockMetadatas : Array;
 
-      public function Runner (klass : Class)
+      public function MockolateRunner (klass : Class)
       {
          super(klass);
          this.mockMetadatas = identifyMetadata(klass);
@@ -49,6 +49,9 @@ package mockolate.runner
                }
             }
          }
+         
+         // TODO if there are no [Mock] fields, throw an InitializationError
+         // possible causes: no fields marked [Mock] or -keep-as3-metadata doesnt include Mock
 
          return metadatas;
       }

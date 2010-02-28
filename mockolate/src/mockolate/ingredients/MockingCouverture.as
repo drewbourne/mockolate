@@ -18,11 +18,14 @@ package mockolate.ingredients
     import mockolate.ingredients.answers.Answer;
     import mockolate.ingredients.answers.CallsAnswer;
     import mockolate.ingredients.answers.DispatchesEventAnswer;
+    import mockolate.ingredients.answers.MethodInvokingAnswer;
+    import mockolate.ingredients.answers.PassThroughAnswer;
     import mockolate.ingredients.answers.ReturnsAnswer;
     import mockolate.ingredients.answers.ThrowsAnswer;
     
     import org.hamcrest.Matcher;
     import org.hamcrest.collection.array;
+    import org.hamcrest.collection.emptyArray;
     import org.hamcrest.core.anyOf;
     import org.hamcrest.core.anything;
     import org.hamcrest.date.dateEqual;
@@ -57,7 +60,8 @@ package mockolate.ingredients
         private var _stubExpectations:Array;
         private var _currentExpectation:Expectation;
         private var _expectationsAsMocks:Boolean;
-        private var _eventDispatcher:IEventDispatcher; 
+        private var _eventDispatcher:IEventDispatcher;
+        private var _eventDispatcherMethods:Array = ['addEventListener', 'dispatchEvent', 'hasEventListener', 'removeEventListener', 'willTrigger']; 
         
         /**
          * Constructor. 
@@ -320,6 +324,15 @@ package mockolate.ingredients
         }
         
         /**
+         * 
+         */
+        public function asEventDispatcher():MockingCouverture
+        {
+            addEventDispatcherStubs();
+            return this;
+        }
+        
+        /**
          * Causes the current Expectation to invoke the given Answer subclass. 
          * 
          * @example
@@ -358,7 +371,7 @@ package mockolate.ingredients
          */
         public function times(n:int):MockingCouverture
         {
-            setReceiveCount(equalTo(n));
+            setInvokeCount(lessThanOrEqualTo(n), equalTo(n));
             return this;
         }
         
@@ -458,7 +471,7 @@ package mockolate.ingredients
          */
         public function atLeast(n:int):MockingCouverture
         {
-            setReceiveCount(greaterThanOrEqualTo(n));
+            setInvokeCount(greaterThanOrEqualTo(0), greaterThanOrEqualTo(n));
             return this;
         }
         
@@ -477,7 +490,7 @@ package mockolate.ingredients
          */
          public function atMost(n:int):MockingCouverture
         {
-            setReceiveCount(lessThanOrEqualTo(n));
+            setInvokeCount(lessThanOrEqualTo(n), lessThanOrEqualTo(n));
             return this;
         }
 
@@ -491,6 +504,18 @@ package mockolate.ingredients
         public function ordered(group:String=null):MockingCouverture
         {
         	throw new Error("Not Implemented");
+            return this;
+        }
+        
+        /**
+         * @example
+         * <listing version="3.0">
+         * 	mock(instance).method("addEventListener").anyArgs().pass();
+         * </listing> 
+         */
+        public function pass():MockingCouverture
+        {
+            addPassThrough();
             return this;
         }
         
@@ -609,7 +634,7 @@ package mockolate.ingredients
         	// actually dispatch events and avoid recursive stack overflows. 
         	//
         	if (this.mockolate.target is IEventDispatcher
-        	&& contains(['addEventListener', 'dispatchEvent', 'hasEventListener', 'removeEventListener', 'willTrigger'], invocation.name))
+        	&& contains(_eventDispatcherMethods, invocation.name))
         	{
         		if (!_eventDispatcher)
         		{
@@ -717,7 +742,7 @@ package mockolate.ingredients
          */
         protected function setNoArgs():void
         {
-            _currentExpectation.argsMatcher = nullValue();
+            _currentExpectation.argsMatcher = anyOf(nullValue(), emptyArray());
         }
         
         /**
@@ -780,9 +805,12 @@ package mockolate.ingredients
         /**
          * @private
          */
-        protected function setReceiveCount(matcher:Matcher):void
+        protected function setInvokeCount(
+            eligiblityMatcher:Matcher, 
+            verificationMatcher:Matcher):void
         {
-            _currentExpectation.invokeCountMatcher = matcher;
+            _currentExpectation.invokeCountEligiblityMatcher = eligiblityMatcher;
+            _currentExpectation.invokeCountVerificationMatcher = verificationMatcher;
         }
         
         /**
@@ -805,15 +833,35 @@ package mockolate.ingredients
         /**
          * @private
          */
-        protected function addDispatches(event:Event, delay:Number=0):void
+        protected function prepareEventDispatcher():void 
         {
         	if (!(this.mockolate.target is IEventDispatcher))
         		throw new MockolateError(["Mockolate target is not an IEventDispatcher, target: {}", [mockolate.target]], mockolate, mockolate.target);
         	
         	if (!_eventDispatcher)
         		_eventDispatcher = new EventDispatcher(this.mockolate.target);
-        	
+        }
+        
+        /**
+         * @private
+         */
+        protected function addDispatches(event:Event, delay:Number=0):void
+        {
+        	prepareEventDispatcher();
             addAnswer(new DispatchesEventAnswer(_eventDispatcher, event, delay));
+        }
+        
+        /**
+         * @private 
+         */
+        protected function addEventDispatcherStubs():void 
+        {
+            prepareEventDispatcher();
+            
+            for each (var methodName:String in _eventDispatcherMethods)
+            {
+                stub().method(methodName).answers(new MethodInvokingAnswer(_eventDispatcher, methodName));    
+            }
         }
         
         /**
@@ -833,6 +881,14 @@ package mockolate.ingredients
         }
         
         /**
+         * @private 
+         */
+        protected function addPassThrough():void 
+        {
+            addAnswer(new PassThroughAnswer());
+        }
+        
+        /**
          * @private
          */
         override mockolate_ingredient function verify():void
@@ -848,11 +904,13 @@ package mockolate.ingredients
          */
         protected function verifyExpectation(expectation:Expectation):void 
         {
-        	if (expectation.invokeCountMatcher 
-        		&& !expectation.invokeCountMatcher.matches(expectation.invokedCount))
+        	if (expectation.invokeCountVerificationMatcher 
+        		&& !expectation.invokeCountVerificationMatcher.matches(expectation.invokedCount))
+        	{
         		throw new ExpectationError(
         			["Unmet Expectation: {}", [expectation]], 
-        			expectation, this.mockolate, this.mockolate.target); 
+        			expectation, this.mockolate, this.mockolate.target);
+        	} 
         }
     }
 }

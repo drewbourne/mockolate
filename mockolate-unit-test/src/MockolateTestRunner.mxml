@@ -6,19 +6,21 @@
 
    <mx:Script>
       <![CDATA[
+          import org.flexunit.internals.TraceListener;
          import mockolate.MockolateSuite;
-         import mockolate.runner.Runner;
+         import mockolate.runner.MockolateRunner;
          
          import org.flexunit.listeners.CIListener;
          import org.flexunit.listeners.UIListener;
          import org.flexunit.runner.FlexUnitCore;
 
          private var core : FlexUnitCore;
-         private var runner : Runner;
+         private var runner : MockolateRunner;
 
          public function run () : void
          {
             core = new FlexUnitCore();
+            core.addListener(new TraceListener());
             core.addListener(new UIListener(uiListener));
             core.addListener(new CIListener());
             core.run(MockolateSuite);
