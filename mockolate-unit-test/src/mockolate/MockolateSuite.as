@@ -37,8 +37,13 @@ package mockolate
 		public var usingStub:StubbingMockolates;
 		public var usingMock:MockingMockolates;
 		public var usingVerify:VerifyingMockolates;
+		
+		//
+		//  
+		//
+		public var usingFlashClasses:UsingFlashClasses;
       
-      //runner
-      public var runnerExample : MockolateRunnerExample;
+        //runner
+        public var runnerExample : MockolateRunnerExample;
 	}
 }

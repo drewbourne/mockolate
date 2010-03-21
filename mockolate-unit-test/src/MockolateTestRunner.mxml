@@ -4,9 +4,9 @@
     xmlns:flexui="org.flexunit.flexui.*"
     xmlns:mx="http://www.adobe.com/2006/mxml">
 
-   <mx:Script>
+    <mx:Script>
       <![CDATA[
-          import org.flexunit.internals.TraceListener;
+         import org.flexunit.internals.TraceListener;
          import mockolate.MockolateSuite;
          import mockolate.runner.MockolateRunner;
          
@@ -26,9 +26,9 @@
             core.run(MockolateSuite);
          }
       ]]>
-   </mx:Script>
+    </mx:Script>
 
-   <flexui:TestRunnerBase id="uiListener"
+    <flexui:TestRunnerBase id="uiListener"
       width="100%"
       height="100%"/>
 

@@ -59,8 +59,21 @@ package mockolate.sample
          var expected : String = "how long is a piece of string";
 
          mock(strictlyImplicitlyInjected).method("giveString").noArgs().returns(expected).once();
-
+         
          assertThat(strictlyImplicitlyInjected.giveString(),  equalTo(expected));
+      }
+
+      // remove the [Ignore] for the test as an example of a mock failing auto-verification. 
+      [Ignore]
+      [Test]
+      public function mocksShouldBeAutomaticallyVerified2 () : void
+      {
+        var expected : String = "how long is a piece of string";
+
+        mock(strictlyImplicitlyInjected).method("giveString").args(1, 2, 3).returns(expected).once();
+         
+         // dont call, should fail verification
+         // assertThat(strictlyImplicitlyInjected.giveString(),  equalTo(expected));
       }
 
       [Test(verify="false")]
