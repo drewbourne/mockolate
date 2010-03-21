@@ -94,7 +94,7 @@ Stubs are defined with the 'stub(instance)' function. In these examples we're go
     stub(flavour).property("name").args(true);
 
     // stub a method
-    stub(flavour).method("toString").return("Butterscotch");
+    stub(flavour).method("toString").returns("Butterscotch");
     
     // stub a method with arg values
     var otherFlavour:Flavour = nice(Flavour);
