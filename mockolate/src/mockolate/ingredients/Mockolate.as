@@ -148,6 +148,25 @@ package mockolate.ingredients
         }
         
         /**
+         * Reference to the instance this Mockolate is managing.
+         */
+        mockolate_ingredient function get targetClass():*
+        {
+            return _targetClass;
+        }
+        
+        /** @private */
+        mockolate_ingredient function set targetClass(value:*):void
+        {
+            if (_targetClass)
+            {
+                throw new ArgumentError("This Mockolate already has a targetClass, received:" + value);
+            }
+            
+            _targetClass = value;            
+        }
+        
+        /**
          * Called when a method or property is invoked on the target instance. 
          */
         mockolate_ingredient function invoked(invocation:Invocation):Mockolate

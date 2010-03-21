@@ -5,6 +5,7 @@ package mockolate.ingredients
     import flash.events.IEventDispatcher;
     import flash.utils.getTimer;
     
+    import mockolate.errors.ExpectationError;
     import mockolate.ingredients.answers.CallsAnswer;
     import mockolate.ingredients.answers.CallsWithInvocationAnswer;
     import mockolate.ingredients.answers.ThrowsAnswer;
@@ -31,8 +32,9 @@ package mockolate.ingredients
         {
             target = new EventDispatcher();
             
-            this.mockolate = new Mockolate();
+            this.mockolate = new Mockolate("Example");
             this.mockolate.target = target;
+            this.mockolate.targetClass = EventDispatcher;
             
             mocker = new MockingCouverture(mockolate);
         }
@@ -50,6 +52,21 @@ package mockolate.ingredients
         {
             mocker.method("example");
             mocker.verify();
+        }
+        
+        [Test]
+        public function mockMethodShouldFailIfNotInvokedWithANiceMessage():void
+        {
+            mocker.method("example");
+            
+            try
+            {
+                mocker.verify();
+            }
+            catch (error:ExpectationError)
+            {
+                assertThat(error.message, equalTo("Unmet Expectation: flash.events::EventDispatcher<\"Example\">#example()"));
+            }
         }
         
         [Test]

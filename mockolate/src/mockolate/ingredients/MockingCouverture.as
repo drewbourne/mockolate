@@ -10,6 +10,7 @@ package mockolate.ingredients
     import flash.events.Event;
     import flash.events.EventDispatcher;
     import flash.events.IEventDispatcher;
+    import flash.utils.getQualifiedClassName;
     
     import mockolate.errors.ExpectationError;
     import mockolate.errors.InvocationError;
@@ -24,10 +25,12 @@ package mockolate.ingredients
     import mockolate.ingredients.answers.ThrowsAnswer;
     
     import org.hamcrest.Matcher;
+    import org.hamcrest.StringDescription;
     import org.hamcrest.collection.array;
     import org.hamcrest.collection.emptyArray;
     import org.hamcrest.core.anyOf;
     import org.hamcrest.core.anything;
+    import org.hamcrest.core.describedAs;
     import org.hamcrest.date.dateEqual;
     import org.hamcrest.number.greaterThan;
     import org.hamcrest.number.greaterThanOrEqualTo;
@@ -737,7 +740,9 @@ package mockolate.ingredients
          */
         protected function setArgs(args:Array):void
         {   
-        	_currentExpectation.argsMatcher = array(map(args, valueToMatcher));
+        	_currentExpectation.argsMatcher = describedAs(
+        	    new StringDescription().appendList("", ",", "", args).toString(), 
+        	    array(map(args, valueToMatcher)));
         }
         
         /**
@@ -745,7 +750,7 @@ package mockolate.ingredients
          */
         protected function setNoArgs():void
         {
-            _currentExpectation.argsMatcher = anyOf(nullValue(), emptyArray());
+            _currentExpectation.argsMatcher = describedAs("", anyOf(nullValue(), emptyArray()));
         }
         
         /**
@@ -912,7 +917,10 @@ package mockolate.ingredients
         		&& !expectation.invokeCountVerificationMatcher.matches(expectation.invokedCount))
         	{
         		throw new ExpectationError(
-        			["Unmet Expectation: {}", [expectation]], 
+        			[this.mockolate.name ? "Unmet Expectation: {}<\"{}\">{}" : "Unmet Expectation: {}{}", [
+                    getQualifiedClassName(this.mockolate.targetClass), 
+                    this.mockolate.name ? this.mockolate.name : "", 
+                    expectation ]], 
         			expectation, this.mockolate, this.mockolate.target);
         	} 
         }

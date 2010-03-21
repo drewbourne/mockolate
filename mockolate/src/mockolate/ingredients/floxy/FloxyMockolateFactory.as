@@ -45,6 +45,7 @@ package mockolate.ingredients.floxy
             var mockolate:FloxyMockolate = createMockolate(asStrict, name) as FloxyMockolate;
             var target:* = _proxyRespository.create(klass, constructorArgs || [], mockolate.interceptor);
             mockolate.target = target;
+            mockolate.targetClass = klass;
             return mockolate;
         }
         

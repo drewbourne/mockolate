@@ -288,7 +288,7 @@ package mockolate.ingredients
 	     */
 	    public function toString():String 
 	    {
-	        return substitute(
+	       return substitute(
 	        	isMethod ? "#{}({})" : "#{}={}",
 	        	name, 
 	        	argsMatcher ? StringDescription.toString(argsMatcher) : "");
