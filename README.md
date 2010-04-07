@@ -23,7 +23,7 @@ Thats enough for now.
 
 ## preparing, getting your ingredients ready
 
-To prepare the Class you want to create Mockolates for we use the 'prepare(Class)' function.
+To prepare the Class you want to create Mockolates for we use the `prepare(Class)` function.
     
     import mockolate.prepare;
     
@@ -40,7 +40,7 @@ To prepare the Class you want to create Mockolates for we use the 'prepare(Class
     
 Mockolates do take some time to prepare so we run this [Before] block asynchronously to allow the code generation backend to do its thing.
 
-'prepare(Class)' can take more than one Class so go ahead and feed it as many as you like. Just be sure to wait till they are complete. 
+`prepare(Class)` can take more than one Class so go ahead and feed it as many as you like. Just be sure to wait till they are complete. 
 
 ## creating Mockolates nicely, or strictly
 
@@ -49,7 +49,7 @@ Each Mockolate instance operates as either a 'nice' Mock or a 'strict' Mock Obje
 - 'nice' Mocks will play nice and return false-y values for methods and properties that aren't stubbed. 
 - 'strict' Mocks will whinge and cry if you mistreat them by calling methods that aren't stubbed. 
 
-Create a nice mock using 'nice(Class)', or a strict Mock using 'strict(Class)' giving them the Class you want an instance of.
+Create a nice mock using `nice(Class)`, or a strict Mock using `strict(Class)` giving them the Class you want an instance of.
 
     [Test]
     public function nicelyPlease():void 
@@ -80,7 +80,7 @@ Both nice and strict Mock can be stubbed to do one or more of:
 - call another function 
 - throw an Error
 
-Stubs are defined with the 'stub(instance)' function. In these examples we're going to skip the [Test] block and focus just on stubbing. 
+Stubs are defined with the `stub(instance)` function. In these examples we're going to skip the [Test] block and focus just on stubbing. 
 
     import mockolate.stub;
 
@@ -117,7 +117,7 @@ Stubs are defined with the 'stub(instance)' function. In these examples we're go
 
 ## verifying Mockolates
 
-For all strict Mocks an easy call to 'verify(instance)' will check that all the stubbed methods have been called at least once. 
+For all strict Mocks an easy call to `verify(instance)` will check that all the stubbed methods have been called at least once. 
 
     import mockolate.verify;
 
@@ -161,6 +161,19 @@ Spying on Mockolates is a little bit like verifying and a lot more like stubbing
         // check that flavour.combine() was called at least 3 times
         verify(flavour).method("combine").atLeast(3);
     }
+
+## gotchas
+
+`toString()`: Classes or interfaces that explicitly define `toString():String` as a method, when invoked on a nice Mockolate will return `null` unless a `returns` has been set. 
+
+    var flavour:Flavour = nice(Flavour);
+    // will return 'null'
+    trace(flavour); 
+    // will return 'My String'
+    stub(flavour).method('toString').noArgs().returns('My String');
+    trace(flavour)
+
+
 
 ## notes
 
