@@ -2,8 +2,10 @@ package mockolate.ingredients
 {    
     import asx.array.contains;
     import asx.array.detect;
+    import asx.array.empty;
     import asx.array.filter;
     import asx.array.map;
+    import asx.array.reject;
     import asx.fn.getProperty;
     import asx.string.substitute;
     
@@ -173,6 +175,12 @@ package mockolate.ingredients
             // FIXME when this checks if the method exists, remember we have to support Proxy as well!
             
             createPropertyExpectation(name, ns);
+            
+            // when expectation mode is mock
+            // than should be called at least once
+            // -- will be overridden if set by the user. 
+            if (mockolate.isStrict)
+            	atLeast(1);            
                         
             return this;
         }
@@ -635,17 +643,13 @@ package mockolate.ingredients
         	// EventDispatcher instance than the proxied instance in order to
         	// actually dispatch events and avoid recursive stack overflows. 
         	//
-        	trace('invokedAsMethod', invocation.name, (this.mockolate.target is IEventDispatcher));
-        	
         	if (this.mockolate.target is IEventDispatcher
-        	&& contains(_eventDispatcherMethods, invocation.name))
+        	    && contains(_eventDispatcherMethods, invocation.name))
         	{
         		if (!_eventDispatcher)
         		{
         			_eventDispatcher = new EventDispatcher(this.mockolate.target);
         		}
-        		
-        		trace('invokedAsMethod', invocation.name, invocation.arguments);
         		
         		_eventDispatcher[invocation.name].apply(null, invocation.arguments);	
         	}
@@ -903,6 +907,36 @@ package mockolate.ingredients
         override mockolate_ingredient function verify():void
         {
         	// mock expectations are always verified
+        	
+        	var unmetExpectations:Array = reject(_mockExpectations, verifyExpectation);
+        	if (!empty(unmetExpectations))
+        	{
+        	    var message:String = unmetExpectations.length.toString();
+        	    
+        	    message += unmetExpectations.length == 1 
+        	        ? " unmet Expectation"
+        	        : " unmet Expectations";
+
+                for each (var expectation:Expectation in unmetExpectations)
+                {
+                    message += "\n\t";
+                    // TODO move to mockolate.targetClassName
+                    message += getQualifiedClassName(this.mockolate.targetClass);
+                    
+                    if (this.mockolate.name)
+                        message += "<\"" + this.mockolate.name + "\">";
+                    
+                    // TOOD include more description from the Expectation
+                    message += expectation.toString();
+                }
+        	    
+        	    throw new ExpectationError(
+        	        message, 
+        	        unmetExpectations, 
+        	        this.mockolate, 
+        	        this.mockolate.target);
+        	}
+        	
         	map(_mockExpectations, verifyExpectation);
         	
         	// stub expectations are not verified
@@ -911,18 +945,13 @@ package mockolate.ingredients
         /**
          * @private 
          */
-        protected function verifyExpectation(expectation:Expectation):void 
+        protected function verifyExpectation(expectation:Expectation):Boolean 
         {
-        	if (expectation.invokeCountVerificationMatcher 
+            if (expectation.invokeCountVerificationMatcher 
         		&& !expectation.invokeCountVerificationMatcher.matches(expectation.invokedCount))
-        	{
-        		throw new ExpectationError(
-        			[this.mockolate.name ? "Unmet Expectation: {}<\"{}\">{}" : "Unmet Expectation: {}{}", [
-                    getQualifiedClassName(this.mockolate.targetClass), 
-                    this.mockolate.name ? this.mockolate.name : "", 
-                    expectation ]], 
-        			expectation, this.mockolate, this.mockolate.target);
-        	} 
+        		return false;
+        		
+            return true;
         }
     }
 }

@@ -8,24 +8,33 @@ package mockolate.errors
 	 */
 	public class ExpectationError extends MockolateError
 	{
-		private var _expectation:Expectation;
+		private var _expectations:Array;
 		
 		/**
-		 * Constructor
+		 * Constructor.
+		 * 
+		 * @param message String or Array (String, ...Object) to be substituted.
+		 * @param expectations Array of Expectation
+		 * @param mockolate Mockolate instance
+		 * @param target Object the Mockolate is mocking. 
 		 */
-		public function ExpectationError(message:Object, expectation:Expectation, mockolate:Mockolate, target:Object)
+		public function ExpectationError(
+		    message:Object, 
+		    expectations:Array, 
+		    mockolate:Mockolate, 
+		    target:Object)
 		{
 			super(message, mockolate, target);
 			
-			_expectation = expectation;
+			_expectations = expectations;
 		}
 		
 		/**
-		 * Expectation instance related to this Error
+		 * Expectations related to this Error
 		 */
-		public function get expectation():Expectation
+		public function get expectations():Array 
 		{
-			return _expectation;
+		    return _expectations;
 		}
 	}
 }

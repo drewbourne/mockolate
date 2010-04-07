@@ -6,12 +6,14 @@ package mockolate
     import flash.events.IEventDispatcher;
     import flash.utils.describeType;
     
+    import mockolate.errors.ExpectationError;
     import mockolate.ingredients.Mockolate;
     import mockolate.sample.DarkChocolate;
     import mockolate.sample.Flavour;
     
     import org.flexunit.assertThat;
     import org.flexunit.async.Async;
+    import org.hamcrest.collection.arrayWithSize;
     import org.hamcrest.core.not;
     import org.hamcrest.object.equalTo;
     import org.hamcrest.object.nullValue;
@@ -57,6 +59,26 @@ package mockolate
             mock(instance).method("combine").args(nullValue());
             
             verify(instance);
+        }
+        
+        [Test]
+        public function verifyingShouldReturnAllUnmetExpectations():void 
+        {
+            var instance:Flavour = strict(Flavour);
+            
+            mock(instance).property("name").returns("blueberry");
+            mock(instance).property("ingredients").returns([]);
+            mock(instance).method("toString").returns("blueberry");
+            
+            try 
+            {
+                verify(instance); 
+            }
+            catch (error:ExpectationError)
+            {
+                trace(error.message);
+                assertThat(error.expectations, arrayWithSize(3));
+            }
         }
         
         /*

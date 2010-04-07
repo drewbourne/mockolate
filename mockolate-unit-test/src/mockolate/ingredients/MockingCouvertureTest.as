@@ -65,7 +65,7 @@ package mockolate.ingredients
             }
             catch (error:ExpectationError)
             {
-                assertThat(error.message, equalTo("Unmet Expectation: flash.events::EventDispatcher<\"Example\">#example()"));
+                assertThat(error.message, equalTo("1 unmet Expectation\n\tflash.events::EventDispatcher<\"Example\">#example()"));
             }
         }
         
