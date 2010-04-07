@@ -1,6 +1,5 @@
 package mockolate.errors
 {
-	import mockolate.ingredients.Expectation;
 	import mockolate.ingredients.Mockolate;
 	import mockolate.ingredients.Verification;
 

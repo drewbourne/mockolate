@@ -19,13 +19,13 @@ package mockolate.sample
       [Mock(type="nice", inject="true")]
       public var nicelyExplicitlyInjected : Example;
       //
-      [Mock(type="strict",  inject="true")]
+      [Mock(type="strict", inject="true")]
       public var strictlyExplicitlyInjected : Example;
       //
-      [Mock(type="nice",  inject="false")]
+      [Mock(type="nice", inject="false")]
       public var nicelyExplicitlyNotInjected : Example;
 
-      [Mock(type="strict",  inject="false")]
+      [Mock(type="strict", inject="false")]
       public var strictlyExplicitlyNotInjected : Example;
 
       [Before]
@@ -64,13 +64,13 @@ package mockolate.sample
       }
 
       // remove the [Ignore] for the test as an example of a mock failing auto-verification. 
-      [Ignore]
       [Test]
       public function mocksShouldBeAutomaticallyVerified2 () : void
       {
         var expected : String = "how long is a piece of string";
 
         mock(strictlyImplicitlyInjected).method("giveString").args(1, 2, 3).returns(expected).once();
+        mock(strictlyExplicitlyInjected).method("giveString").args(4, 5, 6).returns(expected).once();
          
          // dont call, should fail verification
          // assertThat(strictlyImplicitlyInjected.giveString(),  equalTo(expected));
