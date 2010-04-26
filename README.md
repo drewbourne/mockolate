@@ -42,7 +42,9 @@ To prepare the Class you want to create Mockolates for we use the `prepare(Class
             Event.COMPLETE);
     }
     
-Mockolates do take some time to prepare so we run this [Before] block asynchronously to allow the code generation backend to do its thing. See [Writing an Async Test](http://docs.flexunit.org/index.php?title=Writing_an_AsyncTest) in the [FlexUnit](http://flexunit.org/) [wiki](http://docs.flexunit.org/).
+Mockolates do take some time to prepare so we run this `[Before]` block asynchronously to allow the code generation backend to do its thing. 
+
+See [Writing an Async Test](http://docs.flexunit.org/index.php?title=Writing_an_AsyncTest) in the [FlexUnit](http://flexunit.org/) [wiki](http://docs.flexunit.org/).
 
 `prepare(Class)` can take more than one Class so go ahead and feed it as many as you like. Just be sure to wait till they are complete. 
 
@@ -74,7 +76,7 @@ Create a nice mock using `nice(Class)`, or a strict Mock using `strict(Class)` g
 
 ## preparing and creating a little bit easier
 
-Mockolate provides a [FlexUnit runner](http://docs.flexunit.org/index.php?title=Runners_and_Builders) that can prepare and create nice and strict Mockolate instances based on metadata. Any public instance variable marked with `[Mock]` metadata will be prepared, and injected. 
+Mockolate provides a [FlexUnit runner](http://docs.flexunit.org/index.php?title=Runners_and_Builders) that can prepare and create nice and strict Mockolate instances based on metadata. Any public instance variable marked with `[Mock]` metadata will be prepared, and injected. Using the MockolateRunner will take care of the Async prepare step and will wait until the classes are prepared before running your tests.
 
 There are two options that can be given to `[Mock]`.
 
