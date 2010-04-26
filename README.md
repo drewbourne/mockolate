@@ -11,6 +11,10 @@ In the delicious land of AS3 you can now create the finest Mock Objects and Test
 Got Git? Awesome, you're allowed in the kitchen.
 
     $ git clone git://github.com/drewbourne/mockolate.git
+    
+Got Subversion? Not quite as awesome, but you can play too.
+
+    $ svn checkout http://svn.github.com/drewbourne/mockolate.git
 
 ## now to make some Mockolate yourself
 
@@ -38,7 +42,7 @@ To prepare the Class you want to create Mockolates for we use the `prepare(Class
             Event.COMPLETE);
     }
     
-Mockolates do take some time to prepare so we run this [Before] block asynchronously to allow the code generation backend to do its thing.
+Mockolates do take some time to prepare so we run this [Before] block asynchronously to allow the code generation backend to do its thing. See [Writing an Async Test](http://docs.flexunit.org/index.php?title=Writing_an_AsyncTest) in the [FlexUnit](http://flexunit.org/) [wiki](http://docs.flexunit.org/).
 
 `prepare(Class)` can take more than one Class so go ahead and feed it as many as you like. Just be sure to wait till they are complete. 
 
@@ -68,6 +72,32 @@ Create a nice mock using `nice(Class)`, or a strict Mock using `strict(Class)` g
         var name:String = flavour.name;
     }
 
+## preparing and creating a little bit easier
+
+Mockolate provides a [FlexUnit runner](http://docs.flexunit.org/index.php?title=Runners_and_Builders) that can prepare and create nice and strict Mockolate instances based on metadata. Any public instance variable marked with `[Mock]` metadata will be prepared, and injected. 
+
+There are two options that can be given to `[Mock]`.
+
+- use `[Mock(type="strict")]` to create a strict Mockolate.
+- use `[Mock(inject="false")]` to prepare only, and not create a Mockolate.
+
+By default a nice Mockolate is created and injected. 
+
+    // import and reference the runner to ensure it is compiled in.
+    import mockolate.runner.MockolateRunner; MockolateRunner; 
+
+    [RunWith("mockolate.runner.MockolateRunner")]
+    public class ExampleWithRunner
+    {
+        [Mock]
+        public var nicelyPlease:Example;
+        
+        [Mock(type="strict")]
+        public var strictlyThanks:Example;
+        
+        [Mock(inject="false")]
+        public var prepareButDontCreate:Example;
+    }
 
 ## stubbing your toe, err Mock
 
@@ -173,6 +203,7 @@ Spying on Mockolates is a little bit like verifying and a lot more like stubbing
     stub(flavour).method('toString').noArgs().returns('My String');
     trace(flavour)
 
+Fields declared as `public var` cannot be proxied which means Mockolate cannot set expectations or record invocations for those fields. 
 
 
 ## notes
