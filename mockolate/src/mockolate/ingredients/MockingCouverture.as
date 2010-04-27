@@ -25,6 +25,9 @@ package mockolate.ingredients
     import mockolate.ingredients.answers.PassThroughAnswer;
     import mockolate.ingredients.answers.ReturnsAnswer;
     import mockolate.ingredients.answers.ThrowsAnswer;
+    import mockolate.ingredients.rpc.HTTPServiceMockingCouvertureDecorator;
+    
+    import mx.rpc.http.HTTPService;
     
     import org.hamcrest.Matcher;
     import org.hamcrest.StringDescription;
@@ -528,6 +531,20 @@ package mockolate.ingredients
             addPassThrough();
             return this;
         }
+		
+		//
+		//	Decorators
+		//
+		
+		public function asHTTPService():HTTPServiceMockingCouvertureDecorator
+		{
+			if (!(mockolate.target is HTTPService))
+			{
+				throw new MockolateError(["Mockolate instance is not a HTTPService", [mockolate.target]], this.mockolate, this.mockolate.target);
+			}
+			
+			return new HTTPServiceMockingCouvertureDecorator(this.mockolate);
+		}
         
         //
         //	Internal API
