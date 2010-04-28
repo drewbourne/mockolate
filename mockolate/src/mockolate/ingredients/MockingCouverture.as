@@ -12,8 +12,13 @@ package mockolate.ingredients
     import flash.events.Event;
     import flash.events.EventDispatcher;
     import flash.events.IEventDispatcher;
+    import flash.utils.Dictionary;
     import flash.utils.getQualifiedClassName;
     
+    import mockolate.decorations.Decorator;
+    import mockolate.decorations.EventDispatcherDecorator;
+    import mockolate.decorations.InvocationDecorator;
+    import mockolate.decorations.rpc.HTTPServiceDecorator;
     import mockolate.errors.ExpectationError;
     import mockolate.errors.InvocationError;
     import mockolate.errors.MockolateError;
@@ -25,7 +30,6 @@ package mockolate.ingredients
     import mockolate.ingredients.answers.PassThroughAnswer;
     import mockolate.ingredients.answers.ReturnsAnswer;
     import mockolate.ingredients.answers.ThrowsAnswer;
-    import mockolate.ingredients.rpc.HTTPServiceMockingCouvertureDecorator;
     
     import mx.rpc.http.HTTPService;
     
@@ -63,13 +67,16 @@ package mockolate.ingredients
      */
     public class MockingCouverture extends Couverture
     {
+		private var _invokedAs:Object;
         private var _expectations:Array;
         private var _mockExpectations:Array;
         private var _stubExpectations:Array;
         private var _currentExpectation:Expectation;
         private var _expectationsAsMocks:Boolean;
-        private var _eventDispatcher:IEventDispatcher;
-        private var _eventDispatcherMethods:Array = ['addEventListener', 'dispatchEvent', 'hasEventListener', 'removeEventListener', 'willTrigger']; 
+		private var _decoratorClassesByClass:Dictionary;
+		private var _decorations:Array;
+		private var _decorationsByClass:Dictionary;
+		private var _invocationDecorations:Array;
         
         /**
          * Constructor. 
@@ -77,11 +84,24 @@ package mockolate.ingredients
         public function MockingCouverture(mockolate:Mockolate)
         {
             super(mockolate);
-            
+			
+			_invokedAs = {};
+			_invokedAs[ InvocationType.METHOD ] = invokedAsMethod;
+			_invokedAs[ InvocationType.GETTER ] = invokedAsGetter;
+			_invokedAs[ InvocationType.SETTER ] = invokedAsSetter;
+			
             _expectations = [];
             _mockExpectations = [];
             _stubExpectations = [];
             _expectationsAsMocks = true;
+			_decorations = [];
+			_invocationDecorations = [];
+			_decorationsByClass = new Dictionary();
+			
+			_decoratorClassesByClass = new Dictionary();
+			_decoratorClassesByClass[IEventDispatcher] = EventDispatcherDecorator;
+			_decoratorClassesByClass[EventDispatcher] = EventDispatcherDecorator;
+			_decoratorClassesByClass[HTTPService] = HTTPServiceDecorator;
         }
         
         //
@@ -337,15 +357,6 @@ package mockolate.ingredients
         }
         
         /**
-         * 
-         */
-        public function asEventDispatcher():MockingCouverture
-        {
-            addEventDispatcherStubs();
-            return this;
-        }
-        
-        /**
          * Causes the current Expectation to invoke the given Answer subclass. 
          * 
          * @example
@@ -532,18 +543,47 @@ package mockolate.ingredients
             return this;
         }
 		
+		/**
+		 * @example
+		 * <listing version="3.0">
+		 * 	(mock(httpService).decorate(HTTPService) as HTTPServiceDecorator)
+		 * 		.send("What is the ultimate answer to life, the universe, everything?")
+		 * 		.result(42)
+		 * </listing> 
+		 */
+		public function decorate(classToDecorate:Class, decoratorClass:Class = null):Decorator 
+		{
+			// the decorators may define new expectations
+			// as such we need to reinstate the current expecation
+			// after the decorator has been created.
+			
+			var previousExpectation:Expectation = _currentExpectation;
+			
+			var decorator:Decorator = createDecoratorFor(classToDecorate, decoratorClass);
+			
+			_currentExpectation = previousExpectation;
+			
+			return decorator;
+		}
+		
 		//
 		//	Decorators
 		//
 		
-		public function asHTTPService():HTTPServiceMockingCouvertureDecorator
+		/**
+		 * 
+		 */
+		public function asEventDispatcher():EventDispatcherDecorator
 		{
-			if (!(mockolate.target is HTTPService))
-			{
-				throw new MockolateError(["Mockolate instance is not a HTTPService", [mockolate.target]], this.mockolate, this.mockolate.target);
-			}
-			
-			return new HTTPServiceMockingCouvertureDecorator(this.mockolate);
+			return decorate(EventDispatcher) as EventDispatcherDecorator;
+		}
+		
+		/**
+		 * 
+		 */
+		public function asHTTPService():HTTPServiceDecorator
+		{
+			return decorate(HTTPService) as HTTPServiceDecorator;
 		}
         
         //
@@ -637,14 +677,21 @@ package mockolate.ingredients
          */
         override mockolate_ingredient function invoked(invocation:Invocation):void
         {
-            // FIXME move to constructor
-            var invokedAs:Object = {};
-            invokedAs[ InvocationType.METHOD ] = invokedAsMethod;
-            invokedAs[ InvocationType.GETTER ] = invokedAsGetter;
-            invokedAs[ InvocationType.SETTER ] = invokedAsSetter;
-            
-            invokedAs[ invocation.invocationType ](invocation);
+			invokeDecorators(invocation);
+			
+            _invokedAs[ invocation.invocationType ](invocation);
         }
+		
+		/**
+		 * 
+		 */
+		protected function invokeDecorators(invocation:Invocation):void 
+		{
+			for each (var decorator:Decorator in _invocationDecorations)
+			{
+				decorator.invoked(invocation);
+			}
+		}
         
         /**
          * Find and invoke the first eligible method Expectation. 
@@ -653,24 +700,6 @@ package mockolate.ingredients
          */
         protected function invokedAsMethod(invocation:Invocation):void
         {
-        	// when the invocation is for an IEventDispatcher method
-        	// then call that method on the _eventDispatcher
-        	// 
-        	// IEventDispatcher methods must to be forwarded to a separate
-        	// EventDispatcher instance than the proxied instance in order to
-        	// actually dispatch events and avoid recursive stack overflows. 
-        	//
-        	if (this.mockolate.target is IEventDispatcher
-        	    && contains(_eventDispatcherMethods, invocation.name))
-        	{
-        		if (!_eventDispatcher)
-        		{
-        			_eventDispatcher = new EventDispatcher(this.mockolate.target);
-        		}
-        		
-        		_eventDispatcher[invocation.name].apply(null, invocation.arguments);	
-        	}
-        	            
             var expectation:Expectation = findEligibleMethod(invocation);
             if (expectation)
             {
@@ -863,35 +892,11 @@ package mockolate.ingredients
         /**
          * @private
          */
-        protected function prepareEventDispatcher():void 
-        {
-        	if (!(this.mockolate.target is IEventDispatcher))
-        		throw new MockolateError(["Mockolate target is not an IEventDispatcher, target: {}", [mockolate.target]], mockolate, mockolate.target);
-        	
-        	if (!_eventDispatcher)
-        		_eventDispatcher = new EventDispatcher(this.mockolate.target);
-        }
-        
-        /**
-         * @private
-         */
         protected function addDispatches(event:Event, delay:Number=0):void
         {
-        	prepareEventDispatcher();
-            addAnswer(new DispatchesEventAnswer(_eventDispatcher, event, delay));
-        }
-        
-        /**
-         * @private 
-         */
-        protected function addEventDispatcherStubs():void 
-        {
-            prepareEventDispatcher();
-            
-            for each (var methodName:String in _eventDispatcherMethods)
-            {
-                stub().method(methodName).answers(new MethodInvokingAnswer(_eventDispatcher, methodName));    
-            }
+        	var eventDispatcherDecorator:EventDispatcherDecorator = decorate(IEventDispatcher) as EventDispatcherDecorator;
+			
+            addAnswer(new DispatchesEventAnswer(eventDispatcherDecorator.eventDispatcher, event, delay));
         }
         
         /**
@@ -917,6 +922,33 @@ package mockolate.ingredients
         {
             addAnswer(new PassThroughAnswer());
         }
+		
+		/**
+		 * @private
+		 */
+		protected function createDecoratorFor(classToDecorate:Class, decoratorClass:Class):Decorator
+		{
+			if (!decoratorClass)
+				decoratorClass = _decoratorClassesByClass[classToDecorate];
+			
+			if (!decoratorClass)
+				throw new MockolateError(["No Decorator registered for {0}", [classToDecorate]], this.mockolate, this.mockolate.target);
+			
+			var decorator:Decorator = _decorationsByClass[classToDecorate];
+			
+			if (!decorator)
+			{
+				decorator = new decoratorClass(this.mockolate);
+			
+				_decorations[_decorations.length] = decorator;
+				_decorationsByClass[classToDecorate] = decorator; 
+				
+				if (decorator is InvocationDecorator)
+					_invocationDecorations[_invocationDecorations.length] = decorator;
+			}
+			
+			return decorator;
+		}
         
         /**
          * @private

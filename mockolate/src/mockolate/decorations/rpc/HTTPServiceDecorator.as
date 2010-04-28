@@ -1,5 +1,7 @@
-package mockolate.ingredients.rpc
+package mockolate.decorations.rpc
 {
+	import mockolate.decorations.Decorator;
+	import mockolate.errors.MockolateError;
 	import mockolate.ingredients.MockingCouverture;
 	import mockolate.ingredients.Mockolate;
 	import mockolate.ingredients.mockolate_ingredient;
@@ -8,6 +10,7 @@ package mockolate.ingredients.rpc
 	import mx.rpc.Fault;
 	import mx.rpc.events.FaultEvent;
 	import mx.rpc.events.ResultEvent;
+	import mx.rpc.http.HTTPService;
 	
 	import org.hamcrest.Matcher;
 	import org.hamcrest.object.equalTo;
@@ -27,11 +30,8 @@ package mockolate.ingredients.rpc
 	 * 
 	 * @author drewbourne 
 	 */
-	public class HTTPServiceMockingCouvertureDecorator
+	public class HTTPServiceDecorator extends Decorator
 	{
-		private var _mockolate:Mockolate;
-		private var _mocker:MockingCouverture;
-		
 		private var _dataMatcher:Matcher;
 		private var _result:Object;
 		private var _fault:Fault;
@@ -39,12 +39,19 @@ package mockolate.ingredients.rpc
 		/**
 		 * Constructor
 		 */
-		public function HTTPServiceMockingCouvertureDecorator(mockolate:Mockolate)
+		public function HTTPServiceDecorator(mockolate:Mockolate)
 		{
-			super();
+			super(mockolate);	
 			
-			_mockolate = mockolate;
-			_mocker = _mockolate.mocker; 
+			initialize();
+		}
+		
+		protected function initialize():void 
+		{
+			if (!(this.mockolate.target is HTTPService))
+			{
+				throw new MockolateError(["Mockolate instance is not a HTTPService", [mockolate.target]], this.mockolate, this.mockolate.target);
+			}
 		}
 		
 		/**
@@ -53,14 +60,14 @@ package mockolate.ingredients.rpc
 		 * Accepts either a HTTP Method as a String, or a Matcher against which
 		 * the set method will be checked.
 		 */
-		public function method(httpMethodOrMatcher:Object):HTTPServiceMockingCouvertureDecorator
+		public function method(httpMethodOrMatcher:Object):HTTPServiceDecorator
 		{
 			var httpMethodMatcher:Matcher
 				= httpMethodOrMatcher is Matcher
 				? httpMethodOrMatcher as Matcher
 				: equalTo(httpMethodOrMatcher);
 			
-			_mocker.property("method").args(httpMethodMatcher).once();
+			mocker.property("method").args(httpMethodMatcher).once();
 			
 			return this;
 		}
@@ -71,14 +78,14 @@ package mockolate.ingredients.rpc
 		 * Accepts either an Object of <code>header-name: header-value</code>,
 		 * or a Matcher against which the set headers will be checked.
 		 */
-		public function headers(headersOrMatcher:Object):HTTPServiceMockingCouvertureDecorator
+		public function headers(headersOrMatcher:Object):HTTPServiceDecorator
 		{
 			var headersMatcher:Matcher 
 				= headersOrMatcher is Matcher
 				? headersOrMatcher as Matcher
 				: hasProperties(headersOrMatcher);
 			
-			_mocker.property("headers").args(headersMatcher).once();
+			mocker.property("headers").args(headersMatcher).once();
 			
 			return this;
 		}
@@ -90,14 +97,14 @@ package mockolate.ingredients.rpc
 		 * Accepts either an Object of <code>parameter-name: paramter-value</code>,
 		 * or a Matcher against which the sent data will be checked.
 		 */
-		public function send(dataOrMatcher:Object):HTTPServiceMockingCouvertureDecorator
+		public function send(dataOrMatcher:Object):HTTPServiceDecorator
 		{
 			_dataMatcher 
 				= dataOrMatcher is Matcher
 				? dataOrMatcher as Matcher
 				: hasProperties(dataOrMatcher);
 				
-//			_mocker.method("send").args(dataMatcher).once();
+//			mocker.method("send").args(dataMatcher).once();
 
 			return this;
 		}
@@ -105,11 +112,11 @@ package mockolate.ingredients.rpc
 		/**
 		 * 
 		 */
-		public function result(resultData:Object):HTTPServiceMockingCouvertureDecorator
+		public function result(resultData:Object):HTTPServiceDecorator
 		{
 			var token:AsyncToken = new AsyncToken();
 			
-			_mocker
+			mocker
 				.method("send")
 				.args(_dataMatcher)
 				.returns(token)
@@ -121,11 +128,11 @@ package mockolate.ingredients.rpc
 		/**
 		 * 
 		 */
-		public function fault(faultCode:String, faultString:String, faultDetail:String):HTTPServiceMockingCouvertureDecorator
+		public function fault(faultCode:String, faultString:String, faultDetail:String):HTTPServiceDecorator
 		{
 			var token:AsyncToken = new AsyncToken();
 			
-			_mocker
+			mocker
 				.method("send")
 				.args(_dataMatcher)
 				.returns(token)

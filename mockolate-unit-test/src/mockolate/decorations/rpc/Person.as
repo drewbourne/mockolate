@@ -1,4 +1,4 @@
-package mockolate.rpc
+package mockolate.decorations.rpc
 {
 	import flash.events.Event;
 	import flash.events.EventDispatcher;

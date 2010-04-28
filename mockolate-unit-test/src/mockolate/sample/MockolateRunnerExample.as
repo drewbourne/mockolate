@@ -63,7 +63,8 @@ package mockolate.sample
          assertThat(strictlyImplicitlyInjected.giveString(),  equalTo(expected));
       }
 
-      // remove the [Ignore] for the test as an example of a mock failing auto-verification. 
+      // remove the [Ignore] for the test as an example of a mock failing auto-verification.
+	  [Ignore]
       [Test]
       public function mocksShouldBeAutomaticallyVerified2 () : void
       {

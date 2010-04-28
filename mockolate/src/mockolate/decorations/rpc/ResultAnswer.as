@@ -1,4 +1,4 @@
-package mockolate.ingredients.rpc
+package mockolate.decorations.rpc
 {
 	import flash.utils.setTimeout;
 	

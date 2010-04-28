@@ -37,6 +37,8 @@ package mockolate.ingredients
             this.mockolate.targetClass = EventDispatcher;
             
             mocker = new MockingCouverture(mockolate);
+			
+			this.mockolate.mocker = mocker;
         }
         
         public function invoke(options:Object):Invocation 
@@ -381,7 +383,7 @@ package mockolate.ingredients
             Async.proceedOnEvent(this, dispatcher, "dispatches_shouldDispatchEvent");
 
             // stub EventDispatcher methods
-            mocker.asEventDispatcher();
+            mocker.stub().asEventDispatcher();
 
             // the tested expectation 
             mocker.method("example").dispatches(new Event(Event.COMPLETE));

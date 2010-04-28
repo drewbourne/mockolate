@@ -1,4 +1,4 @@
-package mockolate.rpc
+package mockolate.decorations.rpc
 {
 	import flash.events.Event;
 	
@@ -98,6 +98,7 @@ package mockolate.rpc
 			person.save();
 		}
 	
+		[Ignore]
 		[Test(async)]
 		public function destroy_withPerson_notifiesOfSaveAndDoesntUpdatePerson():void 
 		{

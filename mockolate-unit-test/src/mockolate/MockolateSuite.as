@@ -2,7 +2,7 @@ package mockolate
 {
 	import mockolate.ingredients.*;
 	import mockolate.ingredients.floxy.InterceptingCouvertureTest;
-	import mockolate.rpc.StubbingHttpService;
+	import mockolate.decorations.rpc.StubbingHttpService;
 	import mockolate.sample.MockolateRunnerExample;
 
 	[Suite]
