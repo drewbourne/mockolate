@@ -170,12 +170,21 @@ package mockolate.ingredients
             var mockolate:Mockolate = _mockolateFactory.create(klass, constructorArgs, asStrict, name);
             var target:* = mockolate.target;
             
-            // store
-            _mockolates.push(mockolate);
-            _mockolatesByTarget[target] = mockolate;
+            registerTargetMockolate(target, mockolate);
             
             return target;
         }
+		
+		/**
+		 * 
+		 */
+		mockolate_ingredient function registerTargetMockolate(target:Object, mockolate:Mockolate):Mockolate 
+		{
+			_mockolates.push(mockolate);
+			_mockolatesByTarget[target] = mockolate;
+			
+			return mockolate;
+		}
         
         /**
          * Finds a Mockolate instance by its target instance.
@@ -184,7 +193,7 @@ package mockolate.ingredients
          * 
          * @private
          */
-        protected function mockolateByTarget(target:*):Mockolate
+		mockolate_ingredient function mockolateByTarget(target:*):Mockolate
         {
             var mockolate:Mockolate = _mockolatesByTarget[target];
             if (!mockolate)

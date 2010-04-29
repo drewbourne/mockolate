@@ -2,6 +2,10 @@ package mockolate.ingredients
 {
     import flash.events.IEventDispatcher;
     
+    import mockolate.ingredients.mockolate_ingredient;
+	
+	use namespace mockolate_ingredient;
+	
     [ExcludeClass]
     
     /**
@@ -82,5 +86,13 @@ package mockolate.ingredients
         {
             return mockolatier.verify(target);
         }
+		
+		/**
+		 * 
+		 */
+		mockolate_ingredient static function registerTargetMockolate(target:Object, mockolate:Mockolate):Mockolate 
+		{
+			return mockolatier.registerTargetMockolate(target, mockolate);
+		}
     }
 }

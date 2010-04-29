@@ -1,8 +1,9 @@
 package mockolate
 {
+	import mockolate.decorations.rpc.StubbingHttpService;
 	import mockolate.ingredients.*;
 	import mockolate.ingredients.floxy.InterceptingCouvertureTest;
-	import mockolate.decorations.rpc.StubbingHttpService;
+	import mockolate.ingredients.proxy.ProxyMockolateTest;
 	import mockolate.sample.MockolateRunnerExample;
 
 	[Suite]
@@ -27,7 +28,7 @@ package mockolate
         // FLoxy integration
         //
         public var intercepting:InterceptingCouvertureTest;
-
+		
         //
         // examples
         //
@@ -39,6 +40,8 @@ package mockolate
 		public var usingMock:MockingMockolates;
 		public var usingVerify:VerifyingMockolates;
 		public var usingFlashClasses:UsingFlashClasses;
+		public var usingProxies:ProxyMockolateTest;
+
 		
 		// 
 		//	decorators

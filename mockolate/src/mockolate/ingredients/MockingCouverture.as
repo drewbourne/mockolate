@@ -575,7 +575,7 @@ package mockolate.ingredients
 		 */
 		public function asEventDispatcher():EventDispatcherDecorator
 		{
-			return decorate(EventDispatcher) as EventDispatcherDecorator;
+			return stub().decorate(EventDispatcher) as EventDispatcherDecorator;
 		}
 		
 		/**
@@ -583,7 +583,7 @@ package mockolate.ingredients
 		 */
 		public function asHTTPService():HTTPServiceDecorator
 		{
-			return decorate(HTTPService) as HTTPServiceDecorator;
+			return stub().decorate(HTTPService) as HTTPServiceDecorator;
 		}
         
         //

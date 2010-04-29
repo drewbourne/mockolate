@@ -52,7 +52,6 @@ package mockolate.sample
       }
 
       // Cannot use expected error for Mock Errors as the expects metadata is processed before the automatic mock verification
-      // [Test(expected="com.anywebcam.mock.MockExpectationError")]
       [Test]
       public function mocksShouldBeAutomaticallyVerified () : void
       {

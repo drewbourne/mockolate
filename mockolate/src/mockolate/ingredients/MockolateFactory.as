@@ -31,6 +31,6 @@ package mockolate.ingredients
          * 
          * @see Mockolate#isStrict
          */
-        function create(klass:Class, constructorArgs:Array=null, asStrict:Boolean=true, name:String=null):Mockolate;
+        function create(classReference:Class, constructorArgs:Array=null, asStrict:Boolean=true, name:String=null):Mockolate;
     }
 }
