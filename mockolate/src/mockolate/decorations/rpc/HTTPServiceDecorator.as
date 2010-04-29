@@ -104,8 +104,6 @@ package mockolate.decorations.rpc
 				? dataOrMatcher as Matcher
 				: hasProperties(dataOrMatcher);
 				
-//			mocker.method("send").args(dataMatcher).once();
-
 			return this;
 		}
 			
@@ -115,12 +113,14 @@ package mockolate.decorations.rpc
 		public function result(resultData:Object):HTTPServiceDecorator
 		{
 			var token:AsyncToken = new AsyncToken();
+			var resultEvent:ResultEvent = new ResultEvent(ResultEvent.RESULT, false, false, resultData, token);
 			
 			mocker
 				.method("send")
 				.args(_dataMatcher)
 				.returns(token)
-				.answers(new ResultAnswer(token, new ResultEvent(ResultEvent.RESULT, false, false, resultData, token)));			
+				.answers(new ResultAnswer(token, resultEvent))
+				.dispatches(resultEvent);			
 			
 			return this;
 		}
@@ -131,12 +131,14 @@ package mockolate.decorations.rpc
 		public function fault(faultCode:String, faultString:String, faultDetail:String):HTTPServiceDecorator
 		{
 			var token:AsyncToken = new AsyncToken();
+			var faultEvent:FaultEvent = new FaultEvent(FaultEvent.FAULT, false, false, new Fault(faultCode, faultString, faultDetail), token); 
 			
 			mocker
 				.method("send")
 				.args(_dataMatcher)
 				.returns(token)
-				.answers(new FaultAnswer(token, new FaultEvent(FaultEvent.FAULT, false, false, new Fault(faultCode, faultString, faultDetail), token)));	
+				.answers(new FaultAnswer(token, faultEvent))
+				.dispatches(faultEvent);	
 			
 			return this;
 		}
