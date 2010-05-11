@@ -347,6 +347,7 @@ package mockolate.ingredients
             {
                 if (!_currentVerification.invokedCountMatcher.matches(matchingInvocations))
                 {
+                    // TODO fix description
                     fail("no invocations received " + _currentVerification.invokedCount + " times ");
                 }
             }
@@ -359,7 +360,7 @@ package mockolate.ingredients
         {
             if (empty(array))
             {
-                fail(description);       
+                fail(description);
             } 
         }
         
@@ -369,7 +370,7 @@ package mockolate.ingredients
         protected function fail(description:String):void 
         {
             throw new VerificationError(
-            	description, _currentVerification, mockolate, mockolate.target);    
+                description, _currentVerification, mockolate, mockolate.target);
         }
     }
 }
