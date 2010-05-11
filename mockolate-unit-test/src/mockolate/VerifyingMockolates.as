@@ -131,5 +131,16 @@ package mockolate
                 .args(nullValue())
                 .twice();
         }
+		
+		[Test(expected="mockolate.errors.VerificationError")]
+		public function verifyAsTestSpyFailingInvokedCountNever():void 
+		{
+			var instance:Flavour = nice(Flavour);
+			
+			instance.combine(null);
+			
+			verify(instance).method("combine").args(nullValue()).times(0);
+		}
+		
     }
 }
