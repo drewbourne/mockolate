@@ -26,7 +26,6 @@ package mockolate.decorations.rpc
 		[Mock]
 		public var service:HTTPService;
 		
-		
 		[Before]
 		public function setUp():void
 		{
