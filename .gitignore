@@ -8,3 +8,6 @@ doc/
 
 # ignore the eclipse .settings folder, irrelevant
 .settings/
+
+# MacOS junk
+.DS_Store
