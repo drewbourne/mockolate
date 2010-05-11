@@ -8,6 +8,12 @@ doc/
 
 # ignore the eclipse .settings folder, irrelevant
 .settings/
+.actionScriptProperties
+.flexLibProperties
+.flexProperties
+
+# ignore generated FlexUnit apps
+FlexUnitCompilerApplication.mxml
 
 # MacOS junk
 .DS_Store
