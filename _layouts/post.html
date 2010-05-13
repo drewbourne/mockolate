@@ -1,0 +1,14 @@
+---
+layout: site
+---
+<div class="post">
+	<h1><a href="{{ page.url }}">{{ page.title }}</a></h1>
+	<div class="meta">
+		{% if page.date != null %} 
+		<span class="date">{{ page.date | date_to_string }}</span>
+		{% endif %}
+		<span class="author">{{ page.author }}</span> 
+		wrote <span class="wordcount">{{ content | number_of_words }} words</span>
+	</div>
+	<div class="body">{{ content }}</div>
+</div>

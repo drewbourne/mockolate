@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>mockolate * {{ page.title }}</title>
+	<meta name="author" content="Drew Bourne" />
+	<link rel="stylesheet" href="/css/reset.css" type="text/css" media="screen, projection" />
+	<link rel="stylesheet" href="/css/960.css" type="text/css" media="screen, projection" />	
+	<link rel="stylesheet" href="/css/text.css" type="text/css" media="screen, projection" />
+	<link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />	
+	<link rel="stylesheet" href="/css/syntax.css" type="text/css" media="screen, projection" />
+	<script type="text/javascript" src="http://use.typekit.com/wnv0apu.js"></script>
+	<script type="text/javascript">try { Typekit.load(); } catch(e) {}</script>
+</head>
+<body>
+	<div class="container_12">
+		<div class="grid_3">
+			
+			<div class="header">
+				<h1><a href="/">Mockolate</a></h1>
+				<p>fake chocolate, <br/>mock objects and <br/>test spies for <abbr title="actionscript 3">AS3</abbr></p>
+			</div>
+			
+			<div class="navigation">
+				<div class="download">
+					<h3>Download</h3>
+					<ul>
+						<li>SWC + Source + Docs (Soon)</li>
+						<li><a href="http://github.com/drewbourne/mockolate">GitHub</a></li>
+						<li><a href="http://github.com/drewbourne/mockolate/LICENSE">License</a></li>
+					</ul>
+				</div>
+				
+				<div class="how_to">
+					<h3>How-to</h3>
+					<ul>
+						<li><a href="/mockolate.html">Mockolate?</a></li>
+						<li><a href="/getting_mockolate.html">Getting Mockolate</a></li>
+						<li><a href="/preparing_and_creating.html">Preparing and Creating</a></li>
+						<li><a href="/stubbing_and_mocking.html">Stubbing and Mocking</a></li>
+						<li><a href="/verifying_and_test_spies.html">Verifying and Test Spies</a></li>
+						<li><a href="/decorating_mockolates.html">Decorating Mockolates</a></li>
+					</ul>
+				</div>
+				
+				<div class="posts">
+					<h3>Posts</h3>
+					<ul>
+					{% for post in site.posts %}
+						<li><a href="{{ post.url }}">{{ post.title }}</a></li>
+					{% endfor %}
+					</ul>
+				</div>
+				
+				<div class="contributors">
+					<h3>Handcrafted by</h3>
+					<ul>
+						<li>Drew Bourne 
+							<a href="http://twitter.com/drewbourne">twitter</a>
+							<a href="http://github.com/drewbourne">github</a>
+						</li>
+					</ul>
+				</div>
+				
+				<div class="related">
+					<h3>Related Projects</h3>
+					<ul>
+						<li><a href="http://github.com/drewbourne/hamcrest-as3">hamcrest-as3</a></li>
+						<li><a href="http://flexunit.org/">flexunit 4</a></li>
+						<li><a href="http://github.com/drewbourne/asx">asx</a></li>
+					</ul>
+				</div>
+				
+			</div>
+		</div>
+		<div class="grid_9 content">{{ content }}</div>
+		<div class="clear"></div>
+	</div>
+	<script type="text/javascript">
+
+	  var _gaq = _gaq || [];
+	  _gaq.push(['_setAccount', 'UA-16341473-1']);
+	  _gaq.push(['_trackPageview']);
+
+	  (function() {
+	    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+	    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+	    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+	  })();
+
+	</script>
+</body>
+</html>

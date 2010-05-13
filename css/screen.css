@@ -1,0 +1,109 @@
+/*
+kuler, chocolate kiss
+
+- #E3EEF0 white 	240, 238, 227
+- #521220 raspberry	83, 18, 32
+- #D65D7B pink, 	214, 93, 123
+- #3B2520 milk		39, 37, 32
+- #261815 dark		38, 24, 21
+- #1C110F darker	28, 17, 15
+
+kuler, fake rainbox
+- #61114b purple, 97, 17, 75
+- #363445 gray 54, 52, 69
+- #998836 brown 153, 136, 54
+- #c9bb27 babyshit 201 187 39
+- #99b2ff blue 153 178 255
+
+*/
+
+/* elements */
+
+body {
+	background: #1C110F;
+	/*background: #1C110F url(/images/bg.jpg) repeat center top;*/
+	color: #F0EEE3;
+}
+
+a {
+	color: #D65D7B /*#AD1E86*/;
+	font-weight: bold;	
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+h1, h2, h3, h4, h5, h6 {
+	font-weight: 100;
+}
+
+h1 a, h2 a, h3 a, h4 a, h5 a, h6 a {
+	font-weight: 100;
+}
+
+h1, h2, h3, h4, h5, h6 {
+	margin-bottom: 0px;
+}
+
+h1 a {
+	text-decoration: none;
+}
+
+pre {
+	background: #261815;
+	padding: 10px 20px 10px 10px;
+	border: 1px solid #261815;
+	/*
+	border-top: 1px solid #261815;
+	border-bottom: 1px solid #261815;
+	border-left: 1px solid #3B2520;
+	border-right: 1px solid #3B2520;
+	*/
+	margin-left: -10px;
+	margin-right: -10px;
+	margin-bottom: -1;
+	margin-right: -1;
+	overflow: auto;
+}
+
+/* containers */
+
+.header {
+	padding-top: 20px;
+}
+
+.header a {
+}
+
+.content {
+	padding-top: 20px;
+}
+
+.navigation {
+}
+
+.navigation ul {
+	list-style: none;
+}
+
+.navigation ul li {
+	margin: 0;
+}
+
+.links {
+
+}
+
+.footer {
+	background: #3B2520;
+}
+
+/* 960 containers */
+
+.container_12 {
+	/*background: rgba(28, 17, 15, 0.9); /*261815*/
+	/*background: transparent url(/images/12_col.gif) repeat-y;*/
+	margin-bottom: 20px;
+}
