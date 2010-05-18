@@ -208,6 +208,14 @@ package mockolate.ingredients
             invoke({ name: "example", arguments: [ 1, 2 ] });
             mocker.verify();
         }
+		
+		[Test]
+		public function args_shouldUseArrayAsIs():void 
+		{
+			mocker.method("example").args([1, 2, 3]);
+			invoke({ name: "example", arguments: [ [1, 2, 3] ] });
+			mocker.verify();
+		}
         
         //
         //    returns

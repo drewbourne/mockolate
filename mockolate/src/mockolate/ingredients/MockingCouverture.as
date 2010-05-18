@@ -35,6 +35,7 @@ package mockolate.ingredients
     
     import org.hamcrest.Matcher;
     import org.hamcrest.StringDescription;
+    import org.hamcrest.collection.IsArrayMatcher;
     import org.hamcrest.collection.array;
     import org.hamcrest.collection.emptyArray;
     import org.hamcrest.core.anyOf;
@@ -792,7 +793,7 @@ package mockolate.ingredients
         {   
         	_currentExpectation.argsMatcher = describedAs(
         	    new StringDescription().appendList("", ",", "", args).toString(), 
-        	    array(map(args, valueToMatcher)));
+        	    new IsArrayMatcher(map(args, valueToMatcher)));
         }
         
         /**
