@@ -70,9 +70,15 @@ package mockolate.ingredients
         }
         
         [Test(expected="mockolate.errors.VerificationError")]
-        public function never():void 
+        public function never_implicitly():void 
         {
-        	verifier.method("notCalled");
+        	verifier.method("notCalled").never();
         }
+		
+		[Test(expected="mockolate.errors.VerificationError")]
+		public function never_explicitly():void 
+		{
+			verifier.method("method").never();
+		}
     }
 }
