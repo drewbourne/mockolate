@@ -5,6 +5,8 @@ package mockolate.runner
    
    import org.flexunit.internals.runners.statements.IAsyncStatement;
    import org.flexunit.token.AsyncTestToken;
+   
+   [ExcludeClass]
 
    public class Inject implements IAsyncStatement
    {

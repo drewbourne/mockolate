@@ -73,7 +73,6 @@ package mockolate.runner
       protected override function methodBlock (method : FrameworkMethod) : IAsyncStatement
       {
          //COPY/PASTE FROM PARENT to supplement runner until refactor
-         var c : Class;
 
          var test : Object;
          

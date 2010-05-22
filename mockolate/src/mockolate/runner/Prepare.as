@@ -11,6 +11,8 @@ package mockolate.runner
    import org.flexunit.internals.runners.InitializationError;
    import org.flexunit.internals.runners.statements.IAsyncStatement;
    import org.flexunit.token.AsyncTestToken;
+   
+   [ExcludeClass]
 
    public class Prepare implements IAsyncStatement
    {

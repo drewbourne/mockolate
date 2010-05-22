@@ -8,6 +8,8 @@ package mockolate.runner
    import org.flexunit.internals.runners.statements.IAsyncStatement;
    import org.flexunit.runners.model.FrameworkMethod;
    import org.flexunit.token.AsyncTestToken;
+   
+   [ExcludeClass]
 
    public class Verify implements IAsyncStatement
    {
