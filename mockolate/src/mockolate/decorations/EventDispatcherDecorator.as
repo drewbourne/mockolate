@@ -2,6 +2,8 @@ package mockolate.decorations
 {
 	import asx.array.contains;
 	
+	import flash.display.DisplayObject;
+	import flash.display.Sprite;
 	import flash.events.EventDispatcher;
 	import flash.events.IEventDispatcher;
 	
@@ -49,14 +51,31 @@ package mockolate.decorations
 		
 		protected function initialize():void 
 		{
-			if (!(this.mockolate.target is IEventDispatcher))
+			if (this.mockolate.target is DisplayObject)
+				initializeForDisplayObject();
+			else if (this.mockolate.target is IEventDispatcher)
+				initializeForEventDispatcher();
+			else
 				throw new MockolateError(["Mockolate target is not an IEventDispatcher, target: {}", [mockolate.target]], mockolate, mockolate.target);
+		}
 		
+		protected function initializeForEventDispatcher():void 
+		{
 			_eventDispatcher = new EventDispatcher(this.mockolate.target);
 			
 			for each (var methodName:String in _eventDispatcherMethods)
 			{
 				mocker.method(methodName).answers(new MethodInvokingAnswer(_eventDispatcher, methodName));    
+			}
+		}
+		
+		protected function initializeForDisplayObject():void 
+		{
+			_eventDispatcher = this.mockolate.target as IEventDispatcher;
+			
+			for each (var methodName:String in _eventDispatcherMethods)
+			{
+				mocker.method(methodName).pass();    
 			}
 		}
 		
@@ -71,6 +90,7 @@ package mockolate.decorations
 			//
 			if (invocation.invocationType == InvocationType.METHOD
 				&& this.mockolate.target is IEventDispatcher
+				&& !(this.mockolate.target is DisplayObject)
 				&& contains(_eventDispatcherMethods, invocation.name))
 			{
 				_eventDispatcher[invocation.name].apply(null, invocation.arguments);	

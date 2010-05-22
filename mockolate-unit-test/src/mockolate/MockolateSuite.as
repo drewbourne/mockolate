@@ -41,6 +41,7 @@ package mockolate
 		public var usingVerify:VerifyingMockolates;
 		public var usingFlashClasses:UsingFlashClasses;
 		public var usingProxies:ProxyMockolateTest;
+		public var usingDisplayObjects:UsingDisplayObjects;
 
 		
 		// 
