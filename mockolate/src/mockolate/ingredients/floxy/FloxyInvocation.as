@@ -23,20 +23,7 @@ package mockolate.ingredients.floxy
         public function FloxyInvocation(invocation:IInvocation)
         {
             _invocation = invocation;
-            _invocationType = InvocationType.METHOD;
-            
-            if (_invocation.property)
-            {
-                if (_invocation.method.name == "get")
-                {
-                    _invocationType = InvocationType.GETTER;
-                }
-                
-                if (_invocation.method.name == "set")
-                {
-                    _invocationType = InvocationType.SETTER;
-                }
-            }
+            _invocationType = invocationTypeFromInvocation(invocation); 
         }
         
         public function get target():Object
@@ -95,5 +82,28 @@ package mockolate.ingredients.floxy
         {
             return formatToString(this, "FloxyInvocation", ["invocationType", "name", "arguments"]);
         }
+		
+		protected function invocationTypeFromInvocation(invocation:IInvocation):InvocationType 
+		{
+			var invocationType:InvocationType;
+			
+			if (invocation.property)
+			{
+				if (invocation.method.name == "get")
+				{
+					invocationType = InvocationType.GETTER;
+				}
+				else if (_invocation.method.name == "set")
+				{
+					invocationType = InvocationType.SETTER;
+				}
+			}
+			else
+			{
+				invocationType = InvocationType.METHOD;
+			}
+			
+			return invocationType;
+		}
     }
 }
