@@ -73,12 +73,51 @@ package mockolate
         public function mockingPropertyGetter():void
         {
             var instance:Flavour = nice(Flavour);
-            var answer:Object = "Butterscotch";
+            var result:Object = "Butterscotch";
             
-            mock(instance).property("name").returns(answer);
+            mock(instance).property("name").returns(result);
             
-            assertThat(instance.name, strictlyEqualTo(answer));
+            assertThat(instance.name, strictlyEqualTo(result));
         }
+		
+		[Test]
+		public function mockingPropertySetter():void 
+		{
+			var instance:Flavour = strict(Flavour);
+			var ingredients:Array= ["Cashew", "Butterscotch"];
+			
+			mock(instance).property("ingredients").arg(ingredients);
+			
+			instance.ingredients = ingredients;
+			
+			verify(instance);
+		}
+		
+		[Test]
+		public function mockingPropertyGetterAndSetter():void 
+		{
+			var instance:Flavour = strict(Flavour);
+			var ingredientsA:Array= ["Cashew", "Butterscotch"];
+			var ingredientsB:Array= ["Cashew", "Caramel"];
+			
+			mock(instance).property("ingredients").noArgs().returns(ingredientsA).once();
+			mock(instance).property("ingredients").args(ingredientsB).once();
+			mock(instance).property("ingredients").noArgs().returns(ingredientsB);
+			
+			assertThat(instance.ingredients, strictlyEqualTo(ingredientsA));
+			
+			instance.ingredients = ingredientsB;
+			
+			assertThat(instance.ingredients, strictlyEqualTo(ingredientsB));
+			
+			verify(instance);
+		}
+		
+		[Test]
+		public function mockingPropertySetterAndGetter():void 
+		{
+			
+		}
 
         // getter throws
         // setter throws

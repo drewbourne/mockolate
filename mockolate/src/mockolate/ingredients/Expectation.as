@@ -68,7 +68,7 @@ package mockolate.ingredients
 	    }
 	    
 	    private var _namespace:String;
-	    
+		
 	    /**
 	     * Indicates if this Expectation is for a method.
 	     */
@@ -240,12 +240,6 @@ package mockolate.ingredients
 	    	if (invocation.name != name)
 	    	{
 	    		return false;
-	    	}
-	    	
-	    	// getters are always eligible
-	    	if (invocation.invocationType == InvocationType.GETTER)
-	    	{
-	    		return true;
 	    	}
 	    	
 	    	if (argsMatcher && !argsMatcher.matches(invocation.arguments))
