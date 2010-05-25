@@ -67,7 +67,7 @@ package mockolate.decorations.rpc
 				? httpMethodOrMatcher as Matcher
 				: equalTo(httpMethodOrMatcher);
 			
-			mocker.property("method").args(httpMethodMatcher).once();
+			mocker.setter("method").arg(httpMethodMatcher).once();
 			
 			return this;
 		}
@@ -85,7 +85,7 @@ package mockolate.decorations.rpc
 				? headersOrMatcher as Matcher
 				: hasProperties(headersOrMatcher);
 			
-			mocker.property("headers").args(headersMatcher).once();
+			mocker.setter("headers").arg(headersMatcher).once();
 			
 			return this;
 		}
