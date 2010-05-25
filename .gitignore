@@ -2,6 +2,7 @@
 bin/
 bin-debug/
 bin-release/
+target/
 
 # ignore the asdoc output
 doc/
@@ -14,6 +15,9 @@ doc/
 
 # ignore generated FlexUnit apps
 FlexUnitCompilerApplication.mxml
+FlexUnitApplication.mxml
+.FlexUnitSettings
+
 
 # MacOS junk
 .DS_Store
