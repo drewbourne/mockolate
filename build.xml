@@ -3,58 +3,171 @@
       ant -v clean package
    
    The goal of this build is compile the library SWC, generate FlexPMD reports, generate ASDocs, and 
-   bundle a binary distribution.  Please note that FLoxy.swc is a runtime dependency of this library 
-   so it should be included on the classpath along with this library during compilation. 
+   bundle a binary distribution. 
 -->
-<project name="mockolate" basedir="." default="package">
-	<!-- Version config -->
-	<property name="build.groupId" value="mockolate" />
-	<property name="build.artifactId" value="mockolate" />
-	<property name="build.version" value="1.0.0" />
-	<property name="build.finalName" value="${build.artifactId}-${build.version}" />
+<project name="Mockolate" basedir="." default="package">
+    <property environment="env" />
+    <property file="${basedir}/build.properties" />
+    <property name="build.finalName" value="${build.artifactId}-${build.version}" />
+    <property name="FLEX_HOME" location="${env.FLEX_HOME}" />
 
-	<!-- Existing -->
-	<property name="library.loc" location="${basedir}/mockolate" />
-	<property name="tests.loc" location="${basedir}/mockolate-unit-test" />
+    <taskdef resource="flexTasks.tasks" classpath="${FLEX_HOME}/ant/lib/flexTasks.jar" />
+    <taskdef resource="flexUnitTasks.tasks" classpath="${build.loc}/flexUnitTasks-4.0.0.jar" />
 
-	<target name="clean">
-		<ant dir="${library.loc}" target="clean" inheritall="false">
-			<propertyset>
-				<propertyref prefix="build" />
-			</propertyset>
-		</ant>
-		
-		<ant dir="${tests.loc}" target="clean" inheritall="false" />
+    <target name="clean">
+        <delete dir="${target.loc}" />
+    </target>
+    
+    <target name="initialize">
+        <mkdir dir="${target.loc}" />
+        <mkdir dir="${bin.loc}" />
+        <mkdir dir="${doc.loc}" />
+        <mkdir dir="${report.loc}" />
+        <mkdir dir="${report.flexunit.loc}" />
+    </target>
+    
+    <target name="initialize-build-number">
+        <!-- Favour external build number, eg from Hudson -->
+        <condition property="build.number" value="${env.BUILD_NUMBER}">
+            <isset property="env.BUILD_NUMBER" />
+        </condition>
 
-		<delete file="${tests.loc}/libs/${build.finalName}.swc" />
-		<delete file="${tests.loc}/libs/FLoxy.swc" />
+        <!-- Otherwise use the local build.number -->
+        <propertyfile file="${build.number.loc}" comment="${project.name} build number">
+            <entry key="build.number" default="0" value="1" type="int" operation="+" />
+        </propertyfile>
+        <property file="${build.number.loc}" />
+    </target>
 
-		<delete file="${basedir}/${build.finalName}.bin.zip" />
-	</target>
+    <target name="compile" depends="initialize, compile.library">
+    </target>
+    
+    <target name="compile.library.check-if-required">
+        <uptodate property="compile.library.not-required"
+            targetfile="${bin.loc}/${library.swc}">
+            <srcfiles dir="${basedir}">
+                <include name="${src.loc}/**/.as" />
+                <include name="${src.loc}/**/.mxml" />
+                <include name="${test.src.loc}/**/.as" />
+                <include name="${test.src.loc}/**/.mxml" />
+            </srcfiles>
+        </uptodate>
+    </target>
+    
+    <target name="compile.library">
+        <compc output="${bin.loc}/${library.swc}">
+            <load-config filename="${FLEX_HOME}/frameworks/flex-config.xml" />
+            <load-config filename="${src.loc}/${library.config}" />
+        </compc>
+    </target>
+    
+    <target name="test" depends="initialize, compile.test, test.execute, test.report">
+    </target>
+    
+    <target name="compile.test.check-if-required">
+        <uptodate property="compile.library.not-required" 
+            targetfile="${test.swf}">
+            <srcresources>
+                <fileset dir="${src.loc}">
+                    <include name="**/.as" />
+                    <include name="**/.mxml" />
+                </fileset>
+                <fileset dir="${test.src.loc}">
+                    <include name="**/.as" />
+                    <include name="**/.mxml" />
+                </fileset>
+            </srcresources>
+        </uptodate>
+    </target>
+    
+    <target name="compile.test">
+        <mxmlc output="${bin.loc}/${test.swf}" file="${test.src.loc}/${test.runner}">
+            <load-config filename="${FLEX_HOME}/frameworks/flex-config.xml" />
+        </mxmlc>
+    </target>
+    
+    <target name="test.execute">
+        <flexunit 
+            swf="${bin.loc}/${test.swf}" 
+            toDir="${report.flexunit.loc}" 
+            haltonfailure="false" 
+            verbose="true" 
+            localTrusted="true" />
+    </target>
+    
+    <target name="test.report">
+        <junitreport todir="${report.flexunit.loc}">
+            <fileset dir="${report.flexunit.loc}">
+                <include name="TEST-*.xml" />
+            </fileset>
+            <report format="frames" todir="${report.flexunit.loc}/html" />
+        </junitreport>
 
-	<!-- Generate all artifacts and reports -->
-	<target name="prepare">
-		<!-- Build library -->
-		<ant dir="${library.loc}" target="report" inheritall="false" />
+        <property name="flexpmd.version" value="1.1" />
+        <path id="flexpmd.base">
+			<pathelement location="${build.loc}/as3-parser-${flexpmd.version}.jar" />
+			<pathelement location="${build.loc}/as3-parser-api-${flexpmd.version}.jar" />
+			<pathelement location="${build.loc}/as3-plugin-utils-${flexpmd.version}.jar" />
+			<pathelement location="${build.loc}/flex-pmd-files-${flexpmd.version}.jar" />
+			<pathelement location="${build.loc}/pmd-4.2.5.jar" />
+		</path>
 
-		<!-- Copy over library and FLoxy dependencies to run tests -->
-		<copy file="${library.loc}/target/${build.finalName}.swc" tofile="${tests.loc}/libs/${build.finalName}.swc" />
-		<copy file="${library.loc}/libs/FLoxy.swc" tofile="${tests.loc}/libs/FLoxy.swc" />
+		<taskdef name="pmd" classname="com.adobe.ac.pmd.ant.FlexPmdAntTask" classpath="${build.loc}/flex-pmd-ant-task-${flexpmd.version}.jar">
+			<classpath>
+				<path refid="flexpmd.base" />
+				<pathelement location="${build.loc}/commons-lang-2.4.jar" />
+				<pathelement location="${build.loc}/flex-pmd-core-${flexpmd.version}.jar" />
+				<pathelement location="${build.loc}/flex-pmd-ruleset-api-${flexpmd.version}.jar" />
+				<pathelement location="${build.loc}/flex-pmd-ruleset-${flexpmd.version}.jar" />
+				<pathelement location="${build.loc}/plexus-utils-1.0.2.jar" />
+			</classpath>
+		</taskdef>
 
-		<!-- Run tests -->
-		<ant dir="${tests.loc}" target="report" inheritall="false" />
-	</target>
+		<taskdef name="cpd" classname="com.adobe.ac.cpd.ant.FlexCpdAntTask" classpath="${build.loc}/flex-pmd-cpd-ant-task-${flexpmd.version}.jar">
+			<classpath>
+				<path refid="flexpmd.base" />
+				<pathelement location="${build.loc}/flex-pmd-cpd-${flexpmd.version}.jar" />
+			</classpath>
+		</taskdef>
 
-	<!-- Create distribution for binaries with docs -->
-	<target name="package" depends="prepare">
-		<zip destfile="${basedir}/${build.finalName}.bin.zip">
-			<zipfileset dir="${library.loc}/target/doc" prefix="doc" />
-			<zipfileset dir="${library.loc}/target">
-				<include name="${build.finalName}.swc" />
-			</zipfileset>
-			<zipfileset dir="${library.loc}/libs" prefix="libs">
-				<include name="FLoxy.swc" />
-			</zipfileset>
-		</zip>
-	</target>
+		<taskdef name="metrics" classname="com.adobe.ac.pmd.metrics.ant.FlexMetricsAntTask" classpath="${build.loc}/flex-pmd-metrics-ant-task-${flexpmd.version}.jar">
+			<classpath>
+				<path refid="flexpmd.base" />
+				<pathelement location="${build.loc}/commons-lang-2.4.jar" />
+				<pathelement location="${build.loc}/dom4j-1.6.1.jar" />
+				<pathelement location="${build.loc}/flex-pmd-metrics-${flexpmd.version}.jar" />
+				<pathelement location="${build.loc}/flex-pmd-ruleset-api-${flexpmd.version}.jar" />
+			</classpath>
+		</taskdef>
+        
+        <echo message="FlexMetrics running..." />
+        <metrics sourcedirectory="${src.loc}" outputfile="${report.loc}/javancss.xml" />
+
+        <echo message="FlexPMD running..." />
+        <pmd sourceDirectory="${src.loc}" outputDirectory="${report.loc}" ruleset="${basedir}/pmd-ruleset.xml" />
+
+        <echo message="FlexCPD running..." />
+        <cpd minimumTokenCount="50" outputFile="${report.loc}/cpd.xml">
+            <fileset dir="${src.loc}">
+                <include name="**/*.as" />
+            </fileset>
+        </cpd>
+    </target>
+
+    <target name="docs">
+        <java jar="${FLEX_HOME}/lib/asdoc.jar" fork="true" failonerror="true">
+            <arg line="+flexlib '${FLEX_HOME}/frameworks'" />
+            <arg line="-doc-sources '${src.loc}'" />
+            <arg line="-source-path+='${src.loc}'" />
+            <arg line="-library-path+='${libs.loc}'" />
+            <arg line="-output '${doc.loc}'" />
+            <arg line="-main-title '${ant.project.name} Documentation'" />
+            <arg line="-window-title '${ant.project.name} Documentation'" />
+        </java>
+    </target>
+    
+    <target name="package"
+        depends="compile, test, docs">
+    </target>
+
 </project>

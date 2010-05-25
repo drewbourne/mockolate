@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<flex-config xmlns="http://www.adobe.com/2006/flex-config">
+    
+    <benchmark>true</benchmark>
+    <compiler>
+        <debug>true</debug>
+        <incremental>true</incremental>
+        <optimize>true</optimize>
+        <keep-generated-actionscript>false</keep-generated-actionscript>
+        <warn-no-constructor>false</warn-no-constructor>
+        <warn-no-explicit-super-call-in-constructor>false</warn-no-explicit-super-call-in-constructor>
+        <show-unused-type-selector-warnings>false</show-unused-type-selector-warnings>
+        
+        <source-path append="true">
+            <path-element>../src</path-element>
+        </source-path>
+        
+        <library-path append="true">
+            <path-element>../libs</path-element>
+        </library-path>
+        
+        <include-libraries append="true">
+            <library>../libs/Floxy.swc</library>
+        </include-libraries>
+        
+        <external-library-path append="true">
+            <path-element>../libs/flexunit-4.0.0.swc</path-element>
+        </external-library-path>
+        
+        <keep-as3-metadata append="true">
+            <name>Mock</name>
+        </keep-as3-metadata>
+    </compiler>
+    
+    <include-sources>
+        <path-element>mockolate/src</path-element>
+    </include-sources>
+    
+    <link-report>../../target/bin/mockolate-link-report.xml</link-report>
+    
+</flex-config>
