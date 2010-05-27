@@ -7,6 +7,7 @@ package mockolate
     import flash.utils.describeType;
     
     import mockolate.ingredients.Mockolate;
+    import mockolate.ingredients.Sequence;
     import mockolate.sample.DarkChocolate;
     import mockolate.sample.Flavour;
     import mockolate.sample.FlavourMismatchError;
@@ -276,6 +277,46 @@ package mockolate
 			instance.combine(null);
 			
 			assertThat(dispatched, equalTo(true));
-        }        
+        }   
+		
+		[Test]
+		public function orderedMocksShouldPassIfInvokedInOrder():void
+		{
+			var seq:Sequence = sequence("should pass");
+			var flavourA:Flavour = strict(Flavour);
+			var flavourB:Flavour = strict(Flavour);
+			
+			var ingredientsA:Array = ["Cookies", "Cream"];
+			var ingredientsB:Array = ["Crunchie"];
+			
+			mock(flavourA).setter("ingredients").arg(ingredientsA).once().ordered(seq);
+			mock(flavourB).setter("ingredients").arg(ingredientsB).once().ordered(seq);
+			
+			flavourA.ingredients = ingredientsA;
+			flavourB.ingredients = ingredientsB;
+			
+			verify(flavourA);
+			verify(flavourB);
+		}
+		
+		[Test(expected="mockolate.errors.InvocationError")]
+		public function orderedMocksShouldFailIfInvokedOutOfOrder():void
+		{
+			var seq:Sequence = sequence("should pass");
+			var flavourA:Flavour = strict(Flavour);
+			var flavourB:Flavour = strict(Flavour);
+			
+			var ingredientsA:Array = ["Cookies", "Cream"];
+			var ingredientsB:Array = ["Crunchie"];
+			
+			mock(flavourA).setter("ingredients").arg(ingredientsA).once().ordered(seq);
+			mock(flavourB).setter("ingredients").arg(ingredientsB).once().ordered(seq);
+			
+			// stricts cause an InvocationError
+			flavourB.ingredients = ingredientsB;
+			
+			verify(flavourA);
+			verify(flavourB);
+		}
     }
 }

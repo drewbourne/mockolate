@@ -85,9 +85,9 @@ package mockolate.ingredients
 			return this;
 		}
 		
-		public function ordered(group:String=null):IMockingCouverture
+		public function ordered(sequence:Sequence):IMockingCouverture
 		{
-			mocker.ordered(group);
+			mocker.ordered(sequence);
 			return this;
 		}
 		

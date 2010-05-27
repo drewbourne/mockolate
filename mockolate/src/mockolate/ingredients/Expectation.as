@@ -1,6 +1,8 @@
 package mockolate.ingredients
 {
 	import asx.array.detect;
+	import asx.array.every;
+	import asx.fn.callProperty;
 	import asx.number.bound;
 	import asx.object.isDefined;
 	import asx.string.substitute;
@@ -10,6 +12,7 @@ package mockolate.ingredients
 	import flash.utils.setTimeout;
 	
 	import mockolate.ingredients.answers.Answer;
+	import mockolate.ingredients.constraints.Constraint;
 	
 	import org.hamcrest.Matcher;
 	import org.hamcrest.StringDescription;
@@ -32,6 +35,7 @@ package mockolate.ingredients
 	     */
 	    public function Expectation():void
 	    {
+			_constraints = [];
 	        _answers = [];
 	    }
 	    
@@ -163,6 +167,23 @@ package mockolate.ingredients
 	    
 	    private var _invokedCount:int;	    
 		
+		[ArrayElementType("mockolate.ingredients.constraints.Constraint")]
+		/**
+		 * Array of Constraints, used to constrain this Expectation to be 
+		 * invoked in the correct order. 
+		 */
+		public function get constraints():Array 
+		{
+			return _constraints;
+		}
+		
+		mockolate_ingredient function set _constraints(value:Array):void 
+		{
+			_constraints = value;
+		}
+		
+		private var _constraints:Array;
+		
 	    [ArrayElementType("mockolate.ingredients.answers.Answer")]
 	    /**
 	     * Array of Answers, used to determine the returnValue and other 
@@ -182,43 +203,29 @@ package mockolate.ingredients
 	    
 	    private var _answers:Array;
 	    
-	    /**
-	     * Group name when this Expectation is ordered.
-	     * 
-	     * @see MockingCouverture#ordered()
-	     */
-	    public function get orderGroup():String
-	    {
-	    	return _orderGroup;
-	    }
-	    
-	    mockolate_ingredient function set _orderGroup(value:String):void 
-	    {
-	    	_orderGroup = value;
-	    }
-	    
-	    private var _orderGroup:String;
-	    
-	    /**
-	     * Index of this Expectation in the orderGroup.
-	     * 
-	     * @see MokcingCouverture#ordered()
-	     */
-	    public function get orderIndex():int
-	    {
-	    	return _orderIndex;
-	    }
-	    
-	    mockolate_ingredient function set _orderIndex(value:int):void 
-	    {
-	    	_orderIndex = value;
-	    }
-	    
-	    private var _orderIndex:int;
+		/**
+		 * Indicates if the Expectation has been satisfied. 
+		 */
+		public function get satisfied():Boolean 
+		{
+			if (invokeCountVerificationMatcher) 
+				return invokeCountVerificationMatcher.matches(invokedCount)
+			
+			return true;
+		}
 	    
 	    //
 	    //	Methods
 	    //
+		
+		/**
+		 * Adds a Constraint instance to be used to determine the eligibility of
+		 * this Expectation.
+		 */
+		public function addConstraint(constraint:Constraint):void 
+		{
+			_constraints.push(constraint);	
+		}
 	    
 	    /**
 	     * Adds an Answer instance to be performed when this Expectation is invoked.
@@ -237,25 +244,33 @@ package mockolate.ingredients
 	   	 */
 	    public function eligible(invocation:Invocation):Boolean 
 	    {
-	    	if (invocation.name != name)
-	    	{
-	    		return false;
-	    	}
-	    	
-	    	if (argsMatcher && !argsMatcher.matches(invocation.arguments))
-	    	{
-	    		return false; 
-	    	}
-	    	
-	    	if (!invokeCountEligiblityMatcher 
-	    	|| invokeCountEligiblityMatcher.matches(invokedCount + 1))
-	    	{
-				return true;
-	    	}	
-	    	
-	    	return false;
+			return eligibleByName(invocation.name)
+				&& eligibleByArguments(invocation.arguments)
+				&& eligibleByConstraints()
+				&& eligibleByInvocationCount();
 	    }
-	    
+		
+		protected function eligibleByName(name:String):Boolean 
+		{
+			return this.name == name;
+		}
+		
+		protected function eligibleByArguments(arguments:Array):Boolean 
+		{
+			return !argsMatcher || argsMatcher.matches(arguments);
+		}
+		
+		protected function eligibleByConstraints():Boolean 
+		{
+			return every(_constraints, callProperty('isInvocationAllowed'));
+		}
+		
+		protected function eligibleByInvocationCount():Boolean 
+		{
+			return !invokeCountEligiblityMatcher 
+				|| invokeCountEligiblityMatcher.matches(invokedCount + 1);
+		}
+		
 	    /**
 	     * Invokes the Expectation. 
 	     * 

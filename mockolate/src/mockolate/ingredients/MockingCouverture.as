@@ -24,6 +24,7 @@ package mockolate.ingredients
 	import mockolate.errors.InvocationError;
 	import mockolate.errors.MockolateError;
 	import mockolate.errors.VerificationError;
+	import mockolate.ingredients.MockolatierMaster;
 	import mockolate.ingredients.answers.Answer;
 	import mockolate.ingredients.answers.CallsAnswer;
 	import mockolate.ingredients.answers.DispatchesEventAnswer;
@@ -206,7 +207,7 @@ package mockolate.ingredients
 			// when expectation mode is mock
 			// than should be called at least once
 			// -- will be overridden if set by the user. 
-			if (mockolate.isStrict)
+			if (this.mockolate.isStrict)
 				atLeast(1);			   
 			
 			return this;
@@ -547,9 +548,9 @@ package mockolate.ingredients
 		 *	mock(instance2).method("sort").ordered("execution order sensitive");
 		 * </listing>
 		 */		   
-		public function ordered(group:String=null):IMockingCouverture
+		public function ordered(sequence:Sequence):IMockingCouverture
 		{
-			throw new Error("Not Implemented");
+			addOrdered(sequence);
 			return this;
 		}
 		
@@ -899,6 +900,14 @@ package mockolate.ingredients
 		/**
 		 * @private
 		 */
+		protected function addOrdered(sequence:Sequence):void 
+		{
+			sequence.constrainAsNextInSequence(_currentExpectation);
+		}
+		
+		/**
+		 * @private
+		 */
 		protected function createDecoratorFor(classToDecorate:Class, decoratorClass:Class):Decorator
 		{
 			if (!decoratorClass)
@@ -969,11 +978,7 @@ package mockolate.ingredients
 		 */
 		protected function verifyExpectation(expectation:Expectation):Boolean 
 		{
-			if (expectation.invokeCountVerificationMatcher 
-				&& !expectation.invokeCountVerificationMatcher.matches(expectation.invokedCount))
-				return false;
-			
-			return true;
+			return expectation.satisfied;			
 		}
 	}
 }

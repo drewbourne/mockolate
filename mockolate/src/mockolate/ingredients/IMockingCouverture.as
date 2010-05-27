@@ -28,7 +28,7 @@ package mockolate.ingredients
 
 		function atMost(n:int):IMockingCouverture;
 
-		function ordered(group:String=null):IMockingCouverture;
+		function ordered(sequence:Sequence):IMockingCouverture;
 
 		function pass():IMockingCouverture;
 	}

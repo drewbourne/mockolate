@@ -42,7 +42,7 @@ package mockolate
 		public var usingFlashClasses:UsingFlashClasses;
 		public var usingProxies:ProxyMockolateTest;
 		public var usingDisplayObjects:UsingDisplayObjects;
-
+		public var usingOrderExpectations:UsingOrderedExpectations;
 		
 		// 
 		//	decorators
