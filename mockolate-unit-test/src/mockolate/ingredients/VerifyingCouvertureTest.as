@@ -69,10 +69,10 @@ package mockolate.ingredients
         	verifier.setter("setter").arg(4).once();
         }
         
-        [Test(expected="mockolate.errors.VerificationError")]
-        public function never_implicitly():void 
+        [Test]
+        public function never_implicitly_shouldNotOccur():void 
         {
-        	verifier.method("notCalled").never();
+        	verifier.method("notCalled");
         }
 		
 		[Test(expected="mockolate.errors.VerificationError")]
