@@ -14,6 +14,7 @@ package mockolate.ingredients
 	import org.flexunit.assertThat;
 	import org.flexunit.async.Async;
 	import org.hamcrest.collection.array;
+	import org.hamcrest.core.anything;
 	import org.hamcrest.number.greaterThanOrEqualTo;
 	import org.hamcrest.object.equalTo;
 	import org.hamcrest.object.hasProperty;
@@ -485,6 +486,16 @@ package mockolate.ingredients
 			
 			// invoke the expectation
 			invoke({ name: "example" });
+			
+			mocker.verify();
+		}
+		
+		[Test]
+		public function eventDispatcher_shouldAllowMockingOfEventDispatcherMethods():void 
+		{
+			mocker.method('addEventListener').args('change', Function, anything(), anything(), anything());
+			
+			invoke({ name: 'addEventListener', arguments: ['change', function():void {}, false, 0, true] })
 			
 			mocker.verify();
 		}
