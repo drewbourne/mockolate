@@ -1,4 +1,4 @@
-package mockolate.sample
+package mockolate.runner
 {
    import mockolate.mock;
    
@@ -6,7 +6,10 @@ package mockolate.sample
    import org.hamcrest.object.equalTo;
    import org.hamcrest.object.notNullValue;
    import org.hamcrest.object.nullValue;
+   import mockolate.sample.Example;
 
+   MockolateRunner;
+   
    [RunWith("mockolate.runner.MockolateRunner")]
    public class MockolateRunnerExample
    {

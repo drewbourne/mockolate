@@ -4,7 +4,8 @@ package mockolate
 	import mockolate.ingredients.*;
 	import mockolate.ingredients.floxy.InterceptingCouvertureTest;
 	import mockolate.ingredients.proxy.ProxyMockolateTest;
-	import mockolate.sample.MockolateRunnerExample;
+	import mockolate.runner.MockolateRuleExample;
+	import mockolate.runner.MockolateRunnerExample;
 
 	[Suite]
 	[RunWith("org.flexunit.runners.Suite")]
@@ -53,6 +54,7 @@ package mockolate
 		//
         //runner
 		//
-        public var runnerExample : MockolateRunnerExample;
+        public var runnerExample:MockolateRunnerExample;
+		public var ruleExample:MockolateRuleExample;
 	}
 }
