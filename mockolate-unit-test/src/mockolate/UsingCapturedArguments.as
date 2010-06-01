@@ -26,7 +26,7 @@ package mockolate
 			Async.proceedOnEvent(this, prepare(Flavour), Event.COMPLETE, 10000);
 		}
 		
-		[Test(expected="mockolate.error.CaptureError")]
+		[Test(expected="mockolate.errors.CaptureError")]
 		public function shouldComplainIfNoCapturedValue():void 
 		{
 			var captured:Capture = new Capture();
