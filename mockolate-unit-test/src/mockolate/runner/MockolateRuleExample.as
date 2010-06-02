@@ -27,6 +27,7 @@ package mockolate.runner
 			assertThat(flavour, notNullValue());
 		}
 		
+		[Ignore]
 		[Test]
 		public function failVerify():void 
 		{
