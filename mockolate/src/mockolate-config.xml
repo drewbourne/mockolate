@@ -24,7 +24,7 @@
         </include-libraries>
         
         <external-library-path append="true">
-            <path-element>../libs/flexunit-4.0.0.swc</path-element>
+            <path-element>../libs/flexunit-4.1.0.x.swc</path-element>
         </external-library-path>
         
         <keep-as3-metadata append="true">
@@ -33,7 +33,7 @@
     </compiler>
     
     <include-sources>
-        <path-element>mockolate/src</path-element>
+        <path-element>.</path-element>
     </include-sources>
     
     <link-report>../../target/bin/mockolate-link-report.xml</link-report>

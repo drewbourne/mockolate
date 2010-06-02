@@ -1,6 +1,12 @@
 <!--
-   Suggested Usage:
-      ant -v clean package
+    Mockolate
+    
+    Usage:    
+        $ ant -v clean package
+        
+    Dependencies:
+    - Ant 1.7+
+    - Flex 4.0+
    
    The goal of this build is compile the library SWC, generate FlexPMD reports, generate ASDocs, and 
    bundle a binary distribution. 
