@@ -14,7 +14,6 @@
 <project name="Mockolate" basedir="." default="package">
     <property environment="env" />
     <property file="${basedir}/build.properties" />
-    <property name="build.finalName" value="${build.artifactId}-${build.version}" />
     <property name="FLEX_HOME" location="${env.FLEX_HOME}" />
 
     <taskdef resource="flexTasks.tasks" classpath="${FLEX_HOME}/ant/lib/flexTasks.jar" />
@@ -30,6 +29,10 @@
         <mkdir dir="${doc.loc}" />
         <mkdir dir="${report.loc}" />
         <mkdir dir="${report.flexunit.loc}" />
+        
+        <property name="library.swc" value="${build.artifactId}-${build.version}.swc" />
+        <property name="library.zip" value="${build.artifactId}-${build.version}.zip" />
+        
     </target>
     
     <target name="initialize-build-number">
@@ -60,7 +63,9 @@
         </uptodate>
     </target>
     
-    <target name="compile.library">
+    <target name="compile.library" 
+        depends="compile.library.check-if-required"
+        unless="compile.library.not-required">
         <compc output="${bin.loc}/${library.swc}">
             <load-config filename="${FLEX_HOME}/frameworks/flex-config.xml" />
             <load-config filename="${src.loc}/${library.config}" />
@@ -71,22 +76,20 @@
     </target>
     
     <target name="compile.test.check-if-required">
-        <uptodate property="compile.library.not-required" 
-            targetfile="${test.swf}">
-            <srcresources>
-                <fileset dir="${src.loc}">
-                    <include name="**/.as" />
-                    <include name="**/.mxml" />
-                </fileset>
-                <fileset dir="${test.src.loc}">
-                    <include name="**/.as" />
-                    <include name="**/.mxml" />
-                </fileset>
-            </srcresources>
+        <uptodate property="compile.test.not-required" 
+            targetfile="${bin.loc}/${test.swf}">
+            <srcfiles dir="${basedir}">
+                <include name="${src.loc}/**/.as" />
+                <include name="${src.loc}/**/.mxml" />
+                <include name="${test.src.loc}/**/.as" />
+                <include name="${test.src.loc}/**/.mxml" />
+            </srcfiles>
         </uptodate>
     </target>
     
-    <target name="compile.test">
+    <target name="compile.test" 
+        depends="compile.test.check-if-required"
+        unless="compile.test.not-required">
         <mxmlc output="${bin.loc}/${test.swf}" file="${test.src.loc}/${test.runner}">
             <load-config filename="${FLEX_HOME}/frameworks/flex-config.xml" />
         </mxmlc>
@@ -174,6 +177,14 @@
     
     <target name="package"
         depends="compile, test, docs">
+        
+        <zip destfile="${target.loc}/${library.zip}">
+            <zipfileset dir="${doc.loc}" prefix="mockolate/docs" />
+            <zipfileset dir="${bin.loc}" prefix="mockolate">
+                <include name="*.swc" />
+             </zipfileset>
+        </zip>
+        
     </target>
 
 </project>
