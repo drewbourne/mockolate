@@ -73,32 +73,52 @@ package mockolate.ingredients
 	    
 	    private var _namespace:String;
 		
+		/**
+		 * 
+		 */
+		public function get invocationType():InvocationType
+		{
+			return _invocationType;
+		}
+		
+		public function set invocationType(value:InvocationType):void 
+		{
+			_invocationType = value;
+		}
+		
+		private var _invocationType:InvocationType;
+		
 	    /**
 	     * Indicates if this Expectation is for a method.
 	     */
 	    public function get isMethod():Boolean
 	    {
-	    	return _isMethod;
+	    	return _invocationType.isMethod;
 	    }
 	    
-	    public function set isMethod(value:Boolean):void 
-	    {
-	    	_isMethod = value;
-	    }
+		/**
+		 * Indicates if this Expectation is for a getter.
+		 */
+		public function get isGetter():Boolean 
+		{
+			return _invocationType.isGetter
+		}
+		
+		/**
+		 * Indicates if this Expectation is for a getter.
+		 */
+		public function get isSetter():Boolean 
+		{
+			return _invocationType.isSetter;
+		}
 	    
-	    private var _isMethod:Boolean;
-	    
+		[Deprecated(since="0.8.0", replacement="#isGetter() or #isSetter()")]
 	    /**
-	     * Indicates if this Expectation is for a method.
+	     * Indicates if this Expectation is for a property.
 	     */
 	    public function get isProperty():Boolean
 	    {
 	    	return !isMethod;
-	    }
-	    
-	    public function set isProperty(value:Boolean):void 
-	    {
-	    	isMethod = !value;
 	    }
 	    
 	    /**
@@ -244,11 +264,17 @@ package mockolate.ingredients
 	   	 */
 	    public function eligible(invocation:Invocation):Boolean 
 	    {
-			return eligibleByName(invocation.name)
+			return eligibleByInvocationType(invocation.invocationType) 
+				&& eligibleByName(invocation.name)
 				&& eligibleByArguments(invocation.arguments)
 				&& eligibleByConstraints()
 				&& eligibleByInvocationCount();
 	    }
+		
+		protected function eligibleByInvocationType(invocationType:InvocationType):Boolean 
+		{
+			return this.invocationType == invocationType;	
+		}
 		
 		protected function eligibleByName(name:String):Boolean 
 		{

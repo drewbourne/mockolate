@@ -89,11 +89,6 @@ package mockolate.ingredients
 		{
 			super(mockolate);
 			
-			_invokedAs = {};
-			_invokedAs[ InvocationType.METHOD ] = invokedAsMethod;
-			_invokedAs[ InvocationType.GETTER ] = invokedAsGetter;
-			_invokedAs[ InvocationType.SETTER ] = invokedAsSetter;
-			
 			_expectations = [];
 			_mockExpectations = [];
 			_stubExpectations = [];
@@ -185,7 +180,7 @@ package mockolate.ingredients
 		}
 		
 		// TODO Should return a MockingPropertyCouverture that hides method() and property() and provides only arg() not args()
-		// [Deprecated(replacement="#getter() or #setter()")]
+		[Deprecated(since="0.8.0", replacement="#getter() or #setter()")]
 		/**
 		 * Defines an Expectation for the given property name.
 		 * 
@@ -212,22 +207,24 @@ package mockolate.ingredients
 			return this;
 		}
 		
-		// TODO return a MockingGetterCouverture
 		/**
 		 * 
 		 */
 		public function getter(name:String/*, ns:String=null*/):IMockingGetterCouverture
 		{
-			return new MockingGetterCouverture(MockingCouverture(property(name).noArgs()));
+			createGetterExpectation(name);
+			
+			return new MockingGetterCouverture(this);
 		}
 		
-		// TODO return a MockingSetterCouverture
 		/**
 		 * 
 		 */
 		public function setter(name:String/*, ns:String=null*/):IMockingSetterCouverture
 		{
-			return new MockingSetterCouverture(MockingCouverture(property(name)));
+			createSetterExpectation(name);
+			
+			return new MockingSetterCouverture(this);
 		}
 		
 		/**
@@ -628,67 +625,29 @@ package mockolate.ingredients
 		 * 
 		 * @private
 		 */
-		protected function findEligibleExpectation(expectations:Array, invocation:Invocation):Expectation
+		protected function findEligibleExpectation(invocation:Invocation):Expectation
 		{
-			function isEligibleExpectation(expectation:Expectation):Boolean 
-			{
-				return expectation.eligible(invocation);
-			}
-			
-			return detect(expectations, isEligibleExpectation) as Expectation;
-		}
-		
-		/**
-		 * Finds the first method Expectation that returns <code>true</code> for
-		 * <code>Expectation.eligible(Invocation)</code> with the given Invocation.
-		 * 
-		 * @private	 
-		 */
-		protected function findEligibleMethod(invocation:Invocation):Expectation
-		{
-			function isMethodExpectation(expectation:Expectation):Boolean 
-			{
-				return expectation.isMethod;
-			}
-			
-			var expectation:Expectation = findEligibleExpectation(filter(_mockExpectations, isMethodExpectation), invocation);
-			
+			var expectation:Expectation = detect(_mockExpectations, isEligibleExpectation, invocation) as Expectation;
+
 			if (!expectation)
-				expectation = findEligibleExpectation(filter(_stubExpectations, isMethodExpectation), invocation); 
+				expectation = detect(_stubExpectations, isEligibleExpectation, invocation) as Expectation;
 			
 			if (!expectation && this.mockolate.isStrict)
+			{
 				throw new InvocationError(
-					["No method Expectation defined for Invocation:{}", [invocation]], 
+					["No Expectation defined for Invocation:{}", [invocation]], 
 					invocation, this.mockolate, this.mockolate.target);
+			}
 			
 			return expectation;
 		}
 		
 		/**
-		 * Finds the first property Expectation that returns <code>true</code> for
-		 * <code>Expectation.eligible(Invocation)</code> with the given Invocation.
-		 * 
-		 * @private
+		 * @private 
 		 */
-		protected function findEligibleProperty(invocation:Invocation):Expectation
+		protected function isEligibleExpectation(expectation:Expectation, invocation:Invocation):Boolean 
 		{
-			function isPropertyExpectation(expectation:Expectation):Boolean 
-			{
-				return expectation.isProperty;
-			}
-			
-			var expectation:Expectation = findEligibleExpectation(filter(_mockExpectations, isPropertyExpectation), invocation);
-			
-			if (!expectation)
-				expectation = findEligibleExpectation(filter(_stubExpectations, isPropertyExpectation), invocation); 
-			
-			if (!expectation && this.mockolate.isStrict)
-				throw new InvocationError(
-					["No property Expectation defined for Invocation:{}", [invocation]],
-					invocation, this.mockolate, this.mockolate.target);
-			
-			return expectation;
-			
+			return expectation.eligible(invocation);
 		}
 		
 		/**
@@ -701,11 +660,13 @@ package mockolate.ingredients
 		{
 			invokeDecorators(invocation);
 			
-			_invokedAs[ invocation.invocationType ](invocation);
+			invokeExpectation(invocation);
 		}
 		
 		/**
+		 * Invoke Decorators.
 		 * 
+		 * @private
 		 */
 		protected function invokeDecorators(invocation:Invocation):void 
 		{
@@ -716,41 +677,13 @@ package mockolate.ingredients
 		}
 		
 		/**
-		 * Find and invoke the first eligible method Expectation. 
+		 * Find and invoke the first eligible Expectation. 
 		 * 
 		 * @private
 		 */
-		protected function invokedAsMethod(invocation:Invocation):void
+		protected function invokeExpectation(invocation:Invocation):void
 		{
-			var expectation:Expectation = findEligibleMethod(invocation);
-			if (expectation)
-			{
-				expectation.invoke(invocation); 
-			}
-		}
-		
-		/**
-		 * Find and invoke the first eligible property Expectation. 
-		 * 
-		 * @private
-		 */
-		protected function invokedAsGetter(invocation:Invocation):void
-		{
-			var expectation:Expectation = findEligibleProperty(invocation);
-			if (expectation)
-			{
-				expectation.invoke(invocation); 
-			}
-		}
-		
-		/**
-		 * Find and invoke the first eligible property Expectation. 
-		 * 
-		 * @private
-		 */
-		protected function invokedAsSetter(invocation:Invocation):void 
-		{
-			var expectation:Expectation = findEligibleProperty(invocation);
+			var expectation:Expectation = findEligibleExpectation(invocation);
 			if (expectation)
 			{
 				expectation.invoke(invocation); 
@@ -769,10 +702,28 @@ package mockolate.ingredients
 		{
 			var expectation:Expectation = new Expectation();
 			expectation.name = name;
-			//			  expectation.namespace = ns;
+			
 			return expectation;
 		}
 		
+		/**
+		 * Adds an Expectation.
+		 * 
+		 * @private
+		 */
+		protected function addExpectation(expectation:Expectation):Expectation 
+		{
+			_expectations[_expectations.length] = expectation;
+			
+			if (_expectationsAsMocks)
+				_mockExpectations[_mockExpectations.length] = expectation;
+			else
+				_stubExpectations[_stubExpectations.length] = expectation;		
+			
+			return expectation;
+		}
+		
+		[Deprecated]
 		/**
 		 * Create an Expectation for a property.
 		 * 
@@ -781,14 +732,46 @@ package mockolate.ingredients
 		protected function createPropertyExpectation(name:String, ns:String=null):void
 		{
 			_currentExpectation = createExpectation(name, ns);
-			_currentExpectation.isMethod = false;
+			_currentExpectation.invocationType = InvocationType.GETTER;
+		}
+		
+		/**
+		 * Creates a Expectation for a getter.
+		 * 
+		 * @private
+		 */
+		protected function createGetterExpectation(name:String, ns:String=null):void 
+		{
+			_currentExpectation = createExpectation(name, ns);
+			_currentExpectation.invocationType = InvocationType.GETTER;
 			
-			_expectations[_expectations.length] = _currentExpectation;
+			addExpectation(_currentExpectation);
 			
-			_expectationsAsMocks
-			? _mockExpectations[_mockExpectations.length] = _currentExpectation
-				: _stubExpectations[_stubExpectations.length] = _currentExpectation;
-		}		 
+			// when expectation mode is mock
+			// than should be called at least once
+			// -- will be overridden if set by the user. 
+			if (this.mockolate.isStrict)
+				atLeast(1);	
+		}
+		
+		/**
+		 * Creates an Expectation for a setter.
+		 * 
+		 * @private
+		 */
+		protected function createSetterExpectation(name:String, ns:String=null):void 
+		{
+			_currentExpectation = createExpectation(name, ns);
+			_currentExpectation.invocationType = InvocationType.SETTER;
+			
+			addExpectation(_currentExpectation);
+			
+			// when expectation mode is mock
+			// than should be called at least once
+			// -- will be overridden if set by the user. 
+			if (this.mockolate.isStrict)
+				atLeast(1);				
+		}
 		
 		/**
 		 * Create an Expectation for a method.
@@ -798,13 +781,9 @@ package mockolate.ingredients
 		protected function createMethodExpectation(name:String, ns:String=null):void
 		{
 			_currentExpectation = createExpectation(name, ns);
-			_currentExpectation.isMethod = true;
+			_currentExpectation.invocationType = InvocationType.METHOD;
 			
-			_expectations[_expectations.length] = _currentExpectation;
-			
-			_expectationsAsMocks
-				? _mockExpectations[_mockExpectations.length] = _currentExpectation
-				: _stubExpectations[_stubExpectations.length] = _currentExpectation;						
+			addExpectation(_currentExpectation);						
 		}
 		
 		/**
