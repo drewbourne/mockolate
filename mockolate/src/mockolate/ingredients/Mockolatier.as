@@ -22,7 +22,7 @@ package mockolate.ingredients
     /**
      * Maker of the Mockolates.
      * 
-     * Used by MockolatierMaster and the <code>mockolate.*</code> package-level functions.
+     * Used by MockolatierMaster and the <code>mockolate.* </code> package-level functions.
      * 
      * Do not reference directly.  
      * 

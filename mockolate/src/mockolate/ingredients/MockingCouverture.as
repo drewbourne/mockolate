@@ -55,10 +55,9 @@ package mockolate.ingredients
 	
 	use namespace mockolate_ingredient;
 	
-	// FIXME the eventDispatcher stuff is hacky, unusable for other similar cases where we want to proceed.
-	
 	/**
-	 * Mock & Stub behaviour of the target, such as:
+	 * Mock and Stub behaviour of the target, such as:
+	 * 
 	 * <ul>
 	 * <li>return values, </li>
 	 * <li>calling functions, </li>
@@ -804,7 +803,7 @@ package mockolate.ingredients
 			_expectations[_expectations.length] = _currentExpectation;
 			
 			_expectationsAsMocks
-			? _mockExpectations[_mockExpectations.length] = _currentExpectation
+				? _mockExpectations[_mockExpectations.length] = _currentExpectation
 				: _stubExpectations[_stubExpectations.length] = _currentExpectation;						
 		}
 		

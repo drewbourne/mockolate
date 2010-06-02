@@ -4,9 +4,9 @@ package mockolate.ingredients
      * Type of an Invocation.
      * 
      * <ul>
-     * <li><code>METHOD</code> indicates the Invocation is a Method.
-     * <li><code>GETTER</code> indicates the Invocation is for the getter of a Property.
-     * <li><code>SETTER</code> indicates the Invocation is for the setter of a Property.
+     * <li><code>METHOD</code> indicates the Invocation is a Method.</li>
+     * <li><code>GETTER</code> indicates the Invocation is for the getter of a Property.</li>
+     * <li><code>SETTER</code> indicates the Invocation is for the setter of a Property.</li>
      * </ul>
      * 
      * @author drewbourne
