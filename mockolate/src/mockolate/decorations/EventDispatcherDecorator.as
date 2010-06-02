@@ -23,6 +23,7 @@ package mockolate.decorations
 	 */
 	public class EventDispatcherDecorator extends Decorator implements InvocationDecorator
 	{
+		private var _usingProxyEventDispatcher:Boolean;
 		private var _eventDispatcher:IEventDispatcher;
 		private var _eventDispatcherMethods:Array = [
 			'addEventListener', 
@@ -53,15 +54,18 @@ package mockolate.decorations
 		{
 			if (this.mockolate.target is DisplayObject)
 				initializeForDisplayObject();
-			else if (this.mockolate.target is IEventDispatcher)
+			else if (this.mockolate.target is EventDispatcher)
 				initializeForEventDispatcher();
+			else if (this.mockolate.target is IEventDispatcher)
+				initializeForIEventDispatcher();
 			else
 				throw new MockolateError(["Mockolate target is not an IEventDispatcher, target: {}", [mockolate.target]], mockolate, mockolate.target);
 		}
 		
-		protected function initializeForEventDispatcher():void 
+		protected function initializeForIEventDispatcher():void 
 		{
 			_eventDispatcher = new EventDispatcher(this.mockolate.target);
+			_usingProxyEventDispatcher = true;
 			
 			for each (var methodName:String in _eventDispatcherMethods)
 			{
@@ -69,9 +73,21 @@ package mockolate.decorations
 			}
 		}
 		
+		protected function initializeForEventDispatcher():void 
+		{
+			_eventDispatcher = this.mockolate.target as IEventDispatcher;
+			_usingProxyEventDispatcher = false;
+			
+			for each (var methodName:String in _eventDispatcherMethods)
+			{
+				mocker.method(methodName).pass();
+			}
+		}
+		
 		protected function initializeForDisplayObject():void 
 		{
 			_eventDispatcher = this.mockolate.target as IEventDispatcher;
+			_usingProxyEventDispatcher = false;
 			
 			for each (var methodName:String in _eventDispatcherMethods)
 			{
@@ -89,8 +105,7 @@ package mockolate.decorations
 			// actually dispatch events and avoid recursive stack overflows. 
 			//
 			if (invocation.invocationType == InvocationType.METHOD
-				&& this.mockolate.target is IEventDispatcher
-				&& !(this.mockolate.target is DisplayObject)
+				&& _usingProxyEventDispatcher
 				&& contains(_eventDispatcherMethods, invocation.name))
 			{
 				_eventDispatcher[invocation.name].apply(null, invocation.arguments);	

@@ -414,10 +414,10 @@ package mockolate.ingredients
 			
 			// invoke addEventListener, forwards arguments an actual EventDispatcher instance
 			// which is where the dispatchEvent will come from.
-			invoke({ name: "addEventListener", arguments: [Event.COMPLETE, listener] });
+			invoke({ target: target, name: "addEventListener", arguments: [Event.COMPLETE, listener] });
 			
 			// invoke the expectation
-			invoke({ name: "example" });
+			invoke({ target: target, name: "example" });
 			
 			mocker.verify();
 		}
@@ -450,10 +450,10 @@ package mockolate.ingredients
 			
 			// invoke addEventListener, forwards arguments an actual EventDispatcher instance
 			// which is where the dispatchEvent will come from.
-			invoke({ name: "addEventListener", arguments: [Event.COMPLETE, listener] });
+			invoke({ target: target, name: "addEventListener", arguments: [Event.COMPLETE, listener] });
 			
 			// invoke the expectation
-			invoke({ name: "example" });
+			invoke({ target: target, name: "example" });
 			
 			mocker.verify();
 		}
@@ -482,10 +482,10 @@ package mockolate.ingredients
 			
 			// invoke addEventListener, forwards arguments an actual EventDispatcher instance
 			// which is where the dispatchEvent will come from.
-			invoke({ name: "addEventListener", arguments: [Event.COMPLETE, listener] });
+			invoke({ target: target, name: "addEventListener", arguments: [Event.COMPLETE, listener] });
 			
 			// invoke the expectation
-			invoke({ name: "example" });
+			invoke({ target: target, name: "example" });
 			
 			mocker.verify();
 		}
@@ -495,7 +495,7 @@ package mockolate.ingredients
 		{
 			mocker.method('addEventListener').args('change', Function, anything(), anything(), anything());
 			
-			invoke({ name: 'addEventListener', arguments: ['change', function():void {}, false, 0, true] })
+			invoke({ target: target, name: 'addEventListener', arguments: ['change', function():void {}, false, 0, true] })
 			
 			mocker.verify();
 		}
