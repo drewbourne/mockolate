@@ -1,5 +1,7 @@
 package mockolate.ingredients.floxy
 {
+    import asx.array.repeat;
+    
     import flash.events.IEventDispatcher;
     
     import mockolate.ingredients.MockingCouverture;
@@ -9,6 +11,7 @@ package mockolate.ingredients.floxy
     import mockolate.ingredients.VerifyingCouverture;
     import mockolate.ingredients.mockolate_ingredient;
     
+    import org.flemit.reflection.Type;
     import org.floxy.IProxyRepository;
     import org.floxy.ProxyRepository;
     
@@ -42,6 +45,9 @@ package mockolate.ingredients.floxy
          */
         public function create(klass:Class, constructorArgs:Array=null, asStrict:Boolean=true, name:String=null):Mockolate
         {
+			if (!constructorArgs)
+				constructorArgs = repeat(null, Type.getType(klass).constructor.parameters.length);
+				
             var mockolate:FloxyMockolate = createMockolate(asStrict, name) as FloxyMockolate;
             var target:* = _proxyRespository.create(klass, constructorArgs || [], mockolate.interceptor);
             mockolate.target = target;
