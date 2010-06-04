@@ -182,13 +182,13 @@ package mockolate.ingredients
 		// TODO Should return a MockingPropertyCouverture that hides method() and property() and provides only arg() not args()
 		[Deprecated(since="0.8.0", replacement="#getter() or #setter()")]
 		/**
-		 * Defines an Expectation for the given property name.
+		 * Defines an Expectation to get a property value.
 		 * 
 		 * @param name Name of the method to expect.
 		 * 
 		 * @example
 		 * <listing version="3.0">
-		 *	stub(instance).method("toString").returns("[Instance]");
+		 *	stub(instance).property("name").returns("[Instance]");
 		 * </listing>  
 		 */
 		public function property(name:String/*, ns:String=null*/):MockingCouverture
@@ -198,17 +198,18 @@ package mockolate.ingredients
 			
 			createPropertyExpectation(name, null);
 			
-			// when expectation mode is mock
-			// than should be called at least once
-			// -- will be overridden if set by the user. 
-			if (this.mockolate.isStrict)
-				atLeast(1);			   
-			
 			return this;
 		}
 		
 		/**
+		 * Defines an Expectation to get a property value.
 		 * 
+		 * @param name Name of the property
+		 * 
+		 * @example
+		 * <listing version="3.0">
+		 * 	stub(instance).getter("name").returns("Current Name");
+		 * </listing>
 		 */
 		public function getter(name:String/*, ns:String=null*/):IMockingGetterCouverture
 		{
@@ -218,7 +219,14 @@ package mockolate.ingredients
 		}
 		
 		/**
+		 * Defines an Expectation to set a property value.
 		 * 
+		 * @param name Name of the property
+		 * 
+		 * @example
+		 * <listing version="3.0">
+		 * 	stub(instance).setter("name").arg("New Name");
+		 * </listing>
 		 */
 		public function setter(name:String/*, ns:String=null*/):IMockingSetterCouverture
 		{
@@ -733,6 +741,14 @@ package mockolate.ingredients
 		{
 			_currentExpectation = createExpectation(name, ns);
 			_currentExpectation.invocationType = InvocationType.GETTER;
+			
+			addExpectation(_currentExpectation);
+			
+			// when expectation mode is mock
+			// than should be called at least once
+			// -- will be overridden if set by the user. 
+			if (this.mockolate.isStrict)
+				atLeast(1);			   
 		}
 		
 		/**

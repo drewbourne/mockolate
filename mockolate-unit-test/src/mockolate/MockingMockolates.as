@@ -44,6 +44,10 @@ package mockolate
            mock(instance:*).method(methodName:String):Stub
            // mock: property
            mock(instance:*).property(propertyName:String):Stub
+		   // mock: getter
+		   mock(instance:*).getter(propertyName:String):Stub
+		   // mock: setter
+		   mock(instance:*).setter(propertyName:String):Stub
            // mock: argument matchers
            // methods
            .args(...valuesOrMatchers)
@@ -91,20 +95,7 @@ package mockolate
 			
 			assertThat(instance.name, strictlyEqualTo(result));
 		}
-		
-		[Test]
-		public function mockingPropertySetter():void 
-		{
-			var instance:Flavour = strict(Flavour);
-			var ingredients:Array= ["Cashew", "Butterscotch"];
-			
-			mock(instance).property("ingredients").arg(ingredients);
-			
-			instance.ingredients = ingredients;
-			
-			verify(instance);
-		}
-		
+				
 		[Test]
 		public function mockingSetter():void 
 		{
@@ -114,26 +105,6 @@ package mockolate
 			mock(instance).setter("ingredients").arg(ingredients);
 			
 			instance.ingredients = ingredients;
-			
-			verify(instance);
-		}
-		
-		[Test]
-		public function mockingPropertyGetterAndSetter():void 
-		{
-			var instance:Flavour = strict(Flavour);
-			var ingredientsA:Array= ["Cashew", "Butterscotch"];
-			var ingredientsB:Array= ["Cashew", "Caramel"];
-			
-			mock(instance).property("ingredients").noArgs().returns(ingredientsA).once();
-			mock(instance).property("ingredients").args(ingredientsB).once();
-			mock(instance).property("ingredients").noArgs().returns(ingredientsB);
-			
-			assertThat(instance.ingredients, strictlyEqualTo(ingredientsA));
-			
-			instance.ingredients = ingredientsB;
-			
-			assertThat(instance.ingredients, strictlyEqualTo(ingredientsB));
 			
 			verify(instance);
 		}
@@ -150,23 +121,6 @@ package mockolate
 			mock(instance).getter("ingredients").returns(ingredientsB);
 			
 			assertThat(instance.ingredients, strictlyEqualTo(ingredientsA));
-			
-			instance.ingredients = ingredientsB;
-			
-			assertThat(instance.ingredients, strictlyEqualTo(ingredientsB));
-			
-			verify(instance);
-		}
-		
-		[Test]
-		public function mockingPropertySetterAndGetter():void 
-		{
-			var instance:Flavour = strict(Flavour);
-			var ingredientsA:Array= ["Cashew", "Butterscotch"];
-			var ingredientsB:Array= ["Cashew", "Caramel"];
-			
-			mock(instance).property("ingredients").arg(ingredientsB).once();
-			mock(instance).property("ingredients").noArgs().returns(ingredientsB);
 			
 			instance.ingredients = ingredientsB;
 			

@@ -30,7 +30,7 @@ package mockolate
         	
         	// stub behaviour is never enforced
         	// stub behaviour can be verified
-        	stub(flavour).property("liked").arg(true);
+        	stub(flavour).setter("liked").arg(true);
         	
         	// exercise mockolate
         	flavour.combine(null);
@@ -64,7 +64,7 @@ package mockolate
         	
         	// stub behaviour is never enforced
         	// stub behaviour can be verified
-        	stub(flavour).property("liked").arg(true);
+        	stub(flavour).setter("liked").arg(true);
         	
         	// exercise mockolate
         	// in this case: dont.  

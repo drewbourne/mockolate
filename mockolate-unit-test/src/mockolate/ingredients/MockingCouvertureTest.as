@@ -96,34 +96,6 @@ package mockolate.ingredients
 			mocker.verify();
 		}
 		
-		[Test]
-		public function property_setter_shouldPassIfInvoked():void 
-		{
-			mocker.property("example").args(true);
-			invoke({ name: "example", invocationType: InvocationType.SETTER, arguments: [true] });
-			mocker.verify();
-		}
-		
-		[Test]
-		public function property_getterThenSetter_shouldPassIfInvoked():void 
-		{
-			mocker.property("example").noArgs().once();
-			mocker.property("example").args(true);
-			invoke({ name: "example", invocationType: InvocationType.GETTER });
-			invoke({ name: "example", invocationType: InvocationType.SETTER, arguments: [true] });
-			mocker.verify();
-		}
-		
-		[Test]
-		public function property_setterThenGetter_shouldPassIfInvoked():void 
-		{
-			mocker.property("example").args(true).once();
-			mocker.property("example").noArgs();
-			invoke({ name: "example", invocationType: InvocationType.SETTER, arguments: [true] });
-			invoke({ name: "example", invocationType: InvocationType.GETTER });
-			mocker.verify();			
-		}
-		
 		//
 		//	getter
 		//
