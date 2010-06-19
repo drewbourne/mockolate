@@ -24,17 +24,13 @@
         </include-libraries>
         
         <external-library-path append="true">
-            <path-element>../libs/flexunit-4.1.0.x.swc</path-element>
+            <path-element>../libs/flexunit-core-flex-4.1.0-beta1.swc</path-element>
         </external-library-path>
         
         <keep-as3-metadata append="true">
             <name>Mock</name>
         </keep-as3-metadata>
     </compiler>
-    
-    <include-sources>
-        <path-element>.</path-element>
-    </include-sources>
     
     <link-report>../../target/bin/mockolate-link-report.xml</link-report>
     
