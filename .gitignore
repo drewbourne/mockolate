@@ -4,6 +4,9 @@ bin-debug/
 bin-release/
 target/
 
+# ignore generated build crap
+build.number
+
 # ignore the asdoc output
 doc/
 
