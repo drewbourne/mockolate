@@ -16,7 +16,9 @@ package mockolate.ingredients
     import org.hamcrest.core.describedAs;
     import org.hamcrest.date.dateEqual;
     import org.hamcrest.number.greaterThan;
+    import org.hamcrest.number.greaterThanOrEqualTo;
     import org.hamcrest.number.lessThan;
+    import org.hamcrest.number.lessThanOrEqualTo;
     import org.hamcrest.object.equalTo;
     import org.hamcrest.object.hasProperties;
     import org.hamcrest.object.hasProperty;
@@ -234,7 +236,7 @@ package mockolate.ingredients
         public function atLeast(n:int):VerifyingCouverture
         {
             _currentVerification.invokedCount = "at least " + n;
-            _currentVerification.invokedCountMatcher = arrayWithSize(greaterThan(n));
+            _currentVerification.invokedCountMatcher = arrayWithSize(greaterThanOrEqualTo(n));
             
             doVerify();
             return this;
@@ -251,7 +253,7 @@ package mockolate.ingredients
         public function atMost(n:int):VerifyingCouverture
         {
             _currentVerification.invokedCount = "at most " + n;
-            _currentVerification.invokedCountMatcher = arrayWithSize(lessThan(n)); 
+            _currentVerification.invokedCountMatcher = arrayWithSize(lessThanOrEqualTo(n)); 
                   
             doVerify();
             return this;

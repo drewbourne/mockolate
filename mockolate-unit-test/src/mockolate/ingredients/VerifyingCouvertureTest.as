@@ -72,13 +72,45 @@ package mockolate.ingredients
         [Test]
         public function never_implicitly_shouldNotOccur():void 
         {
+			// this does not check the invocation count
+			// so it should pass at this point.
         	verifier.method("notCalled");
         }
 		
 		[Test(expected="mockolate.errors.VerificationError")]
-		public function never_explicitly():void 
+		public function never_shouldFailIfInvokedAtLeastOnce():void 
 		{
 			verifier.method("method").never();
+		}
+		
+		[Test]
+		public function never_shouldPassIfNotInvoked():void 
+		{
+			verifier.method("notCalled").never();
+		}
+		
+		[Test]
+		public function atLeast_shouldPassIfInvokedAtLeastTheGivenNumberOfTimes():void 
+		{
+			verifier.method("method").atLeast(1);
+		}
+		
+		[Test(expected="mockolate.errors.VerificationError")]
+		public function atLeast_shouldFailIfNotInvokedAtLeastTheGivenNumberOfTimes():void 
+		{	
+			verifier.method("notCalled").atLeast(1);
+		}
+		
+		[Test]
+		public function atMost_shouldPassIfInvokedAtMostTheGivenNumberOfTimes():void 
+		{
+			verifier.method("method").atMost(2);
+		}
+		
+		[Test(expected="mockolate.errors.VerificationError")]
+		public function atMost_shouldFailIfInvokedMoreThanTheGivenNumberOfTimes():void 
+		{
+			verifier.method("method").atMost(1);
 		}
     }
 }
