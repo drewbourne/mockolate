@@ -11,7 +11,7 @@ package mockolate.ingredients
 		private var _captureFunction:Function;
 		private var _values:Array;
 		
-		public function Capture(captureType:String = CaptureType.LAST)
+		public function Capture(captureType:String = "last" /*CaptureType.LAST*/)
 		{
 			super();
 			
