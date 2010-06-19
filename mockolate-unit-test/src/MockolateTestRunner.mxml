@@ -6,12 +6,11 @@
 
     <mx:Script>
       <![CDATA[
-         import org.flexunit.internals.TraceListener;
          import mockolate.MockolateSuite;
          import mockolate.runner.MockolateRunner;
          
+         import org.flexunit.internals.TraceListener;
          import org.flexunit.listeners.CIListener;
-         import org.flexunit.listeners.UIListener;
          import org.flexunit.runner.FlexUnitCore;
 
          private var core : FlexUnitCore;
@@ -21,15 +20,10 @@
          {
             core = new FlexUnitCore();
             core.addListener(new TraceListener());
-            core.addListener(new UIListener(uiListener));
             core.addListener(new CIListener());
             core.run(MockolateSuite);
          }
       ]]>
     </mx:Script>
-
-    <flexui:TestRunnerBase id="uiListener"
-      width="100%"
-      height="100%"/>
 
 </mx:Application>
