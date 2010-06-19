@@ -162,7 +162,7 @@
         <metrics sourcedirectory="${src.loc}" outputfile="${report.loc}/javancss.xml" />
 
         <echo message="FlexPMD running..." />
-        <pmd sourceDirectory="${src.loc}" outputDirectory="${report.loc}" ruleset="${basedir}/pmd-ruleset.xml" />
+        <pmd sourceDirectory="${src.loc}" outputDirectory="${report.loc}" ruleset="${build.loc}/pmd-ruleset.xml" />
 
         <echo message="FlexCPD running..." />
         <cpd minimumTokenCount="50" outputFile="${report.loc}/cpd.xml">
