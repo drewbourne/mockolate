@@ -33,11 +33,8 @@ package mockolate.runner
 
 		protected override function methodBlock(method:FrameworkMethod):IAsyncStatement
 		{
-			//COPY/PASTE FROM PARENT to supplement runner until refactor
-
 			var test:Object;
-
-			//might need to be reflective at some point
+			
 			try
 			{
 				test = createTest();
@@ -47,22 +44,20 @@ package mockolate.runner
 				trace(e.getStackTrace());
 				return new Fail(e);
 			}
-
+			
 			this.data = new MockolateRunnerData();
 			this.data.test = test;
 			this.data.method = method;
-
+			
 			sequence = new StatementSequencer();
 			sequence.addStep(new IdentifyMockClasses(data));
 			sequence.addStep(new PrepareMockClasses(data));
 			sequence.addStep(new InjectMockInstances(data));
 			
-			sequence.addStep(withBefores(method, test));
 			sequence.addStep(withDecoration(method, test));
-			sequence.addStep(withAfters(method, test));			
 			
 			sequence.addStep(new VerifyMockInstances(data));
-
+			
 			return sequence;
 		}
 	}
