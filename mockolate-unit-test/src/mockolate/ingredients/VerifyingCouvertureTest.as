@@ -52,6 +52,10 @@ package mockolate.ingredients
             verifier.method("method").args(1, 2, 3);
             verifier.method("method").args(1, 2, 3).once();
         }
+		
+		//
+		//	getter
+		//
         
         [Test]
         public function getter():void 
@@ -59,6 +63,10 @@ package mockolate.ingredients
         	verifier.getter("getter");
         	verifier.getter("getter").once();
         }
+		
+		//
+		//	setter
+		//
         
         [Test]
         public function setter():void 
@@ -69,6 +77,10 @@ package mockolate.ingredients
         	verifier.setter("setter").arg(4).once();
         }
         
+		//
+		//	never
+		//
+		
         [Test]
         public function never_implicitly_shouldNotOccur():void 
         {
@@ -89,6 +101,10 @@ package mockolate.ingredients
 			verifier.method("notCalled").never();
 		}
 		
+		//
+		//	atLeast
+		//
+		
 		[Test]
 		public function atLeast_shouldPassIfInvokedAtLeastTheGivenNumberOfTimes():void 
 		{
@@ -100,6 +116,10 @@ package mockolate.ingredients
 		{	
 			verifier.method("notCalled").atLeast(1);
 		}
+		
+		//
+		//	atMost
+		//
 		
 		[Test]
 		public function atMost_shouldPassIfInvokedAtMostTheGivenNumberOfTimes():void 
