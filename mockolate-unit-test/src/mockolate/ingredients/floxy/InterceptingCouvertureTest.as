@@ -5,14 +5,17 @@ package mockolate.ingredients.floxy
     
     import mockolate.ingredients.Invocation;
     import mockolate.ingredients.Mockolate;
+    import mockolate.ingredients.Mockolatier;
     import mockolate.ingredients.RecordingCouverture;
     import mockolate.ingredients.faux.FauxFloxyInvocation;
     import mockolate.ingredients.faux.FauxInvocation;
     import mockolate.ingredients.faux.FauxMockolate;
+    import mockolate.ingredients.faux.FauxMockolatier;
     import mockolate.ingredients.floxy.InterceptingCouverture;
     import mockolate.ingredients.mockolate_ingredient;
     import mockolate.nice;
     import mockolate.prepare;
+    import mockolate.runner.MockolateRule;
     import mockolate.sample.Flavour;
     import mockolate.verify;
     
@@ -30,6 +33,8 @@ package mockolate.ingredients.floxy
     public class InterceptingCouvertureTest
     {
         private var _mockolate:Mockolate;
+		private var _mockolatier:Mockolatier;
+		
         private var interceptor:InterceptingCouverture;
         private var recorder:RecordingCouverture;
         private var invocation:Invocation;
@@ -45,8 +50,13 @@ package mockolate.ingredients.floxy
                 {
                     interceptedAndForwarded = true;
                 });
+			
+			_mockolatier = new FauxMockolatier(function(invocation:Invocation):void
+			{
+				interceptedAndForwarded = true;
+			});
             
-            interceptor = new InterceptingCouverture(_mockolate);
+            interceptor = new InterceptingCouverture(_mockolate, _mockolatier);
             interceptedInvocation = new FauxFloxyInvocation();
             
             interceptor.intercept(interceptedInvocation);

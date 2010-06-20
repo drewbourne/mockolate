@@ -18,10 +18,11 @@ package mockolate
      * 
      * When <code>verify()</code> is called for the target instance 
      * and the expectation has not been met 
-     * then an <code>UnmetExpectationError</code> will be thrown. 
+     * then an <code>UnmetExpectationError</code> will be thrown.
+	 * 
+	 * @param target Object created by nice() or strict() 
      *  
      * @see mockolate#stub()
-     * 
      * @see mockolate#nice()
      * @see mockolate#strict()
      * 

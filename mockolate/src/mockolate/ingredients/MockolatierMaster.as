@@ -88,6 +88,38 @@ package mockolate.ingredients
         }
 		
 		/**
+		 * @see mockolate#record()
+		 */
+		public static function record(target:*, script:Function=null):*
+		{
+			return mockolatier.record(target, script);
+		}
+		
+		/**
+		 * @see mockolate#replay()
+		 */
+		public static function replay(target:*):*
+		{
+			return mockolatier.replay(target);
+		}
+		
+		/**
+		 * @see mockolate#expect()
+		 */
+		public static function expect(target:*):ExpectingCouverture
+		{
+			return mockolatier.expect(target);
+		}
+		
+		/**
+		 * @see mockolate#expectArg()
+		 */
+		public static function expectArg(value:*):*
+		{
+			return mockolatier.expectArg(value);
+		}
+		
+		/**
 		 * 
 		 */
 		mockolate_ingredient static function registerTargetMockolate(target:Object, mockolate:Mockolate):Mockolate 

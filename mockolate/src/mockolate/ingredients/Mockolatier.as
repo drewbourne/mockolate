@@ -35,6 +35,7 @@ package mockolate.ingredients
         private var _mockolates:Array;
         private var _mockolatesByTarget:Dictionary;
         private var _mockolateFactory:MockolateFactory;
+		private var _lastInvocation:Invocation;
         
         /**
          * Constructor.
@@ -45,7 +46,7 @@ package mockolate.ingredients
             
             _mockolates = [];
             _mockolatesByTarget = new Dictionary();
-            _mockolateFactory = new FloxyMockolateFactory();
+            _mockolateFactory = new FloxyMockolateFactory(this);
         }
 
 		// TODO implement Mockolatier#hasPrepared(Class)        
@@ -137,6 +138,55 @@ package mockolate.ingredients
         {
         	return mockolateByTarget(instance).verify().verifier;
         }
+		
+		/**
+		 * @private
+		 */
+		public function record(instance:*, script:Function=null):* 
+		{
+			mockolateByTarget(instance).record();
+			return instance;
+		}
+		
+		/**
+		 * @private
+		 */
+		public function replay(instance:*):* 
+		{
+			mockolateByTarget(instance).replay();
+			return instance;
+		}
+		
+		/**
+		 * @private
+		 */
+		public function expect(instance:*):ExpectingCouverture
+		{
+			// find the mockateByTarget
+			// for the target of the last recorded invocation
+			// and return the ExpectingCouverture
+			
+			if (!_lastInvocation)
+				throw new MockolateError(["Unable to expect(), no Mockolate invocation has been recorded yet."], null, null);
+			
+			var args:Array = _expectArgs || _lastInvocation.arguments;
+			_expectArgs = null;
+			
+			return mockolateByTarget(_lastInvocation.target).expecter.expect(_lastInvocation, args);
+		}
+		
+		private var _expectArgs:Array;
+		
+		/**
+		 * @private
+		 */
+		public function expectArg(value:*):* 
+		{
+			_expectArgs ||= [];
+			_expectArgs.push(value);
+			
+			return null;
+		}
         
         /**
          * Checks the args Array matches the given Matcher, throws an ArgumentError if not.
@@ -176,7 +226,7 @@ package mockolate.ingredients
         }
 		
 		/**
-		 * 
+		 * @private
 		 */
 		mockolate_ingredient function registerTargetMockolate(target:Object, mockolate:Mockolate):Mockolate 
 		{
@@ -203,5 +253,17 @@ package mockolate.ingredients
             
             return mockolate;
         }
+		
+		/**
+		 * Invokes a Mockolate.
+		 * 
+		 * @private
+		 */
+		mockolate_ingredient function invoked(invocation:Invocation):void 
+		{
+			_lastInvocation = invocation;
+			
+			mockolateByTarget(invocation.target).invoked(invocation);
+		}
     }
 }

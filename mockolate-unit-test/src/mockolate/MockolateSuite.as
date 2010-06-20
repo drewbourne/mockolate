@@ -45,6 +45,7 @@ package mockolate
 		public var usingDisplayObjects:UsingDisplayObjects;
 		public var usingOrderedExpectations:UsingOrderedExpectations;
 		public var usingCapturedArguments:UsingCapturedArguments;
+		public var usingRecordReplayExpect:UsingRecordReplayExpect;
 		
 		// 
 		//	decorators

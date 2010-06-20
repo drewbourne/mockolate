@@ -4,9 +4,11 @@ package mockolate.ingredients.floxy
     
     import flash.events.IEventDispatcher;
     
+    import mockolate.ingredients.ExpectingCouverture;
     import mockolate.ingredients.MockingCouverture;
     import mockolate.ingredients.Mockolate;
     import mockolate.ingredients.MockolateFactory;
+    import mockolate.ingredients.Mockolatier;
     import mockolate.ingredients.RecordingCouverture;
     import mockolate.ingredients.VerifyingCouverture;
     import mockolate.ingredients.mockolate_ingredient;
@@ -23,13 +25,15 @@ package mockolate.ingredients.floxy
     public class FloxyMockolateFactory implements MockolateFactory
     {
         private var _proxyRespository:IProxyRepository;
+		private var _mockolatier:Mockolatier;
         
         /**
          * Constructor. 
          */
-        public function FloxyMockolateFactory()
+        public function FloxyMockolateFactory(mockolatier:Mockolatier)
         {
             _proxyRespository = new ProxyRepository();
+			_mockolatier = mockolatier;
         }
         
         /**
@@ -68,6 +72,7 @@ package mockolate.ingredients.floxy
 //            mockolate.stubber = createStubber(mockolate);
             mockolate.mocker = createMocker(mockolate);
             mockolate.verifier = createVerifier(mockolate);
+			mockolate.expecter = createExpecter(mockolate);
             
             return mockolate;
         }
@@ -77,7 +82,7 @@ package mockolate.ingredients.floxy
          */
         protected function createInterceptor(mockolate:Mockolate):InterceptingCouverture
         {
-            return new InterceptingCouverture(mockolate);
+            return new InterceptingCouverture(mockolate, _mockolatier);
         }
         
         /**
@@ -103,5 +108,13 @@ package mockolate.ingredients.floxy
         {
             return new VerifyingCouverture(mockolate);
         }
+		
+		/**
+		 * @private 
+		 */
+		protected function createExpecter(mockolate:Mockolate):ExpectingCouverture
+		{
+			return new ExpectingCouverture(mockolate);
+		}
     }
 }

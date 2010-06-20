@@ -18,9 +18,11 @@ package mockolate.ingredients
 //        private var _stubber:StubbingCouverture;
         private var _mocker:MockingCouverture;
         private var _verifier:VerifyingCouverture;
+		private var _expecter:ExpectingCouverture;
         
         // flags
         private var _isStrict:Boolean;
+		private var _isRecording:Boolean;
         
         // target!
         private var _target:*;
@@ -101,6 +103,20 @@ package mockolate.ingredients
         {
             _verifier = value;
         }
+		
+		/**
+		 * ExpectingCouverture instance of this Mockolate.
+		 */
+		mockolate_ingredient function get expecter():ExpectingCouverture
+		{
+			return _expecter;
+		}
+		
+		/** @private */
+		mockolate_ingredient function set expecter(value:ExpectingCouverture):void
+		{
+			_expecter = value;
+		}
         
         /**
          * Indicates if this Mockolate is in strict mode. 
@@ -173,21 +189,23 @@ package mockolate.ingredients
         {
             // these are specifically this order
             // so that the recording couvertures are invoked
-            // prior to any exception possibly being thrown by the mocker, or stubber
+            // prior to any exception possibly being thrown by the mocker
             // 
             // this will probably change to a safer and DRYer mechanism shortly
                         
-//            if (_recorder)
-//                _recorder.invoked(invocation);
-            
-            if (_verifier)
-                _verifier.invoked(invocation);
-
-            if (_mocker)
-                _mocker.invoked(invocation);
-            
-//            if (_stubber)
-//                _stubber.invoked(invocation);
+			if (_isRecording)
+			{
+				if (_expecter)
+					_expecter.invoked(invocation);
+			}
+			else
+			{
+	            if (_verifier)
+	                _verifier.invoked(invocation);
+	
+	            if (_mocker)
+	                _mocker.invoked(invocation);            
+			}
 
 			return this;
         }
@@ -197,19 +215,31 @@ package mockolate.ingredients
          */
         mockolate_ingredient function verify():Mockolate
         {
-//            if (_recorder)
-//                _recorder.verify();
-            
             if (_verifier)
                 _verifier.verify();
 
             if (_mocker)
                 _mocker.verify();
-            
-//            if (_stubber)
-//                _stubber.verify();
-	
+            	
 			return this;
         }
+		
+		/**
+		 * 
+		 */
+		mockolate_ingredient function record():Mockolate
+		{
+			_isRecording = true;
+			return this;
+		}
+		
+		/**
+		 * 
+		 */
+		mockolate_ingredient function replay():Mockolate
+		{
+			_isRecording = false;
+			return this;
+		}
     }
 }
