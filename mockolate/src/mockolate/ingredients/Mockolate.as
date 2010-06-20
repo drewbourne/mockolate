@@ -14,8 +14,6 @@ package mockolate.ingredients
      */
     public class Mockolate
     {
-//        private var _recorder:RecordingCouverture;
-//        private var _stubber:StubbingCouverture;
         private var _mocker:MockingCouverture;
         private var _verifier:VerifyingCouverture;
 		private var _expecter:ExpectingCouverture;
@@ -49,20 +47,7 @@ package mockolate.ingredients
         {
             return _name;
         }
-        
-//        /**
-//         *
-//         */
-//        mockolate_ingredient function get recorder():RecordingCouverture
-//        {
-//            return _recorder;
-//        }
-//        
-//        mockolate_ingredient function set recorder(value:RecordingCouverture):void
-//        {
-//            _recorder = value;
-//        }
-        
+
         /**
          * MockingCouverture instance of this Mockolate. 
          */
@@ -76,19 +61,6 @@ package mockolate.ingredients
         {
             _mocker = value;
         }
-        
-//        /**
-//         *
-//         */
-//        mockolate_ingredient function get stubber():StubbingCouverture
-//        {
-//            return _stubber;
-//        }
-//        
-//        mockolate_ingredient function set stubber(value:StubbingCouverture):void
-//        {
-//            _stubber = value;
-//        }
         
         /**
          * VerifyingCouverture instance of this Mockolate.
@@ -225,7 +197,15 @@ package mockolate.ingredients
         }
 		
 		/**
-		 * 
+		 * Indicates if this Mockolate is currently set to record expectations. 
+		 */
+		mockolate_ingredient function isRecording():Boolean
+		{
+			return _isRecording;
+		}
+		
+		/**
+		 * Sets this Mockolate to record expectations from invocations.
 		 */
 		mockolate_ingredient function record():Mockolate
 		{
@@ -234,7 +214,7 @@ package mockolate.ingredients
 		}
 		
 		/**
-		 * 
+		 * Sets this Mockolate to stop recording and start replaying expectations.
 		 */
 		mockolate_ingredient function replay():Mockolate
 		{

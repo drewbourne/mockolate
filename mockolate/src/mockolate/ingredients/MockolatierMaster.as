@@ -120,7 +120,9 @@ package mockolate.ingredients
 		}
 		
 		/**
+		 * Registers the target and mockolate with the Mockolatier.
 		 * 
+		 * @private
 		 */
 		mockolate_ingredient static function registerTargetMockolate(target:Object, mockolate:Mockolate):Mockolate 
 		{

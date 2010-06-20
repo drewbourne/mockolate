@@ -100,7 +100,7 @@ package mockolate.ingredients
         }
         
         /**
-         * @private
+         * @see mockolate#nice()
          */
         public function nice(klass:Class, name:String=null, constructorArgs:Array=null):*
         {
@@ -108,7 +108,7 @@ package mockolate.ingredients
         }
         
         /**
-         * @private
+         * @see mockolate#strict()
          */
         public function strict(klass:Class, name:String=null, constructorArgs:Array=null):*
         {
@@ -116,7 +116,7 @@ package mockolate.ingredients
         }
 
         /**
-         * @private
+         * @see mockolate#mock()
          */
         public function mock(instance:*):MockingCouverture
         {
@@ -124,7 +124,7 @@ package mockolate.ingredients
         }
         
         /**
-         * @private
+         * @see mockolate#stub()
          */
         public function stub(instance:*):MockingCouverture
         {
@@ -132,7 +132,7 @@ package mockolate.ingredients
         }
         
         /**
-         * @private
+         * @see mockolate#verify()
          */
         public function verify(instance:*):VerifyingCouverture
         {
@@ -140,7 +140,7 @@ package mockolate.ingredients
         }
 		
 		/**
-		 * @private
+		 * @see mockolate#record()
 		 */
 		public function record(instance:*, script:Function=null):* 
 		{
@@ -149,7 +149,7 @@ package mockolate.ingredients
 		}
 		
 		/**
-		 * @private
+		 * @see mockolate#replay()
 		 */
 		public function replay(instance:*):* 
 		{
@@ -158,13 +158,13 @@ package mockolate.ingredients
 		}
 		
 		/**
-		 * @private
+		 * @see mockolate#expect()
 		 */
 		public function expect(instance:*):ExpectingCouverture
 		{
-			// find the mockateByTarget
-			// for the target of the last recorded invocation
-			// and return the ExpectingCouverture
+			// calls to expect must happen after an invocation 
+			// as the invocation type, and arguments is used
+			// when adding the expectation.
 			
 			if (!_lastInvocation)
 				throw new MockolateError(["Unable to expect(), no Mockolate invocation has been recorded yet."], null, null);
@@ -178,7 +178,7 @@ package mockolate.ingredients
 		private var _expectArgs:Array;
 		
 		/**
-		 * @private
+		 * @see mockolate#expectArgs()
 		 */
 		public function expectArg(value:*):* 
 		{
@@ -226,6 +226,11 @@ package mockolate.ingredients
         }
 		
 		/**
+		 * Registers the target and mockolate to allow a Mockolate instance to 
+		 * be found by the target.
+		 * 
+		 * @see mockolateByTarget()
+		 * 
 		 * @private
 		 */
 		mockolate_ingredient function registerTargetMockolate(target:Object, mockolate:Mockolate):Mockolate 
