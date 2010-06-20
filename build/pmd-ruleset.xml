@@ -78,10 +78,10 @@ package functional.func2.restricted
 	}
 }]]></example>
   </rule>
-  <rule since="" class="com.adobe.ac.pmd.rules.asdocs.AttributeAsDocMissingRule" message="This attribute ({0}) should be documented with AsDocs.">
+  <!-- <rule since="" class="com.adobe.ac.pmd.rules.asdocs.AttributeAsDocMissingRule" message="This attribute ({0}) should be documented with AsDocs.">
     <description/>
     <priority>3</priority>
-  </rule>
+  </rule> -->
   <rule since="" class="com.adobe.ac.pmd.rules.asdocs.ClassAsDocMissingRule" message="This class ({0}) should be documented with AsDocs.">
     <description/>
     <priority>3</priority>
@@ -738,7 +738,7 @@ public class UnknownMetaDataAttribute
     <priority>3</priority>
     <properties>
       <property name="maximum">
-        <value>10</value>
+        <value>15</value>
       </property>
     </properties>
     <example><![CDATA[public class Foo 
