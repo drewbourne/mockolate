@@ -13,12 +13,22 @@ package mockolate.decorations.rpc
 	
 	use namespace mx_internal;
 	
+	/**
+	 * Answer that calls AsyncToken#applyResult() to invoke IResponders.  
+	 * 
+	 * @see HTTPServiceDecorator#result()
+	 *  
+	 * @author drewbourne
+	 */
 	public class ResultAnswer implements Answer 
 	{
 		private var _token:AsyncToken;
 		private var _resultEvent:ResultEvent
 		private var _delay:Number;
 		
+		/**
+		 * Constructor.
+		 */
 		public function ResultAnswer(token:AsyncToken, resultEvent:ResultEvent, delay:Number = 10)
 		{
 			_token = token;
@@ -26,6 +36,9 @@ package mockolate.decorations.rpc
 			_delay = delay;
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		public function invoke(invocation:Invocation):*
 		{
 			setTimeout(applyResult, _delay);
@@ -33,6 +46,9 @@ package mockolate.decorations.rpc
 			return undefined;
 		}
 		
+		/**
+		 * @private
+		 */
 		protected function applyResult():void 
 		{
 			_token.mx_internal::applyResult(_resultEvent);

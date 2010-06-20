@@ -1,8 +1,6 @@
 package mockolate.ingredients
 {
     import flash.events.IEventDispatcher;
-    
-    import mockolate.ingredients.mockolate_ingredient;
 	
 	use namespace mockolate_ingredient;
 	

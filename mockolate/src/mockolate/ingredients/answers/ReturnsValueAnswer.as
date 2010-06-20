@@ -14,11 +14,19 @@ package mockolate.ingredients.answers
     {
         private var _value:*;
         
+		/**
+		 * Constructor.
+		 * 
+		 * @param value Value to return when invoked.  
+		 */
         public function ReturnsValueAnswer(value:*)
         {
             _value = value;
         }
         
+		/**
+		 * @inheritDoc
+		 */
         public function invoke(invocation:Invocation):*
         {
             return _value;

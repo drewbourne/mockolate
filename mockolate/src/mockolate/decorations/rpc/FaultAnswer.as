@@ -13,12 +13,26 @@ package mockolate.decorations.rpc
 	
 	use namespace mx_internal;
 	
+	/**
+	 * Answer that calls AsyncToken#applyFault() to invoke IResponders.  
+	 * 
+	 * @see HTTPServiceDecorator#fault()
+	 *  
+	 * @author drewbourne
+	 */
 	public class FaultAnswer implements Answer 
 	{
 		private var _token:AsyncToken;
 		private var _faultEvent:FaultEvent
 		private var _delay:Number;
 		
+		/**
+		 * Constructor.
+		 *  
+		 * @param token
+		 * @param faultEvent
+		 * @param delay
+		 */
 		public function FaultAnswer(token:AsyncToken, faultEvent:FaultEvent, delay:Number = 10)
 		{
 			_token = token;
@@ -26,6 +40,9 @@ package mockolate.decorations.rpc
 			_delay = delay;
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		public function invoke(invocation:Invocation):*
 		{
 			setTimeout(applyFault, _delay);
@@ -33,6 +50,9 @@ package mockolate.decorations.rpc
 			return undefined;
 		}
 		
+		/**
+		 * @private
+		 */
 		protected function applyFault():void 
 		{
 			_token.mx_internal::applyFault(_faultEvent);

@@ -45,11 +45,17 @@ package mockolate.decorations
 			initialize();
 		}
 		
+		/**
+		 * IEventDispatcher that will be used to dispatch events. 
+		 */
 		public function get eventDispatcher():IEventDispatcher
 		{
 			return _eventDispatcher;
 		}
 		
+		/**
+		 * Initialize the <code>eventDispatcher</code>
+		 */		
 		protected function initialize():void 
 		{
 			if (this.mockolate.target is DisplayObject)
@@ -62,6 +68,9 @@ package mockolate.decorations
 				throw new MockolateError(["Mockolate target is not an IEventDispatcher, target: {}", [mockolate.target]], mockolate, mockolate.target);
 		}
 		
+		/**
+		 * Initializes the <code>eventDispatcher</code> for an IEventDispatcher.
+		 */
 		protected function initializeForIEventDispatcher():void 
 		{
 			_eventDispatcher = new EventDispatcher(this.mockolate.target);
@@ -73,6 +82,9 @@ package mockolate.decorations
 			}
 		}
 		
+		/**
+		 * Initializes the <code>eventDispatcher</code> for an EventDispatcher.
+		 */
 		protected function initializeForEventDispatcher():void 
 		{
 			_eventDispatcher = this.mockolate.target as IEventDispatcher;
@@ -84,6 +96,9 @@ package mockolate.decorations
 			}
 		}
 		
+		/**
+		 * Initializes the <code>eventDispatcher</code> for a DisplayObject.
+		 */
 		protected function initializeForDisplayObject():void 
 		{
 			_eventDispatcher = this.mockolate.target as IEventDispatcher;
@@ -95,6 +110,10 @@ package mockolate.decorations
 			}
 		}
 		
+		/**
+		 * Handles any Invocations for IEventDispatcher methods by forwarding to
+		 * the <code>eventDispatcher</code>.
+		 */
 		override mockolate_ingredient function invoked(invocation:Invocation):void 
 		{
 			// when the invocation is for an IEventDispatcher method

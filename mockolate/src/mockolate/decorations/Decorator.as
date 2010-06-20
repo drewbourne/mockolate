@@ -7,11 +7,23 @@ package mockolate.decorations
 	
 	use namespace mockolate_ingredient;
 
+	/**
+	 * Decorator is the base Class for use with the MockingCouverture#decorate()
+	 * 
+	 * @see mockolate.ingredients.MockingCouverture#decorate()
+	 * 
+	 * @author drewbourne
+	 */
 	public class Decorator
 	{
 		private var _mockolate:Mockolate;
 		private var _mocker:MockingCouverture;
-				
+		
+		/**
+		 * Constructor.
+		 * 
+		 * @param mockolate Mockolate instance
+		 */
 		public function Decorator(mockolate:Mockolate)
 		{
 			super();
@@ -20,16 +32,26 @@ package mockolate.decorations
 			_mocker = _mockolate.mocker; 			
 		}
 		
+		/**
+		 * Mockolate instance
+		 */
 		protected function get mockolate():Mockolate 
 		{
 			return _mockolate;
 		}
 		
+		/**
+		 * Shortcut to the MockingCouverture instance.
+		 */
 		protected function get mocker():MockingCouverture
 		{
 			return _mocker;
 		}
 		
+		/**
+		 * 
+		 * @param invocation 
+		 */		
 		mockolate_ingredient function invoked(invocation:Invocation):void
 		{
 			

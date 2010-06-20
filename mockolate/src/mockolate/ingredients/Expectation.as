@@ -33,7 +33,7 @@ package mockolate.ingredients
 	    /**
 	     * Constructor. 
 	     */
-	    public function Expectation():void
+	    public function Expectation()
 	    {
 			_constraints = [];
 	        _answers = [];
@@ -271,26 +271,41 @@ package mockolate.ingredients
 				&& eligibleByInvocationCount();
 	    }
 		
+		/**
+		 * Determines if this Expectation is eligible for the given InvocationType.
+		 */		
 		protected function eligibleByInvocationType(invocationType:InvocationType):Boolean 
 		{
 			return this.invocationType == invocationType;	
 		}
 		
+		/**
+		 * Determines if this Expectation is eligible for the given method / property name.
+		 */		
 		protected function eligibleByName(name:String):Boolean 
 		{
 			return this.name == name;
 		}
 		
+		/**
+		 * Determines if this Expectation is eligible for the given arguments.
+		 */		
 		protected function eligibleByArguments(arguments:Array):Boolean 
 		{
 			return !argsMatcher || argsMatcher.matches(arguments);
 		}
-		
+
+		/**
+		 * Determines if this Expectation is eligible for by its constraints.
+		 */		
 		protected function eligibleByConstraints():Boolean 
 		{
 			return every(_constraints, callProperty('isInvocationAllowed'));
 		}
 		
+		/**
+		 * Determines if this Expectation is eligible by its invocation count. 
+		 */		
 		protected function eligibleByInvocationCount():Boolean 
 		{
 			return !invokeCountEligiblityMatcher 

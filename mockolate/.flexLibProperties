@@ -84,6 +84,7 @@
     <classEntry path="mockolate.strict"/>
     <classEntry path="mockolate.stub"/>
     <classEntry path="mockolate.verify"/>
+    <classEntry path="mockolate.ingredients.MockingCouvertureProxy"/>
   </includeClasses>
   <includeResources/>
   <namespaceManifests/>

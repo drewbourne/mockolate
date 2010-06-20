@@ -1,49 +1,66 @@
 package mockolate.runner
 {
-	import asx.array.compact;
-	import asx.array.map;
-	import asx.array.mapSequentially;
-	import asx.array.pluck;
-	import asx.array.unique;
-	import asx.fn.callFunction;
-	
-	import flash.events.Event;
-	import flash.events.IEventDispatcher;
-	import flash.system.ApplicationDomain;
-	import flash.utils.getQualifiedClassName;
-	
-	import flex.lang.reflect.Field;
-	import flex.lang.reflect.Klass;
-	
-	import mockolate.errors.MockolateError;
-	import mockolate.nice;
-	import mockolate.prepare;
 	import mockolate.runner.statements.IdentifyMockClasses;
 	import mockolate.runner.statements.InjectMockInstances;
 	import mockolate.runner.statements.PrepareMockClasses;
 	import mockolate.runner.statements.VerifyMockInstances;
-	import mockolate.strict;
-	import mockolate.verify;
 	
-	import org.flexunit.internals.runners.InitializationError;
 	import org.flexunit.internals.runners.statements.IAsyncStatement;
 	import org.flexunit.internals.runners.statements.MethodRuleBase;
 	import org.flexunit.internals.runners.statements.StatementSequencer;
 	import org.flexunit.rules.IMethodRule;
 	import org.flexunit.runners.model.FrameworkMethod;
 	import org.flexunit.token.AsyncTestToken;
-	import org.flexunit.token.ChildResult;
 	
+	/**
+	 * MockolateRule is the recommended way to enable Mockolate support in
+	 * testcases using FlexUnit 4.1 and up. 
+	 * 
+	 * Use [Mock] metadata to mark public vars that should be injected with a
+	 * Mockolate instance.
+	 * 
+	 * @example
+	 * <listing version="3.0">
+	 *	public class UsingMockolateRuleExample 
+	 * 	{
+	 * 		[Rule]
+	 * 		public var mockolateRule:MockolateRule = new MockolateRule();
+	 * 
+	 * 		[Mock]
+	 * 		public var flavour:Flavour;
+	 * 
+	 * 		[Before]
+	 * 		public function setup():void 
+	 * 		{
+	 * 			// flavour variable is populated with a Flavour instance
+	 * 		}
+	 * 
+	 * 		[Test]
+	 * 		public function example():void 
+	 * 		{
+	 * 			// perform test using flavour
+	 * 		} 
+	 * 	} 
+	 * </listing>
+	 * 
+	 * @author drewbourne
+	 */
 	public class MockolateRule extends MethodRuleBase implements IMethodRule
 	{
 		protected var sequence:StatementSequencer;
 		protected var data:MockolateRunnerData;
 		
+		/**
+		 * Constructor. 
+		 */
 		public function MockolateRule()
 		{
 			super();
 		}
 		
+		/**
+		 * @private
+		 */
 		override public function apply(base:IAsyncStatement, method:FrameworkMethod, test:Object):IAsyncStatement
 		{
 			super.apply(base, method, test);
@@ -62,6 +79,9 @@ package mockolate.runner
 			return this;
 		}
 		
+		/**
+		 * @private
+		 */
 		override public function evaluate(parentToken:AsyncTestToken):void 
 		{
 			super.evaluate(parentToken);
@@ -69,6 +89,9 @@ package mockolate.runner
 			sequence.evaluate(myToken);
 		}
 		
+		/**
+		 * @private
+		 */
 		override public function toString():String
 		{
 			return "MockolateRule";

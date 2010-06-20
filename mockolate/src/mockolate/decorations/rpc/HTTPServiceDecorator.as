@@ -33,8 +33,6 @@ package mockolate.decorations.rpc
 	public class HTTPServiceDecorator extends Decorator
 	{
 		private var _dataMatcher:Matcher;
-		private var _result:Object;
-		private var _fault:Fault;
 		
 		/**
 		 * Constructor
@@ -46,6 +44,9 @@ package mockolate.decorations.rpc
 			initialize();
 		}
 		
+		/**
+		 * @private 
+		 */
 		protected function initialize():void 
 		{
 			if (!(this.mockolate.target is HTTPService))
@@ -108,7 +109,11 @@ package mockolate.decorations.rpc
 		}
 			
 		/**
+		 * Decorates the HTTPService to respond with a ResultEvent.
 		 * 
+		 * @example
+		 * <listing version="3.0">
+		 * </listing>
 		 */
 		public function result(resultData:Object):HTTPServiceDecorator
 		{
@@ -126,7 +131,11 @@ package mockolate.decorations.rpc
 		}
 		
 		/**
+		 * Decorates the HTTPService to respond with a FaultEvent.
 		 * 
+		 * @example
+		 * <listing version="3.0">
+		 * </listing>
 		 */
 		public function fault(faultCode:String, faultString:String, faultDetail:String):HTTPServiceDecorator
 		{

@@ -20,6 +20,8 @@ package mockolate.errors
 		public function CaptureError(message:Object, capture:Capture)
 		{
 			super(message, null, null);
+			
+			_capture = capture;
 		}
 		
 		/**

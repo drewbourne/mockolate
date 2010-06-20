@@ -9,21 +9,38 @@ package mockolate.runner.statements
 	import flex.lang.reflect.Klass;
 	
 	import mockolate.runner.MockMetadata;
-	import mockolate.runner.MockolateRunnerStatement;
 	import mockolate.runner.MockolateRunnerConstants;
 	import mockolate.runner.MockolateRunnerData;
+	import mockolate.runner.MockolateRunnerStatement;
 	
 	import org.flexunit.internals.runners.InitializationError;
 	import org.flexunit.internals.runners.statements.IAsyncStatement;
 	import org.flexunit.token.AsyncTestToken;
 	
+	/**
+	 * Identifies the fields on the TestCase class that should have classes 
+	 * prepared and mock instances injected. 
+	 * 
+	 * @see mockolate.runner.MockolateRule
+	 * @see mockolate.runner.MockolateRunner
+	 * 
+	 * @author drewbourne
+	 */
 	public class IdentifyMockClasses extends MockolateRunnerStatement implements IAsyncStatement
 	{
+		/**
+		 * Constructor.
+		 * 
+		 * @param data
+		 */
 		public function IdentifyMockClasses(data:MockolateRunnerData)
 		{
 			super(data);
 		}
 		
+		/**
+		 * @private
+		 */
 		public function evaluate(parentToken:AsyncTestToken):void 
 		{
 			var error:Error = null;
@@ -40,7 +57,7 @@ package mockolate.runner.statements
 				{
 					try
 					{
-						var metadata:MockMetadata = new MockMetadata(field.name,  field.type,  field.getMetaData(MockolateRunnerConstants.MOCK));
+						var metadata:MockMetadata = new MockMetadata(field.name, field.type, field.getMetaData(MockolateRunnerConstants.MOCK));
 						data.mockMetadatas.push(metadata);
 					}
 					catch (e:Error)
@@ -56,6 +73,9 @@ package mockolate.runner.statements
 			parentToken.sendResult(error);
 		}
 		
+		/**
+		 * @private
+		 */
 		override public function toString():String 
 		{
 			return formatToString(this, "IdentifyMockClasses");

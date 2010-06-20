@@ -1,8 +1,6 @@
 package mockolate.ingredients
 {	
 	import org.hamcrest.Matcher;
-	import org.hamcrest.core.allOf;
-	import mockolate.ingredients.InvocationType;
 	
 	// FIXME Verification is not the most appropriate name for this class. 
 	/**

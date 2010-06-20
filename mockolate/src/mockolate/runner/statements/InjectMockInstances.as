@@ -11,14 +11,29 @@ package mockolate.runner.statements
 	import org.flexunit.internals.runners.InitializationError;
 	import org.flexunit.internals.runners.statements.IAsyncStatement;
 	import org.flexunit.token.AsyncTestToken;
-	
+
+	/**
+	 * Creates and injects mock instances to the current testcase instance. 
+	 * 
+	 * @see mockolate.runner.MockolateRule
+	 * @see mockolate.runner.MockolateRunner
+	 * 
+	 * @author drewbourne
+	 */
 	public class InjectMockInstances extends MockolateRunnerStatement implements IAsyncStatement
 	{
+		/**
+		 * Constructor. 
+		 * @param data
+		 */
 		public function InjectMockInstances(data:MockolateRunnerData)
 		{
 			super(data);
 		}
-		
+
+		/**
+		 * @private
+		 */
 		public function evaluate(parentToken:AsyncTestToken):void 
 		{
 			this.parentToken = parentToken;	
@@ -34,7 +49,10 @@ package mockolate.runner.statements
 					if (metadata.injectable)
 					{
 						var klass:Class = metadata.type;
-						var mock:Object = metadata.mockType == "strict" ? strict(klass) : nice(klass);					
+						var mock:Object 
+							= metadata.mockType == "strict" 
+							? strict(klass, metadata.name)
+							: nice(klass, metadata.name);					
 						data.mockInstances.push(mock);					
 						data.test[metadata.name] = mock as klass;
 					}
@@ -48,6 +66,9 @@ package mockolate.runner.statements
 			parentToken.sendResult(error);
 		}
 		
+		/**
+		 * @private
+		 */
 		override public function toString():String 
 		{
 			return formatToString(this, "InjectMockInstances");

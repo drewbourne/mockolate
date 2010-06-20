@@ -16,13 +16,29 @@ package mockolate.runner.statements
 	import org.flexunit.internals.runners.statements.IAsyncStatement;
 	import org.flexunit.token.AsyncTestToken;
 	
+	/**
+	 * Prepares for proxy generation the classes identified by IdentifyMockClasses. 
+	 * 
+	 * @see mockolate.runner.MockolateRule
+	 * @see mockolate.runner.MockolateRunner
+	 * 
+	 * @author drewbourne
+	 */	
 	public class PrepareMockClasses extends MockolateRunnerStatement implements IAsyncStatement
 	{
+		/**
+		 * Constructor.
+		 * 
+		 * @param data
+		 */
 		public function PrepareMockClasses(data:MockolateRunnerData)
 		{
 			super(data);
 		}
 		
+		/**
+		 * @private
+		 */
 		public function evaluate(parentToken:AsyncTestToken):void 
 		{
 			this.parentToken = parentToken;	
@@ -42,6 +58,9 @@ package mockolate.runner.statements
 			}
 		}
 		
+		/**
+		 * @private
+		 */
 		protected function prepareComplete(event:Event):void 
 		{
 			event.target.removeEventListener(Event.COMPLETE, arguments.callee);
@@ -49,6 +68,9 @@ package mockolate.runner.statements
 			parentToken.sendResult();
 		}
 		
+		/**
+		 * @private
+		 */
 		override public function toString():String 
 		{
 			return formatToString(this, "PrepareMockClasses");

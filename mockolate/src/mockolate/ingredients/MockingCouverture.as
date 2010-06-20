@@ -215,7 +215,7 @@ package mockolate.ingredients
 		{
 			createGetterExpectation(name);
 			
-			return new MockingGetterCouverture(this);
+			return new MockingGetterCouverture(this.mockolate);
 		}
 		
 		/**
@@ -232,7 +232,7 @@ package mockolate.ingredients
 		{
 			createSetterExpectation(name);
 			
-			return new MockingSetterCouverture(this);
+			return new MockingSetterCouverture(this.mockolate);
 		}
 		
 		/**
