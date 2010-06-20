@@ -42,8 +42,8 @@ package mockolate.ingredients
 		 */
 		mockolate_ingredient function expect(invocation:Invocation, args:Array):ExpectingCouverture 
 		{
-			if (invocationHandlers[invocation.invocationType] != null)
-				invocationHandlers[invocation.invocationType](invocation, args);
+			if (_invocationHandlers[invocation.invocationType] != null)
+				_invocationHandlers[invocation.invocationType](invocation, args);
 			
 			return this;
 		}
