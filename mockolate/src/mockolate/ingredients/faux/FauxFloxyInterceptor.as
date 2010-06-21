@@ -9,10 +9,24 @@ package mockolate.ingredients.faux
     
     use namespace mockolate_ingredient;
     
+	/**
+	 * FauxFloxyInterceptor forwards the <code>IInterceptor.intercept()</code>
+	 * to a provided Function.
+	 * 
+	 * Used for testing.
+	 * 
+	 * @private
+	 * @author drewbourne
+	 */
     public class FauxFloxyInterceptor implements IInterceptor
     {
         private var _interceptHandler:Function;
         
+		/**
+		 * Constructor.
+		 *  
+		 * @param interceptorHandler Function to forward an intercepted IInvocation to.
+		 */
         public function FauxFloxyInterceptor(interceptorHandler:Function)
         {
             super();
@@ -20,6 +34,12 @@ package mockolate.ingredients.faux
             _interceptHandler = interceptorHandler;
         }
         
+		/**
+		 * Handle an intercepted IInvocation by forwarding to the interceptorHandler
+		 * given to the constructor. 
+		 * 
+		 * @param invocation
+		 */
         public function intercept(invocation:IInvocation):void
         {
             _interceptHandler(invocation);

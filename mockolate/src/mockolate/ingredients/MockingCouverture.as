@@ -546,6 +546,8 @@ package mockolate.ingredients
 		}
 		
 		/**
+		 * Sets the current Expectation to expect to be called in order.
+		 * 
 		 * @example
 		 * <listing version="3.0">
 		 *	mock(instance1).method("sort").ordered("execution order sensitive");

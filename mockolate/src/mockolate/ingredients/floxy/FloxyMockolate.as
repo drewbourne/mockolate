@@ -13,6 +13,11 @@ package mockolate.ingredients.floxy
         // couvertures 
         private var _interceptor:InterceptingCouverture;
         
+		/**
+		 * Constructor.
+		 *  
+		 * @param name Name of this Mockolate instance
+		 */
         public function FloxyMockolate(name:String)
         {
             super(name);
@@ -26,6 +31,7 @@ package mockolate.ingredients.floxy
             return _interceptor;
         }
         
+		/** @private */
         mockolate_ingredient function set interceptor(value:InterceptingCouverture):void
         {
             _interceptor = value;

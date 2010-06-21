@@ -13,11 +13,71 @@ package mockolate.ingredients.proxy
 	use namespace flash_proxy;
 	use namespace mockolate_ingredient;
 
+	/**
+	 * MockolateProxy is for situations where a generated Mockolate proxy 
+	 * may not be possible. Methods, Getters and Setters can be called on the 
+	 * proxy with the same name and arguments or use <code>invokeMethod</code>, 
+	 * <code>invokeGetter</code> and <code>invokeSetter</code>.
+	 * 
+	 * For <code>...rest</code> arguments use <code>invokeMethod</code>.
+	 * 
+	 * @example
+	 * <listing version="3.0">
+	 * 	public class FlavourMock implements Flavour
+	 * 	{
+	 * 		public var proxy:MockolateProxy;
+	 * 
+	 * 		public function FlavourMock()
+	 * 		{
+	 * 			proxy = new MockolateProxy();
+	 * 		}
+	 * 
+	 * 		public function get name():String 
+	 *	 	{
+	 * 			return proxy.name;
+	 *		}
+	 * 
+	 * 		public function get ingredients():Array
+	 * 		{
+	 * 			return proxy.ingredients;
+	 * 		}
+	 * 
+	 * 		public function set ingredients(value:Array):void 
+	 * 		{
+	 * 			proxy.ingredients = value;
+	 * 		}
+	 * 
+	 * 		public function set liked(value:Boolean):void 
+	 * 		{
+	 * 			proxy.liked = value;
+	 * 		}
+	 * 
+	 * 		public function combine(flavour:Flavour, ... otherFlavours):Flavour
+	 * 		{
+	 * 			proxy.mockolate_ingredient::invokeMethod('combine', [flavour].concat(otherFlavours));
+	 * 		}
+	 * 
+	 * 		public function toString():String 
+	 * 		{
+	 * 			return proxy.toString();
+	 * 		}
+	 * 	}
+	 * </listing>
+	 * 
+	 * @author drewbourne
+	 */
 	public dynamic class MockolateProxy extends Proxy 
 	{
 		private var _mockolate:Mockolate;
 		private var _target:Object;
 		
+		/**
+		 * Constructor.
+		 * 
+		 * @param target
+		 * @param asStrict
+		 * @param name
+		 */
 		public function MockolateProxy(target:Object, asStrict:Boolean=true, name:String=null)
 		{
 			_mockolate = new ProxyMockolateFactory().create(Class(getDefinitionByName(getQualifiedClassName(target))), null, asStrict, name);
@@ -26,7 +86,10 @@ package mockolate.ingredients.proxy
 			MockolatierMaster.registerTargetMockolate(_target, _mockolate);
 		}
 		
-		mockolate_ingredient function invokeMethod(name:*, args:Array):*
+		/**
+		 * Invoke a Method.
+		 */
+		public function invokeMethod(name:*, args:Array):*
 		{
 			var invocation:ProxyInvocation = new ProxyInvocation(_target, InvocationType.METHOD, name, args);
 			
@@ -35,7 +98,10 @@ package mockolate.ingredients.proxy
 			return invocation.returnValue;
 		}
 		
-		mockolate_ingredient function invokeGetter(name:*):*
+		/**
+		 * Invoke a Getter.
+		 */
+		public function invokeGetter(name:*):*
 		{
 			var invocation:ProxyInvocation = new ProxyInvocation(_target, InvocationType.GETTER, name, null);
 			
@@ -44,30 +110,45 @@ package mockolate.ingredients.proxy
 			return invocation.returnValue;
 		}
 		
-		mockolate_ingredient function invokeSetter(name:*, value:*):void
+		/**
+		 * Invoke a Setter.
+		 */
+		public function invokeSetter(name:*, value:*):void
 		{
 			var invocation:ProxyInvocation = new ProxyInvocation(_target, InvocationType.SETTER, name, [value]);
 			
 			_mockolate.invoked(invocation);
 		}
 		
+		/**
+		 * Handle a method invocation.
+		 */
 		override flash_proxy function callProperty(name:*, ...args):*
 		{
 			return invokeMethod(name, args);
 		}
 		
-		// property get requests
+		/**
+		 * Handle a property getter invocation.
+		 */
 		override flash_proxy function getProperty(name:*):*
 		{
 			return invokeGetter(name)
 		}
 		
-		// property set requests
+		/**
+		 * Handle a property setter invocation.
+		 */
 		override flash_proxy function setProperty(name:*, value:*):void
 		{
 			invokeSetter(name, value);
 		}
 		
+		/**
+		 * Indicates if the property exists on this object.
+		 * 
+		 * @return <code>false</code>
+		 */
 		override flash_proxy function hasProperty(name:*):Boolean
 		{
 			return false;	

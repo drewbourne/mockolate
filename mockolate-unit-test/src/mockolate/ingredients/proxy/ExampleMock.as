@@ -29,7 +29,7 @@ package mockolate.ingredients.proxy
 		
 		public function optional( ...rest ):void
 		{
-			proxy.mockolate_ingredient::invokeMethod("optional", rest);
+			proxy.invokeMethod("optional", rest);
 		}
 		
 		public function justCall():void
@@ -44,7 +44,7 @@ package mockolate.ingredients.proxy
 		
 		public function callWithRest(...rest):void
 		{
-			proxy.mockolate_ingredient::invokeMethod("callWithRest", rest);
+			proxy.invokeMethod("callWithRest", rest);
 		}
 	}
 	

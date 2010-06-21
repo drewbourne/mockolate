@@ -26,11 +26,13 @@ package mockolate.ingredients.floxy
             _invocationType = invocationTypeFromInvocation(invocation); 
         }
         
+		/** @inheritDoc */
         public function get target():Object
         {
             return _invocation.invocationTarget;
         }
         
+		/** @inheritDoc */
         public function get name():String
         {
             return isMethod
@@ -38,51 +40,63 @@ package mockolate.ingredients.floxy
                 : _invocation.property.name
         }
         
+		/** @inheritDoc */
         public function get invocationType():InvocationType
         {
             return _invocationType;
         }
         
+		/** @inheritDoc */
         public function get isMethod():Boolean
         {
             return _invocationType.isMethod;
         }
         
+		/** @inheritDoc */
         public function get isGetter():Boolean
         {
             return _invocationType.isGetter;
         }
         
+		/** @inheritDoc */
         public function get isSetter():Boolean
         {
             return _invocationType.isSetter;
         }
         
+		/** @inheritDoc */
         public function get arguments():Array
         {
             return _invocation.arguments;
         }
         
+		/** @inheritDoc */
         public function get returnValue():*
         {
             return _invocation.returnValue;
         }
         
+		/** @inheritDoc */
         public function set returnValue(value:*):void
         {
             _invocation.returnValue = value;
         }
         
+		/** @inheritDoc */
         public function proceed():void
         {
             _invocation.proceed();
         }
         
+		/** @inheritDoc */
         public function toString():String 
         {
             return formatToString(this, "FloxyInvocation", ["invocationType", "name", "arguments"]);
         }
 		
+		/**
+		 * @private
+		 */
 		protected function invocationTypeFromInvocation(invocation:IInvocation):InvocationType 
 		{
 			var invocationType:InvocationType;

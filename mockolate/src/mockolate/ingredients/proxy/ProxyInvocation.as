@@ -5,6 +5,13 @@ package mockolate.ingredients.proxy
 	import mockolate.ingredients.Invocation;
 	import mockolate.ingredients.InvocationType;
 	
+	/**
+	 * Invocation created by MockolateProxy.
+	 * 
+	 * @see mockolate.ingredients.Invocation
+	 * 
+	 * @author drewbourne
+	 */
 	public class ProxyInvocation implements Invocation
 	{
 		private var _target:Object;
@@ -13,6 +20,14 @@ package mockolate.ingredients.proxy
 		private var _arguments:Array;
 		private var _returnValue:*;
 		
+		/**
+		 * Constructor.
+		 * 
+		 * @param target Object this Invocation was triggered by.
+		 * @param invocationType Indicates if this invocation is a Method, Getter or Setter.
+		 * @param name Name of the Method, Getter or Setter.
+		 * @param arguments Array of arguments received by this invocation. 
+		 */
 		public function ProxyInvocation(
 			target:Object,
 			invocationType:InvocationType, 
@@ -25,51 +40,61 @@ package mockolate.ingredients.proxy
 			_arguments = arguments;
 		}
 		
+		/** @inheritDoc */
 		public function get target():Object
 		{
 			return _target;
 		}
 		
+		/** @inheritDoc */
 		public function get name():String
 		{
 			return _name;
 		}
 		
+		/** @inheritDoc */
 		public function get invocationType():InvocationType
 		{
 			return _invocationType;
 		}
 		
+		/** @inheritDoc */
 		public function get isMethod():Boolean
 		{
 			return _invocationType == InvocationType.METHOD;
 		}
-		
+
+		/** @inheritDoc */
 		public function get isGetter():Boolean
 		{
 			return _invocationType == InvocationType.GETTER;
 		}
 		
+		/** @inheritDoc */
 		public function get isSetter():Boolean
 		{
 			return _invocationType == InvocationType.SETTER;
 		}
 		
+		/** @inheritDoc */
 		public function get arguments():Array
 		{
 			return _arguments;
 		}
 		
+		/** @inheritDoc */
 		public function get returnValue():*
 		{
 			return _returnValue;
 		}
 		
+		/** @inheritDoc */
 		public function set returnValue(value:*):void
 		{
 			_returnValue = value;
 		}
 		
+		/** @inheritDoc */
 		public function proceed():void
 		{
 			throw new IllegalOperationError("ProxyInvocation.proceed() is unsupported");

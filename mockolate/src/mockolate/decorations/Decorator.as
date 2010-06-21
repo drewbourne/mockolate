@@ -49,6 +49,7 @@ package mockolate.decorations
 		}
 		
 		/**
+		 * Called when a Mockolate receives an Invocation.
 		 * 
 		 * @param invocation 
 		 */		
