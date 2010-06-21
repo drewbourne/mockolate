@@ -68,12 +68,20 @@ package mockolate.ingredients
 		}
 		
 		/**
+		 * @copy MockingCouverture#callsSuper()
+		 */
+		public function callsSuper():IMockingCouverture
+		{
+			mocker.callsSuper();
+			return this;
+		}
+		
+		/**
 		 * @copy MockingCouverture#pass()
 		 */
 		public function pass():IMockingCouverture
 		{
-			mocker.pass();
-			return this;
+			return callsSuper();
 		}
 		
 		/**

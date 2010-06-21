@@ -473,11 +473,28 @@ package mockolate.ingredients
 		}
 		
 		//
-		//    pass
+		//    callsSuper
 		//
 		
 		[Test(async)]
-		public function pass_shouldProceedWithOriginalImplementation():void 
+		public function callsSuper_shouldProceedWithOriginalImplementation():void 
+		{
+			// target is an actual EventDispatcher instance
+			// so we should be able to listen for events directly
+			// and pass should forward the invocation to the target
+			// thus dispatching the event 
+			
+			Async.proceedOnEvent(this, target, Event.COMPLETE);
+			
+			mocker.method("dispatchEvent").anyArgs().callsSuper();
+			
+			invoke({ target: target, name: "dispatchEvent", arguments: [new Event(Event.COMPLETE)] });
+			
+			mocker.verify();
+		}
+		
+		[Test(async)]
+		public function pass_shouldBeAnAliasOfCallsSuper():void 
 		{
 			// target is an actual EventDispatcher instance
 			// so we should be able to listen for events directly

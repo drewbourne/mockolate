@@ -92,7 +92,7 @@ package mockolate.decorations
 			
 			for each (var methodName:String in _eventDispatcherMethods)
 			{
-				mocker.method(methodName).pass();
+				mocker.method(methodName).callsSuper();
 			}
 		}
 		
@@ -106,7 +106,7 @@ package mockolate.decorations
 			
 			for each (var methodName:String in _eventDispatcherMethods)
 			{
-				mocker.method(methodName).pass();    
+				mocker.method(methodName).callsSuper();    
 			}
 		}
 		

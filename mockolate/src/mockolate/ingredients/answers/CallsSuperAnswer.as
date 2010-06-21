@@ -5,15 +5,15 @@ package mockolate.ingredients.answers
 	/**
      * @example
      * <listing version="3.0">
-     *  stub.pass();
+     *  stub.callsSuper();
      * </listing>
      */
-    public class PassThroughAnswer implements Answer
+    public class CallsSuperAnswer implements Answer
 	{
 		/**
 		 * Constructor.
 		 */
-		public function PassThroughAnswer()
+		public function CallsSuperAnswer()
 		{
 		}
 

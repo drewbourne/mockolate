@@ -203,8 +203,14 @@ package mockolate.ingredients
 		 * 
 		 * @example
 		 * <listing version="3.0">
-		 *	mock(instance).method("addEventListener").anyArgs().pass();
-		 * </listing> 
+		 *	mock(instance).method("addEventListener").anyArgs().callsSuper();
+		 * </listing>
+		 */
+		function callsSuper():IMockingCouverture;
+		
+		[Deprecated(since="0.9", replacement="#callsSuper()")]
+		/**
+		 * Alias for callSuper()
 		 */
 		function pass():IMockingCouverture;
 	}

@@ -27,9 +27,9 @@ package mockolate.ingredients
 	import mockolate.ingredients.MockolatierMaster;
 	import mockolate.ingredients.answers.Answer;
 	import mockolate.ingredients.answers.CallsAnswer;
+	import mockolate.ingredients.answers.CallsSuperAnswer;
 	import mockolate.ingredients.answers.DispatchesEventAnswer;
 	import mockolate.ingredients.answers.MethodInvokingAnswer;
-	import mockolate.ingredients.answers.PassThroughAnswer;
 	import mockolate.ingredients.answers.ReturnsAnswer;
 	import mockolate.ingredients.answers.ThrowsAnswer;
 	
@@ -561,15 +561,25 @@ package mockolate.ingredients
 		}
 		
 		/**
+		 * Sets the current Expectation to invoke the super method or property.
+		 * 
 		 * @example
 		 * <listing version="3.0">
-		 *	mock(instance).method("addEventListener").anyArgs().pass();
-		 * </listing> 
+		 *	mock(instance).method("addEventListener").anyArgs().callsSuper();
+		 * </listing>
+		 */
+		public function callsSuper():IMockingCouverture
+		{
+			addCallsSuper();
+			return this;
+		}
+		
+		/**
+		 * @inheritDoc
 		 */
 		public function pass():IMockingCouverture
 		{
-			addPassThrough();
-			return this;
+			return callsSuper();
 		}
 		
 		/**
@@ -888,9 +898,9 @@ package mockolate.ingredients
 		/**
 		 * @private 
 		 */
-		protected function addPassThrough():void 
+		protected function addCallsSuper():void 
 		{
-			addAnswer(new PassThroughAnswer());
+			addAnswer(new CallsSuperAnswer());
 		}
 		
 		/**
