@@ -631,10 +631,10 @@ public class UnknownMetaDataAttribute
       </property>
     </properties>
   </rule>
-  <rule since="" class="com.adobe.ac.pmd.rules.performance.HeavyConstructorRule" message="Constructor must be as lightweight as possible. No control statement allowed, whereas a cyclomatic complexe of {0} has been detected">
-    <description>The Just-In-Time compiler does not compile constructors. Make them as lightweight as possible, or move the complexity of the code to a method called by the constructor. Then the complexity will be compiled by the JIT.</description>
-    <priority>3</priority>
-  </rule>
+  <!-- <rule since="" class="com.adobe.ac.pmd.rules.performance.HeavyConstructorRule" message="Constructor must be as lightweight as possible. No control statement allowed, whereas a cyclomatic complexe of {0} has been detected">
+      <description>The Just-In-Time compiler does not compile constructors. Make them as lightweight as possible, or move the complexity of the code to a method called by the constructor. Then the complexity will be compiled by the JIT.</description>
+      <priority>3</priority>
+    </rule> -->
   <rule since="" class="com.adobe.ac.pmd.rules.performance.CreationPolicySetToAllRule" message="creationPolicy to ALL impacts the performance significantly">
     <description/>
     <priority>1</priority>
@@ -643,10 +643,10 @@ public class UnknownMetaDataAttribute
     <description/>
     <priority>3</priority>
   </rule>
-  <rule since="" class="com.adobe.ac.pmd.rules.performance.AvoidInstanciationInLoopRule" message="Instanciating a variable in a loop can be expensive">
-    <description/>
-    <priority>3</priority>
-  </rule>
+  <!-- <rule since="" class="com.adobe.ac.pmd.rules.performance.AvoidInstanciationInLoopRule" message="Instanciating a variable in a loop can be expensive">
+      <description/>
+      <priority>3</priority>
+    </rule> -->
   <rule since="" class="com.adobe.ac.pmd.rules.performance.DeeplyNestedIfRule" message="Nested if statements are not a good design">
     <description/>
     <priority>3</priority>
@@ -871,14 +871,14 @@ public class UnknownMetaDataAttribute
     <description/>
     <priority>3</priority>
   </rule>
-  <rule since="" class="com.adobe.ac.pmd.rules.unused.UnusedParameterRule" message="This parameter ({0}) of this function is not used">
-    <description/>
-    <priority>5</priority>
-    <example><![CDATA[public function foo( param1 : Number, param2 : Number, param3 : Number, param4 : Number, param5 : Number ) : void // 4 violations
-      {
-         var i : int = param1;
-      }]]></example>
-  </rule>
+  <!-- <rule since="" class="com.adobe.ac.pmd.rules.unused.UnusedParameterRule" message="This parameter ({0}) of this function is not used">
+     <description/>
+     <priority>5</priority>
+     <example><![CDATA[public function foo( param1 : Number, param2 : Number, param3 : Number, param4 : Number, param5 : Number ) : void // 4 violations
+       {
+          var i : int = param1;
+       }]]></example>
+   </rule> -->
   <rule since="" class="com.adobe.ac.pmd.rules.unused.UnusedLocalVariableRule" message="This variable ({0}) is not used">
     <description/>
     <priority>3</priority>
