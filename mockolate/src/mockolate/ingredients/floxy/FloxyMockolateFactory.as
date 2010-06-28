@@ -3,6 +3,7 @@ package mockolate.ingredients.floxy
     import asx.array.repeat;
     
     import flash.events.IEventDispatcher;
+    import flash.system.ApplicationDomain;
     
     import mockolate.ingredients.ExpectingCouverture;
     import mockolate.ingredients.MockingCouverture;
@@ -26,14 +27,16 @@ package mockolate.ingredients.floxy
     {
         private var _proxyRespository:IProxyRepository;
 		private var _mockolatier:Mockolatier;
+		private var _applicationDomain:ApplicationDomain;
         
         /**
          * Constructor. 
          */
-        public function FloxyMockolateFactory(mockolatier:Mockolatier)
+        public function FloxyMockolateFactory(mockolatier:Mockolatier, applicationDomain:ApplicationDomain = null)
         {
             _proxyRespository = new ProxyRepository();
 			_mockolatier = mockolatier;
+			_applicationDomain = applicationDomain;
         }
         
         /**
@@ -41,7 +44,7 @@ package mockolate.ingredients.floxy
          */
         public function prepare(... rest):IEventDispatcher
         {
-            return _proxyRespository.prepare(rest);
+            return _proxyRespository.prepare(rest, _applicationDomain);
         }
         
         /**

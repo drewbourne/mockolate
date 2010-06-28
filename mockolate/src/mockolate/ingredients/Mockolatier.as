@@ -5,6 +5,7 @@ package mockolate.ingredients
     import flash.events.Event;
     import flash.events.EventDispatcher;
     import flash.events.IEventDispatcher;
+    import flash.system.ApplicationDomain;
     import flash.utils.Dictionary;
     import flash.utils.setTimeout;
     
@@ -32,6 +33,7 @@ package mockolate.ingredients
     {
         // instance
         
+		private var _applicationDomain:ApplicationDomain;
         private var _mockolates:Array;
         private var _mockolatesByTarget:Dictionary;
         private var _mockolateFactory:MockolateFactory;
@@ -44,10 +46,17 @@ package mockolate.ingredients
         {
             super();
             
+			// _applicationDomain = new ApplicationDomain(ApplicationDomain.currentDomain);
+			_applicationDomain = ApplicationDomain.currentDomain;
             _mockolates = [];
             _mockolatesByTarget = new Dictionary();
-            _mockolateFactory = new FloxyMockolateFactory(this);
+            _mockolateFactory = new FloxyMockolateFactory(this, _applicationDomain);
         }
+		
+		public function get applicationDomain():ApplicationDomain
+		{
+			return _applicationDomain;
+		}
 
 		// TODO implement Mockolatier#hasPrepared(Class)        
 //        /**
