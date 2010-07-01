@@ -1,5 +1,7 @@
 package mockolate.ingredients
 {
+    import flash.events.EventDispatcher;
+    
     import mockolate.errors.VerificationError;
     import mockolate.ingredients.faux.FauxInvocation;
     import mockolate.verify;
@@ -14,14 +16,16 @@ package mockolate.ingredients
     
     public class VerifyingCouvertureTest
     {
-    	public var mockolate:Mockolate;
+    	public var instance:Mockolate;
     	public var verifier:VerifyingCouverture;
     	
     	[Before]
     	public function create():void 
     	{
-    		this.mockolate = new Mockolate();
-    		verifier = new VerifyingCouverture(this.mockolate);
+			instance = new Mockolate();
+			instance.target = new EventDispatcher();
+			instance.targetClass = EventDispatcher;
+    		verifier = new VerifyingCouverture(instance);
     		
     		verifier.invoked(invocation({ name: "method", arguments: [] }));
     		verifier.invoked(invocation({ name: "method", arguments: [1, 2, 3] }));
@@ -129,7 +133,7 @@ package mockolate.ingredients
 			}
 			catch (error:VerificationError)
 			{
-				assertThat(error.message, equalTo(""));
+				assertThat(error.message, equalTo("EventDispatcher.notCalled() invoked 0 times"));
 			}			
 		}
 		

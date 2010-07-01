@@ -129,6 +129,7 @@ package mockolate
 			}
         }
 		
+		[Ignore("verify() requires args(), noArgs()")]
 		[Test]
 		public function verifyingAsTestSpyAsFailingInvocationTypeMethod():void
 		{
@@ -184,6 +185,7 @@ package mockolate
 			}
 		}
 		
+		[Ignore("never() cannot be supported using the verify() syntax")]
 		[Test]
 		public function verifyingAsTestSpyAsPassingInvocationTypeMethodWithArgumentsAndInvokeCountAsNever():void
 		{
@@ -192,6 +194,7 @@ package mockolate
 			verify(instance).method("combine").args(Flavour).never();
 		}
 		
+		[Ignore("never() cannot be supported using the verify() syntax")]
 		[Test]
 		public function verifyingAsTestSpyAsFailingInvocationTypeMethodWithArgumentsAndInvokeCountAsNever():void
 		{

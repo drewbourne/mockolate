@@ -298,10 +298,10 @@ package mockolate.ingredients
             {
                 matchingInvocations = filter(matchingInvocations, _currentVerification.argumentsMatcher.matches);
 				
-//				if (empty(matchingInvocations))
-//				{
-//					failed = true;		
-//				}
+				if (empty(matchingInvocations))
+				{
+					failed = true;		
+				}
             }
             
             if (_currentVerification.invokedCountMatcher)
@@ -316,7 +316,7 @@ package mockolate.ingredients
 			{
 				var qname:String = getQualifiedClassName(this.mockolate.targetClass);
 				
-				description = qname.slice(qname.lastIndexOf('::') + 2);
+				description = qname.indexOf("::") != -1 ? qname.slice(qname.lastIndexOf('::') + 2) : qname;
 				description += this.mockolate.name ? "(" + this.mockolate.name + ")" : ""
 				description += '.';
 				description += _currentVerification.name;
