@@ -4,4 +4,6 @@ title: Decorating Mockolates
 author: Drew Bourne
 ---
 
-_FIXME ingredients and materials are still being prepared for the decoration session_
+_ingredients and materials are still being prepared for the decoration session_
+
+## next [limitations and gotchas](limitations_and_gotchas.html)

@@ -21,7 +21,7 @@ Mockolate supports adding _required_ behaviour using `mock(instance)` and _optio
 
 Any methods or properties with expectations added using `mock(instance)` MUST be used in the test before the Mockolate is [verified](verifying_and_test_spies.html), otherwise Mockolate will throw an `ExpectationError` telling you which expectations were not used. 
 
-{% highlight actionscript %}
+{% highlight as3 %}
 var flavour:Flavour = nice(Flavour);
 var yucky:Flavour = nice(Flavour);
 var yummy:Flavour = nice(Flavour);
@@ -35,7 +35,7 @@ verify(flavour);
 
 Oh no, in the above example an `ExpectionError` is thrown because we called `flavour.combine()` with the wrong arguments. If we try that again with the correct arguments then our Mockolate will verify successfully.
 
-{% highlight actionscript %}
+{% highlight as3 %}
 var flavour:Flavour = nice(Flavour);
 var yucky:Flavour = nice(Flavour);
 var yummy:Flavour = nice(Flavour);
@@ -55,31 +55,31 @@ In these examples we're going to skip the `[Test]` block and focus just on stubb
 
 Using a nice Flavour, 
 
-{% highlight actionscript %}
+{% highlight as3 %}
 var flavour:Flavour = nice(Flavour);
 {% endhighlight %}
     
 we can stub a getter,
 
-{% highlight actionscript %}
+{% highlight as3 %}
 stub(flavour).property("name").returns("Butterscotch");
 {% endhighlight %}
 
 or a setter,
 
-{% highlight actionscript %}
+{% highlight as3 %}
 stub(flavour).property("name").args(true);
 {% endhighlight %}
 
 or a method with no arguments, and return a value,
 
-{% highlight actionscript %}
+{% highlight as3 %}
 stub(flavour).method("toString").returns("Butterscotch");
 {% endhighlight %}
 
 stub a method with arguments, and return a reference,
 
-{% highlight actionscript %}
+{% highlight as3 %}
 var otherFlavour:Flavour = nice(Flavour);
 var combinedFlavour:Flavour = nice(Flavour);
 stub(flavour).method("combine").args(otherFlavour).returns(combinedFlavour);
@@ -87,14 +87,20 @@ stub(flavour).method("combine").args(otherFlavour).returns(combinedFlavour);
     
 stub a method with arguments using Matchers from [hamcrest-as3](http://github.com/drewbourne/hamcrest-as3)
 
-{% highlight actionscript %}
+{% highlight as3 %}
 stub(flavour).method("combine").args(instanceOf(Flavour))
     .returns(combinedFlavour);
+{% endhighlight %}
+
+stub a setter with arguments using Matchers, 
+
+{% highlight as3 %}
+stub(flavour).setter("ingredients").arg(array("cookies", "cream"));
 {% endhighlight %}
     
 stub a method to dispatch an Event,
   
-{% highlight actionscript %}
+{% highlight as3 %}
 stub(flavour).method("combine").args(anything())
     .returns(combinedFlavour)
     .dispatches(new FlavourEvent(FlavourEvent.TASTE_EXPLOSION));
@@ -102,7 +108,7 @@ stub(flavour).method("combine").args(anything())
     
 stub a method to call a Function,
 
-{% highlight actionscript %}
+{% highlight as3 %}
 stub(flavour).method("combine").args(anything())
     .returns(combinedFlavour)
     .calls(function():void {
@@ -112,13 +118,13 @@ stub(flavour).method("combine").args(anything())
         
 stub a method to throw an Error,
 
-{% highlight actionscript %}
+{% highlight as3 %}
 stub(flavour).method("combine").args(nullValue())
-    .throws(new ArgumentError("Do you really want to combine this flavour with <null>?"));
+    .throws(new ArgumentError("Really, combine this flavour with <null>?"));
 {% endhighlight %}
-    
+
 ## Customising behaviour
     
 Additional behaviour not included in Mockolate can be added by implementing `mockolate.ingredients.answers.Answer`. Examples of custom `Answer`s are provided for handing `HTTPService` result and fault calls. [Decorating Mocolates](decorating_mockolates.html) has more details.
 
-## next [verifying and test spies](verifying_and_test_spies.html)
+## next [recording and replaying](recording_and_replaying.html)
