@@ -85,6 +85,8 @@
     <classEntry path="mockolate.strict"/>
     <classEntry path="mockolate.stub"/>
     <classEntry path="mockolate.verify"/>
+    <classEntry path="mockolate.received"/>
+    <classEntry path="mockolate.ingredients.InvocationsMatcher"/>
   </includeClasses>
   <includeResources/>
   <namespaceManifests/>

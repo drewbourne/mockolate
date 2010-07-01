@@ -7,6 +7,7 @@ package mockolate.ingredients.proxy
 	import mockolate.ingredients.MockingCouverture;
 	import mockolate.ingredients.Mockolate;
 	import mockolate.ingredients.MockolateFactory;
+	import mockolate.ingredients.RecordingCouverture;
 	import mockolate.ingredients.VerifyingCouverture;
 	import mockolate.ingredients.mockolate_ingredient;
 	
@@ -46,12 +47,21 @@ package mockolate.ingredients.proxy
 		{
 			var instance:Mockolate = new Mockolate(name);
 			instance.targetClass = classReference;
-			instance.isStrict = asStrict;		
+			instance.isStrict = asStrict;
+			instance.recorder = createRecorder(instance);
 			instance.mocker = createMocker(instance);
 			instance.verifier = createVerifier(instance);
 			instance.expecter = createExpecter(instance);
 			
 			return instance;
+		}
+		
+		/**
+		 * @private 
+		 */
+		protected function createRecorder(mockolate:Mockolate):RecordingCouverture
+		{
+			return new RecordingCouverture(mockolate);
 		}
 		
 		/**

@@ -14,6 +14,7 @@ package mockolate.ingredients
      */
     public class Mockolate
     {
+		private var _recorder:RecordingCouverture;
         private var _mocker:MockingCouverture;
         private var _verifier:VerifyingCouverture;
 		private var _expecter:ExpectingCouverture;
@@ -47,6 +48,20 @@ package mockolate.ingredients
         {
             return _name;
         }
+		
+		/**
+		 * RecordingCouverture instance of this Mockolate. 
+		 */
+		mockolate_ingredient function get recorder():RecordingCouverture
+		{
+			return _recorder;
+		}
+		
+		/** @private */
+		mockolate_ingredient function set recorder(value:RecordingCouverture):void
+		{
+			_recorder = value;
+		}
 
         /**
          * MockingCouverture instance of this Mockolate. 
@@ -162,8 +177,6 @@ package mockolate.ingredients
             // these are specifically this order
             // so that the recording couvertures are invoked
             // prior to any exception possibly being thrown by the mocker
-            // 
-            // this will probably change to a safer and DRYer mechanism shortly
                         
 			if (_isRecording)
 			{
@@ -172,6 +185,9 @@ package mockolate.ingredients
 			}
 			else
 			{
+				if (_recorder)
+					_recorder.invoked(invocation);
+				
 	            if (_verifier)
 	                _verifier.invoked(invocation);
 	

@@ -1,29 +1,19 @@
 package mockolate.ingredients
 {
     import asx.array.empty;
-    import asx.fn._;
-    import asx.fn.partial;
+    import asx.array.filter;
+    import asx.array.map;
+    
+    import flash.utils.getQualifiedClassName;
     
     import mockolate.errors.VerificationError;
     
-    import org.hamcrest.Description;
-    import org.hamcrest.Matcher;
-    import org.hamcrest.StringDescription;
     import org.hamcrest.collection.array;
     import org.hamcrest.collection.arrayWithSize;
     import org.hamcrest.collection.emptyArray;
-    import org.hamcrest.core.anyOf;
-    import org.hamcrest.core.describedAs;
-    import org.hamcrest.date.dateEqual;
-    import org.hamcrest.number.greaterThan;
     import org.hamcrest.number.greaterThanOrEqualTo;
-    import org.hamcrest.number.lessThan;
     import org.hamcrest.number.lessThanOrEqualTo;
-    import org.hamcrest.object.equalTo;
-    import org.hamcrest.object.hasProperties;
     import org.hamcrest.object.hasProperty;
-    import org.hamcrest.object.instanceOf;
-    import org.hamcrest.text.re;
     
     use namespace mockolate_ingredient;
     
@@ -135,7 +125,7 @@ package mockolate.ingredients
                 	_currentVerification, mockolate, mockolate.target);
             
             _currentVerification.arguments = rest;
-            _currentVerification.argumentsMatcher = hasProperty("arguments", array(rest.map(partial(valueToMatcher, _))));
+            _currentVerification.argumentsMatcher = hasProperty("arguments", array(map(rest, valueToMatcher)));
             
             doVerify();
             return this;
@@ -278,34 +268,86 @@ package mockolate.ingredients
         protected function doVerify():void
         {
             var matchingInvocations:Array = invocations;
-            
+            var description:String = "";
+			var failed:Boolean = false;
+			
             if (_currentVerification.invocationTypeMatcher)
             {
-                matchingInvocations = matchingInvocations.filter(partial(_currentVerification.invocationTypeMatcher.matches, _));
-                failIfEmpty(matchingInvocations, "no invocations as " + _currentVerification.invocationType);
+                matchingInvocations = filter(matchingInvocations, _currentVerification.invocationTypeMatcher.matches);
+				
+				// do not fail when there are no invocations for the invocation type
+				// as we want to include addition information in the error message
+				// supplied by args() and invocation count methods: times() etc. 
             }
 
             if (_currentVerification.nameMatcher)
             {            
-                matchingInvocations = matchingInvocations.filter(partial(_currentVerification.nameMatcher.matches, _));
+                matchingInvocations = filter(matchingInvocations, _currentVerification.nameMatcher.matches);
 				
-				// don't fail immediately
-                // failIfEmpty(matchingInvocations, "no invocations with name " + _currentVerification.name);
+				// when there are no matching invocations
+				// and the invocation type is getter
+				// then fail at this point
+				// as getters do not receive arguments.
+				if (empty(matchingInvocations) && _currentVerification.invocationType.isGetter)
+				{
+					failed = true;
+				}
             }
             
             if (_currentVerification.argumentsMatcher)
             {
-                matchingInvocations = matchingInvocations.filter(partial(_currentVerification.argumentsMatcher.matches, _));
-                failIfEmpty(matchingInvocations, "no invocations with arguments " + _currentVerification.arguments);
+                matchingInvocations = filter(matchingInvocations, _currentVerification.argumentsMatcher.matches);
+				
+//				if (empty(matchingInvocations))
+//				{
+//					failed = true;		
+//				}
             }
             
             if (_currentVerification.invokedCountMatcher)
             {
                 if (!_currentVerification.invokedCountMatcher.matches(matchingInvocations))
                 {
-					fail("did not receive " + _currentVerification.invokedCount + " invocations.");
+					failed = true;
                 }
             }
+			
+			if (failed)
+			{
+				var qname:String = getQualifiedClassName(this.mockolate.targetClass);
+				
+				description = qname.slice(qname.lastIndexOf('::') + 2);
+				description += this.mockolate.name ? "(" + this.mockolate.name + ")" : ""
+				description += '.';
+				description += _currentVerification.name;
+				
+				if (_currentVerification.invocationType.isMethod)
+				{
+					description += "(";
+					if (_currentVerification.arguments)
+						description += _currentVerification.arguments.join(", ");
+					description += ")";
+				}
+				else if (_currentVerification.invocationType.isGetter)
+				{
+					description += ";";
+				}
+				else if (_currentVerification.invocationType.isSetter)
+				{
+					if (_currentVerification.arguments)
+					{
+						description += " = ";
+						description += _currentVerification.arguments.join(", ");
+					}
+					description += ";";
+				}
+				
+				description += " invoked ";
+				description += matchingInvocations.length;
+				description += " times";
+									
+				fail(description);
+			}
         }
         
         /**

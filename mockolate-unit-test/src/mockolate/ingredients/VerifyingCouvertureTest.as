@@ -1,11 +1,14 @@
 package mockolate.ingredients
 {
+    import mockolate.errors.VerificationError;
     import mockolate.ingredients.faux.FauxInvocation;
     import mockolate.verify;
     
     import org.flexunit.assertThat;
     import org.hamcrest.collection.array;
     import org.hamcrest.collection.emptyArray;
+    import org.hamcrest.core.throws;
+    import org.hamcrest.object.equalTo;
     
     use namespace mockolate_ingredient;
     
@@ -115,6 +118,19 @@ package mockolate.ingredients
 		public function atLeast_shouldFailIfNotInvokedAtLeastTheGivenNumberOfTimes():void 
 		{	
 			verifier.method("notCalled").atLeast(1);
+		}
+		
+		[Test]
+		public function asLeast_shouldFailWithNiceErrorMessage():void 
+		{
+			try
+			{
+				verifier.method("notCalled").atLeast(1);	
+			}
+			catch (error:VerificationError)
+			{
+				assertThat(error.message, equalTo(""));
+			}			
 		}
 		
 		//

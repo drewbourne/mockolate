@@ -1,7 +1,7 @@
 package mockolate
 {
 	import mockolate.decorations.rpc.StubbingHttpService;
-	import mockolate.flexunit.FlexunitKlassConstructor;
+	import mockolate.issues.MockingClassWithConstructorGetter;
 	import mockolate.ingredients.*;
 	import mockolate.ingredients.floxy.InterceptingCouvertureTest;
 	import mockolate.ingredients.proxy.ProxyMockolateTest;
@@ -60,8 +60,8 @@ package mockolate
 		public var ruleExample:MockolateRuleExample;
 		
 		//
-		//	flexunit
+		//	issues
 		//
-		public var flexunitKlassConstructor:FlexunitKlassConstructor;
+		public var mockingClassWithConstructorGetter:MockingClassWithConstructorGetter;
 	}
 }

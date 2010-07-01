@@ -71,8 +71,7 @@ package mockolate.ingredients.floxy
             mockolate.isStrict = asStrict;
             
             mockolate.interceptor = createInterceptor(mockolate);
-//            mockolate.recorder = createRecorder(mockolate);
-//            mockolate.stubber = createStubber(mockolate);
+            mockolate.recorder = createRecorder(mockolate);
             mockolate.mocker = createMocker(mockolate);
             mockolate.verifier = createVerifier(mockolate);
 			mockolate.expecter = createExpecter(mockolate);

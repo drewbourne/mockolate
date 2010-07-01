@@ -7,11 +7,13 @@ package mockolate
     import flash.utils.describeType;
     
     import mockolate.errors.ExpectationError;
+    import mockolate.errors.VerificationError;
     import mockolate.ingredients.Mockolate;
     import mockolate.sample.DarkChocolate;
     import mockolate.sample.Flavour;
     
     import org.flexunit.assertThat;
+    import org.flexunit.asserts.fail;
     import org.flexunit.async.Async;
     import org.hamcrest.collection.arrayWithSize;
     import org.hamcrest.core.not;
@@ -111,13 +113,137 @@ package mockolate
             verify(instance).method("combine").args(nullValue()).once();
         }
         
-        [Test(expected="mockolate.errors.VerificationError")]
+		[Test]
         public function verifyingAsTestSpyAsFailing():void
         {
             var instance:Flavour = nice(Flavour);
             
-            verify(instance).method("combine").args(nullValue()).once();
+			try 
+			{
+            	verify(instance).method("combine").noArgs();
+				fail("VerificationError not thrown");
+			}
+			catch (error:VerificationError)
+			{
+				assertThat(error.message, equalTo("Flavour.combine() invoked 0 times"));
+			}
         }
+		
+		[Test]
+		public function verifyingAsTestSpyAsFailingInvocationTypeMethod():void
+		{
+			var instance:Flavour = nice(Flavour);
+			
+			try 
+			{
+				verify(instance).method("combine");
+				fail("VerificationError not thrown");
+			}
+			catch (error:VerificationError)
+			{
+				assertThat(error.message, equalTo("Flavour.combine() invoked 0 times"));
+			}
+		}
+		
+		[Test]
+		public function verifyingAsTestSpyAsFailingInvocationTypeMethodWithArguments():void
+		{
+			var instance:Flavour = nice(Flavour);
+			var other1:Flavour = nice(Flavour);
+			var other2:Flavour = nice(Flavour);
+			
+			instance.combine(other1, other2);
+			
+			try 
+			{
+				verify(instance).method("combine").args(Flavour);
+				fail("VerificationError not thrown");
+			}
+			catch (error:VerificationError)
+			{
+				assertThat(error.message, equalTo("Flavour.combine([class Flavour]) invoked 0 times"));
+			}
+		}
+		
+		[Test]
+		public function verifyingAsTestSpyAsFailingInvocationTypeMethodWithArgumentsAndInvokeCount():void
+		{
+			var instance:Flavour = nice(Flavour);
+			var other:Flavour = nice(Flavour);
+			
+			instance.combine(other);
+			
+			try 
+			{
+				verify(instance).method("combine").args(Flavour).atLeast(2);
+				fail("VerificationError not thrown");
+			}
+			catch (error:VerificationError)
+			{
+				assertThat(error.message, equalTo("Flavour.combine([class Flavour]) invoked 1 times"));
+			}
+		}
+		
+		[Test]
+		public function verifyingAsTestSpyAsPassingInvocationTypeMethodWithArgumentsAndInvokeCountAsNever():void
+		{
+			var instance:Flavour = nice(Flavour);
+			
+			verify(instance).method("combine").args(Flavour).never();
+		}
+		
+		[Test]
+		public function verifyingAsTestSpyAsFailingInvocationTypeMethodWithArgumentsAndInvokeCountAsNever():void
+		{
+			var instance:Flavour = nice(Flavour);
+			var other:Flavour = nice(Flavour);
+			
+			instance.combine(other);
+			instance.combine(other);
+			instance.combine(other);
+			
+			try 
+			{
+				verify(instance).method("combine").args(Flavour).never();
+				fail("VerificationError not thrown");
+			}
+			catch (error:VerificationError)
+			{
+				assertThat(error.message, equalTo("Flavour.combine([class Flavour]) invoked 3 times"));
+			}
+		}
+		
+		[Test]
+		public function verifyingAsTestSpyAsFailingInvocationTypeGetter():void
+		{
+			var instance:Flavour = nice(Flavour);
+			
+			try
+			{
+				verify(instance).getter('name');
+				fail("VerificationError not thrown");
+			}
+			catch (error:VerificationError)
+			{
+				assertThat(error.message, equalTo("Flavour.name; invoked 0 times"));
+			}
+		}
+		
+		[Test]
+		public function verifyingAsTestSpyAsFailingInvocationTypeSetter():void
+		{
+			var instance:Flavour = nice(Flavour);
+			
+			try
+			{
+				verify(instance).setter('liked').arg(true);
+				fail("VerificationError not thrown");
+			}
+			catch (error:VerificationError)
+			{
+				assertThat(error.message, equalTo("Flavour.liked = true; invoked 0 times"));
+			}
+		}
         
         [Test(expected="mockolate.errors.VerificationError")]
         public function verifyingAsTestSpyAsFailingInvokedCount():void
@@ -141,6 +267,5 @@ package mockolate
 			
 			verify(instance).method("combine").args(nullValue()).times(0);
 		}
-		
     }
 }
