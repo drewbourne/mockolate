@@ -50,19 +50,36 @@ package mockolate.ingredients
 		}
 		
 		//
+		//
+		//
+		
+		public function niceMockolateWithMockMethodShouldDefaultToAtLeastOneInvocationCount():void 
+		{
+			mocker.mock().method("example");
+			invoke({ name: "example" });			
+			mocker.verify();
+		}
+		
+		public function niceMockolateWithMockMethodShouldAllowNeverInvocationCount():void 
+		{
+			mocker.mock().method("example").never();
+			mocker.verify();
+		}
+		
+		//
 		//	method
 		//
 		
 		// method, no args, no return
 		[Test(expected="mockolate.errors.ExpectationError")]
-		public function mockMethodShouldFailIfNotInvoked():void
+		public function method_shouldFailIfNotInvoked():void
 		{
 			mocker.method("example");
 			mocker.verify();
 		}
 		
 		[Test]
-		public function mockMethodShouldFailIfNotInvokedWithANiceMessage():void
+		public function method_shouldFailIfNotInvokedWithANiceMessage():void
 		{
 			mocker.method("example");
 			
@@ -77,7 +94,7 @@ package mockolate.ingredients
 		}
 		
 		[Test]
-		public function mockMethodShouldPassIfInvoked():void
+		public function method_shouldPassIfInvoked():void
 		{
 			mocker.method("example");
 			invoke({ name: "example" });

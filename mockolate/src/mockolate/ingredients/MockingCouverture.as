@@ -173,7 +173,7 @@ package mockolate.ingredients
 			// when expectation mode is mock
 			// than should be called at least once
 			// -- will be overridden if set by the user. 
-			if (mockolate.isStrict)
+			if (mockolate.isStrict || _expectationsAsMocks)
 				atLeast(1);
 			
 			return this;
@@ -874,8 +874,10 @@ package mockolate.ingredients
 		 */
 		protected function addDispatches(event:Event, delay:Number=0):void
 		{
+			var wasExpectingMocks:Boolean = _expectationsAsMocks;
+			_expectationsAsMocks = false;
 			var eventDispatcherDecorator:EventDispatcherDecorator = decorate(IEventDispatcher) as EventDispatcherDecorator;
-			
+			_expectationsAsMocks = wasExpectingMocks;
 			addAnswer(new DispatchesEventAnswer(eventDispatcherDecorator.eventDispatcher, event, delay));
 		}
 		
