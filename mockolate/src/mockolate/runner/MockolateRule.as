@@ -1,9 +1,11 @@
 package mockolate.runner
 {
+	import mockolate.nice;
 	import mockolate.runner.statements.IdentifyMockClasses;
 	import mockolate.runner.statements.InjectMockInstances;
 	import mockolate.runner.statements.PrepareMockClasses;
 	import mockolate.runner.statements.VerifyMockInstances;
+	import mockolate.strict;
 	
 	import org.flexunit.internals.runners.statements.IAsyncStatement;
 	import org.flexunit.internals.runners.statements.MethodRuleBase;
@@ -56,6 +58,62 @@ package mockolate.runner
 		public function MockolateRule()
 		{
 			super();
+		}
+		
+		/**
+		 * Creates a new 'nice' Mockolate and adds it to the Mockolates that will
+		 * be verified by the MockolateRule.
+		 * 
+		 * @example
+		 * <listing version="3.0">
+		 * 	public class ExtraMocks {
+		 * 		[Rule]
+		 * 		public var mocks:MockolateRule = new MockolateRule();
+		 * 
+		 * 		[Mock]
+		 * 		public var flavour1:Flavour;
+		 * 
+		 * 		[Test]
+		 * 		public function moreFlavours():void {
+		 * 			var flavour2:Flavour = mocks.nice(Flavour);
+		 * 			// mock() stub() f2 and it will be verified for you. 
+		 * 		} 
+		 * 	}
+		 * </listing>
+		 */
+		public function nice(classReference:Class):*
+		{
+			var instance:* = mockolate.nice(classReference);
+			this.data.mockInstances.push(instance);
+			return instance;
+		}
+		
+		/**
+		 * Creates a new 'strict' Mockolate and adds it to the Mockolates that will
+		 * be verified by the MockolateRule.
+		 * 
+		 * @example
+		 * <listing version="3.0">
+		 * 	public class ExtraMocks {
+		 * 		[Rule]
+		 * 		public var mocks:MockolateRule = new MockolateRule();
+		 * 
+		 * 		[Mock]
+		 * 		public var flavour1:Flavour;
+		 * 
+		 * 		[Test]
+		 * 		public function moreFlavours():void {
+		 * 			var flavour2:Flavour = mocks.strict(Flavour);
+		 * 			// mock() stub() flavour2 and it will be verified for you. 
+		 * 		} 
+		 * 	}
+		 * </listing>
+		 */
+		public function strict(classReference:Class):* 
+		{
+			var instance:* = mockolate.strict(classReference);
+			this.data.mockInstances.push(instance);
+			return instance;
 		}
 		
 		/**

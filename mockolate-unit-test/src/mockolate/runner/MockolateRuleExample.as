@@ -10,7 +10,7 @@ package mockolate.runner
 	public class MockolateRuleExample
 	{
 		[Rule]
-		public var mockolateRule:MockolateRule = new MockolateRule();
+		public var mocks:MockolateRule = new MockolateRule();
 		
 		[Mock]
 		public var flavour:Flavour;		
@@ -32,6 +32,22 @@ package mockolate.runner
 		public function failVerify():void 
 		{
 			mock(flavour).method("combine").args(Flavour).once();
+		}
+		
+		[Test]
+		public function additionalNiceMockCreatedUsingTheRuleShouldAlsoBeVerified():void 
+		{
+			var f2:Flavour = mocks.nice(Flavour);
+			mock(f2).method("combine").args(Flavour).once();
+			f2.combine(flavour);
+		}
+
+		[Test]
+		public function additionalStrictMockCreatedUsingTheRuleShouldAlsoBeVerified():void 
+		{
+			var f3:Flavour = mocks.strict(Flavour);
+			mock(f3).method("combine").args(Flavour).once();
+			f3.combine(flavour);
 		}
 	}
 }
