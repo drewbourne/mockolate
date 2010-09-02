@@ -655,12 +655,12 @@ public class UnknownMetaDataAttribute
     <description>A recursive style manager call can be a very expensive operation, causing parts of the UI to flicker visibly. Instead it is preferable to defer the creation of parts of the UI that depend on a runtime CSS SWF until after the SWF has been loaded. In this case a recursive call is not required.</description>
     <priority>3</priority>
   </rule>
-  <rule since="" class="com.adobe.ac.pmd.rules.sizing.TooManyFunctionRule" message="Too many methods detected ({0} maximum, but {1} actually)">
+  <!--<rule since="" class="com.adobe.ac.pmd.rules.sizing.TooManyFunctionRule" message="Too many methods detected ({0} maximum, but {1} actually)">
     <description>A class with too many methods is probably a good suspect for refactoring, in order to reduce its complexity and find a way to have more fine grained objects.</description>
     <priority>3</priority>
     <properties>
       <property name="maximum">
-        <value>15</value>
+        <value>20</value>
       </property>
     </properties>
     <example><![CDATA[public class Foo 
@@ -670,7 +670,7 @@ public class UnknownMetaDataAttribute
       public function doWorkAgain() : void {}
       // [... more more public methods ...]
    }]]></example>
-  </rule>
+  </rule>-->
   <rule since="" class="com.adobe.ac.pmd.rules.sizing.TooLongFunctionRule" message="This function is far too long ({0} maximum, but {1} actually)">
     <description>Violations of this rule usually indicate that the method has too much responsibility. Try to reduce the method size by creating helper methods and removing any copy/pasted code.</description>
     <priority>3</priority>
@@ -733,7 +733,7 @@ public class UnknownMetaDataAttribute
       }
    }]]></example>
   </rule>
-  <rule since="" class="com.adobe.ac.pmd.rules.sizing.TooManyPublicRule" message="Too many public fields or functions detected ({0} maximum, but {1} actually)">
+  <!--><rule since="" class="com.adobe.ac.pmd.rules.sizing.TooManyPublicRule" message="Too many public fields or functions detected ({0} maximum, but {1} actually)">
     <description>A large number of public methods and attributes declared in a class can indicate the class may need to be broken up as increased effort will be required to thoroughly test it.</description>
     <priority>3</priority>
     <properties>
@@ -755,7 +755,7 @@ public class UnknownMetaDataAttribute
 
       // [... more more public methods ...]
    }]]></example>
-  </rule>
+  </rule>-->
   <rule since="" class="com.adobe.ac.pmd.rules.sizing.TooManyFieldsRule" message="Too many field detected ({0} maximum, but {1} actually)">
     <description>Classes that have too many fields could be redesigned to have fewer fields, possibly  through some nested object grouping of some of the information.  For example, a class with  city/state/zipcode fields could instead have one Address field.</description>
     <priority>3</priority>
