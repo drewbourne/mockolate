@@ -36,7 +36,7 @@ package mockolate.ingredients
 		private var _applicationDomain:ApplicationDomain;
         private var _mockolates:Array;
         private var _mockolatesByTarget:Dictionary;
-        private var _mockolateFactory:MockolateFactory;
+        private var _mockolateFactory:IMockolateFactory;
 		private var _lastInvocation:Invocation;
         
         /**
