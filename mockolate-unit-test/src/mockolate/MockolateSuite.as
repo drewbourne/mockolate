@@ -1,10 +1,11 @@
 package mockolate
 {
 	import mockolate.decorations.rpc.StubbingHttpService;
-	import mockolate.issues.MockingClassWithConstructorGetter;
 	import mockolate.ingredients.*;
 	import mockolate.ingredients.floxy.InterceptingCouvertureTest;
 	import mockolate.ingredients.proxy.ProxyMockolateTest;
+	import mockolate.issues.ClassInDefaultPackageCannotBeMockedTest;
+	import mockolate.issues.MockingClassWithConstructorGetter;
 	import mockolate.runner.MockolateRuleExample;
 	import mockolate.runner.MockolateRunnerExample;
 
@@ -63,5 +64,6 @@ package mockolate
 		//	issues
 		//
 		public var mockingClassWithConstructorGetter:MockingClassWithConstructorGetter;
+		public var classInDefaultPackageCannotBeMocked:ClassInDefaultPackageCannotBeMockedTest;
 	}
 }
