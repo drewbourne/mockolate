@@ -32,7 +32,7 @@
     <classEntry path="mockolate.ingredients.MockingGetterCouverture"/>
     <classEntry path="mockolate.ingredients.MockingSetterCouverture"/>
     <classEntry path="mockolate.ingredients.Mockolate"/>
-    <classEntry path="mockolate.ingredients.MockolateFactory"/>
+    <classEntry path="mockolate.ingredients.IMockolateFactory"/>
     <classEntry path="mockolate.ingredients.Mockolatier"/>
     <classEntry path="mockolate.ingredients.MockolatierMaster"/>
     <classEntry path="mockolate.ingredients.RecordingCouverture"/>
@@ -87,6 +87,7 @@
     <classEntry path="mockolate.verify"/>
     <classEntry path="mockolate.received"/>
     <classEntry path="mockolate.ingredients.InvocationsMatcher"/>
+    <classEntry path="mockolate.ingredients.AbstractMockolateFactory"/>
   </includeClasses>
   <includeResources/>
   <namespaceManifests/>
