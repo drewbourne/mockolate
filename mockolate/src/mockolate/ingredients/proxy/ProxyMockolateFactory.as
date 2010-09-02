@@ -3,10 +3,11 @@ package mockolate.ingredients.proxy
 	import flash.errors.IllegalOperationError;
 	import flash.events.IEventDispatcher;
 	
+	import mockolate.ingredients.AbstractMockolateFactory;
 	import mockolate.ingredients.ExpectingCouverture;
+	import mockolate.ingredients.IMockolateFactory;
 	import mockolate.ingredients.MockingCouverture;
 	import mockolate.ingredients.Mockolate;
-	import mockolate.ingredients.MockolateFactory;
 	import mockolate.ingredients.RecordingCouverture;
 	import mockolate.ingredients.VerifyingCouverture;
 	import mockolate.ingredients.mockolate_ingredient;
@@ -21,7 +22,7 @@ package mockolate.ingredients.proxy
 	 * @private
 	 * @author drewbourne
 	 */
-	public class ProxyMockolateFactory implements MockolateFactory
+	public class ProxyMockolateFactory extends AbstractMockolateFactory implements IMockolateFactory
 	{
 		/**
 		 * Constructor. 
@@ -54,38 +55,6 @@ package mockolate.ingredients.proxy
 			instance.expecter = createExpecter(instance);
 			
 			return instance;
-		}
-		
-		/**
-		 * @private 
-		 */
-		protected function createRecorder(mockolate:Mockolate):RecordingCouverture
-		{
-			return new RecordingCouverture(mockolate);
-		}
-		
-		/**
-		 * @private 
-		 */
-		protected function createMocker(mockolate:Mockolate):MockingCouverture
-		{
-			return new MockingCouverture(mockolate);
-		}
-		
-		/**
-		 * @private 
-		 */
-		protected function createVerifier(mockolate:Mockolate):VerifyingCouverture
-		{
-			return new VerifyingCouverture(mockolate);
-		}
-		
-		/**
-		 * @private 
-		 */
-		protected function createExpecter(mockolate:Mockolate):ExpectingCouverture
-		{
-			return new ExpectingCouverture(mockolate);
 		}
 	}
 }

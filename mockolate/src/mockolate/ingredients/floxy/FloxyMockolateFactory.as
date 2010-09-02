@@ -5,10 +5,11 @@ package mockolate.ingredients.floxy
     import flash.events.IEventDispatcher;
     import flash.system.ApplicationDomain;
     
+    import mockolate.ingredients.AbstractMockolateFactory;
     import mockolate.ingredients.ExpectingCouverture;
+    import mockolate.ingredients.IMockolateFactory;
     import mockolate.ingredients.MockingCouverture;
     import mockolate.ingredients.Mockolate;
-    import mockolate.ingredients.MockolateFactory;
     import mockolate.ingredients.Mockolatier;
     import mockolate.ingredients.RecordingCouverture;
     import mockolate.ingredients.VerifyingCouverture;
@@ -23,7 +24,7 @@ package mockolate.ingredients.floxy
     /**
      * MockolateFactory implementation using FLoxy to generate Class proxies. 
      */
-    public class FloxyMockolateFactory implements MockolateFactory
+    public class FloxyMockolateFactory extends AbstractMockolateFactory implements IMockolateFactory
     {
         private var _proxyRespository:IProxyRepository;
 		private var _mockolatier:Mockolatier;
@@ -78,45 +79,13 @@ package mockolate.ingredients.floxy
             
             return mockolate;
         }
-        
-        /**
-         * @private 
-         */
-        protected function createInterceptor(mockolate:Mockolate):InterceptingCouverture
-        {
-            return new InterceptingCouverture(mockolate, _mockolatier);
-        }
-        
-        /**
-         * @private 
-         */
-        protected function createRecorder(mockolate:Mockolate):RecordingCouverture
-        {
-            return new RecordingCouverture(mockolate);
-        }
-        
-        /**
-         * @private 
-         */
-        protected function createMocker(mockolate:Mockolate):MockingCouverture
-        {
-            return new MockingCouverture(mockolate);
-        }
-
-        /**
-         * @private 
-         */
-        protected function createVerifier(mockolate:Mockolate):VerifyingCouverture
-        {
-            return new VerifyingCouverture(mockolate);
-        }
 		
 		/**
 		 * @private 
 		 */
-		protected function createExpecter(mockolate:Mockolate):ExpectingCouverture
+		protected function createInterceptor(mockolate:Mockolate):InterceptingCouverture
 		{
-			return new ExpectingCouverture(mockolate);
+			return new InterceptingCouverture(mockolate, _mockolatier);
 		}
     }
 }

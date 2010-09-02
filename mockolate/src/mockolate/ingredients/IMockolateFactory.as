@@ -7,7 +7,7 @@ package mockolate.ingredients
      * 
      * @author drewbourne
      */
-    public interface MockolateFactory
+    public interface IMockolateFactory
     {
         /**
          * Prepares the given Class references for use with the Mockolate library.
