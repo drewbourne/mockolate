@@ -307,14 +307,28 @@ package mockolate.ingredients
 		}
 		
 		/**
-		 * Sets the value to return when the current Expectation is invoked.  
+		 * Sets the value to return when the current Expectation is invoked. 
+		 * 
+		 * If more than 1 return value is given a value will be returned in 
+		 * sequence from first to last each time the method is invoked. The last
+		 * value in the sequence will be repeated if invoked more times than the 
+		 * number of values.   
 		 * 
 		 * @example
 		 * <listing version="3.0">
 		 *	mock(instance).method("toString").returns("[Instance]");
-		 * 
 		 *	trace(instance.toString());
 		 *	// "[Instance]" 
+		 * 
+		 * 	mock(otherInstance).method("gimme").returns(1, 2, 3);
+		 * 	trace(otherInstance.gimme());
+		 * 	// 1
+		 * 	trace(otherInstance.gimme());
+		 * 	// 2
+		 * 	trace(otherInstance.gimme());
+		 * 	// 3
+		 * 	trace(otherInstance.gimme());
+		 * 	// 3
 		 * </listing>
 		 */
 		public function returns(value:*, ...values):IMockingCouverture
