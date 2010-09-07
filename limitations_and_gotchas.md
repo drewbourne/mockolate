@@ -45,8 +45,21 @@ Mockolate will supply `null`s as constructor arguments if none are supplied to `
 
 All methods that are `mock()`ed, `stub()`bed, and `received()` will have default values included and these MUST be accounted for. For example, `EventDispatcher.addEventListener(type:String, listener:Function, useCapture:Boolean=false, priority:int=0, useWeakReferences:Boolean = false)` has 3 parameters with default values. Calls to this method will always received 5 parameters.
 
+## Classes in the default package 
 
+At the moment if a Class is in the default package cannot be mocked. This is due to a bug or limitation of the bytecode library Mockolate uses to generate runtime Classes. 
 
+{% highlight as3 %}
+package 
+{
+    public class OhNo 
+    {
+        public function thisMethodIsNotProxied():void 
+        {
+        }
+    }
+}
+{% endhighlight %}
 
 
 
