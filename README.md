@@ -1,219 +1,51 @@
-# Mockolate. fake chocolate, mock objects and test spies. 
+# Mockolate. 
+# fake chocolate, mock objects and test spies. 
 
-[Drew Bourne](mailto:andrew@firstbourne.com)
+[mockolate.org](http://mockolate.org/) Documentation, examples, elaboration. 
+[Drew Bourne](mailto:drew@firstbourne.com) Contact.
 
-## Mockolate, what what?
+This tagline is probably a hint that Mockolate is most useful when testing software. Whether you are doing _test-driven-development_, _post-crunch-time fill-in-the-gaps_, or _exploratory-I-have-no-idea-what-is-going-on_ testing Mockolate can help.
 
-In the delicious land of AS3 you can now create the finest Mock Objects and Test Spies. 
+# Mock Objects
 
-## how to get Mockolate
+A mock object can be used to simulate the behaviour of complex, real (non-mock) objects when using the real object would be impractical or impossible. Situations where a mock object would be useful: 
 
-Got Git? Awesome, you're allowed in the kitchen.
+- When an object is slow (like a database or webservice),
+- is non-deterministic (like the current time), 
+- has states that are difficult to reproduce (like network connections)
 
-    $ git clone git://github.com/drewbourne/mockolate.git
-    
-Got Subversion? Not quite as awesome, but you can play too.
+The above is mostly appropriated from [Mock Objects at Wikipedia](http://en.wikipedia.org/wiki/Mock_object). I could keep rewriting it here, but it's really quite a good read. 
 
-    $ svn checkout http://svn.github.com/drewbourne/mockolate.git
+# Test Spies
 
-## now to make some Mockolate yourself
+In espionage, spies infiltrate a system, recording and relaying information to their handlers. The handlers may use that information to check facts, inform others, or take action. 
 
-First things first, a few assumptions: 
+In testing, a Test Spy records which methods are called, which getters are got, which setters are set. The handler (typically a testcase) can then check the facts against what should or should not have happened and take action (typically an assertion). 
 
-1. we're going to use [FlexUnit 4](http://opensource.adobe.com/wiki/display/flexunit/FlexUnit). 
-1. and a bit of [hamcrest-as3](http://github.com/drewbourne/hamcrest-as3). 
+# Mockolate?
 
-Thats enough for now. 
+- clean consistent syntax
+- expectation-based or record-replay
+- dynamically generates proxy Classes
+- supports handcoded proxy Classes
+- provides a FlexUnit 4 Rule and Runner
+- uses proven libraries, [FlexUnit 4](http://flexunit.org/), [FLoxy](http://code.google.com/p/floxy) and [Hamcrest-as3](http://github.com/drewbourne/hamcrest-as3)
 
-## preparing, getting your ingredients ready
+# Next
 
-To prepare the Class you want to create Mockolates for we use the `prepare(Class)` function.
-    
-    import mockolate.prepare;
-    
-    import mockolate.sample.Flavour;
-    import mockolate.sample.DarkChocolate;
-        
-    [Before(async, timeout=5000)]
-    public function prepareMockolates():void
-    {
-        Async.proceedOnEvent(this,
-            prepare(Flavour, DarkChocolate),
-            Event.COMPLETE);
-    }
-    
-Mockolates do take some time to prepare so we run this `[Before]` block asynchronously to allow the code generation backend to do its thing. 
+Head over to [http://mockolate.org/](http://mockolate.org/) for documentation and examples:
 
-See [Writing an Async Test](http://docs.flexunit.org/index.php?title=Writing_an_AsyncTest) in the [FlexUnit](http://flexunit.org/) [wiki](http://docs.flexunit.org/).
+- [Mockolate?](http://mockolate.org/mockolate.html)
+- [Getting Mockolate](http://mockolate.org/getting_mockolate.html)
+- [Preparing and Creating](http://mockolate.org/preparing_and_creating.html)
+- [Stubbing and Mocking](http://mockolate.org/stubbing_and_mocking.html)
+- [Recoding and Replaying](http://mockolate.org/recording_and_replaying.html)
+- [Verifying and Test Spies](http://mockolate.org/verifying_and_test_spies.html)
+- [Decorating Mockolates](http://mockolate.org/decorating_mockolates.html)
+- [Limitations and Gotchas](http://mockolate.org/limitations_and_gotchas.html)
 
-`prepare(Class)` can take more than one Class so go ahead and feed it as many as you like. Just be sure to wait till they are complete. 
-
-## creating Mockolates nicely, or strictly
-
-Each Mockolate instance operates as either a 'nice' Mock or a 'strict' Mock Object. 
-
-- 'nice' Mocks will play nice and return false-y values for methods and properties that aren't stubbed. 
-- 'strict' Mocks will whinge and cry if you mistreat them by calling methods that aren't stubbed. 
-
-Create a nice mock using `nice(Class)`, or a strict Mock using `strict(Class)` giving them the Class you want an instance of.
-
-    [Test]
-    public function nicelyPlease():void 
-    {
-        var flavour:Flavour = nice(Flavour);
-        
-        assertThat(flavour.name, nullValue());
-    }
-
-    [Test(expected="mockolate.mistakes.StubMissingError")]
-    public function strictlyIfYouMust():void 
-    {
-        var flavour:Flavour = strict(DarkChocolate);
-        
-        // just accessing a property without a stub will cause a strict to throw a StubMissingError
-        var name:String = flavour.name;
-    }
-
-## preparing and creating a little bit easier
-
-Mockolate provides a [FlexUnit runner](http://docs.flexunit.org/index.php?title=Runners_and_Builders) that can prepare and create nice and strict Mockolate instances based on metadata. Any public instance variable marked with `[Mock]` metadata will be prepared, and injected. Using the MockolateRunner will take care of the Async prepare step and will wait until the classes are prepared before running your tests.
-
-There are two options that can be given to `[Mock]`.
-
-- use `[Mock(type="strict")]` to create a strict Mockolate.
-- use `[Mock(inject="false")]` to prepare only, and not create a Mockolate.
-
-By default a nice Mockolate is created and injected. 
-
-    // import and reference the runner to ensure it is compiled in.
-    import mockolate.runner.MockolateRunner; MockolateRunner; 
-
-    [RunWith("mockolate.runner.MockolateRunner")]
-    public class ExampleWithRunner
-    {
-        [Mock]
-        public var nicelyPlease:Example;
-        
-        [Mock(type="strict")]
-        public var strictlyThanks:Example;
-        
-        [Mock(inject="false")]
-        public var prepareButDontCreate:Example;
-    }
-
-## stubbing your toe, err Mock
-
-Once you have some Mockolate, you probably want it to do something instead of just being given something false-y all the time. 
-
-Both nice and strict Mock can be stubbed to do one or more of:
-
-- return a value, or sequence of values
-- dispatch an event
-- call another function 
-- throw an Error
-
-Stubs are defined with the `stub(instance)` function. In these examples we're going to skip the [Test] block and focus just on stubbing. 
-
-    import mockolate.stub;
-
-    // get our instance to stub
-    var flavour:Flavour = nice(Flavour);
-    
-    // stub a getter
-    stub(flavour).property("name").returns("Butterscotch");
-
-    // stub a setter
-    stub(flavour).property("name").args(true);
-
-    // stub a method
-    stub(flavour).method("toString").returns("Butterscotch");
-    
-    // stub a method with arg values
-    var otherFlavour:Flavour = nice(Flavour);
-    var combinedFlavour:Flavour = nice(Flavour);
-    stub(flavour).method("combine").args(otherFlavour).returns(combinedFlavour);
-    
-    // stub a method with arg Matchers
-    stub(flavour).method("combine").args(instanceOf(Flavour)).returns(combinedFlavour);
-    
-    // stub a method to dispatch an Event
-    stub(flavour).method("combine").args(anything()).returns(combineFlavour).dispatches(new FlavourEvent(FlavourEvent.TASTE_EXPLOSION));
-    
-    // stub a method to call a Function
-    stub(flavour).method("combine").args(anything()).returns(combineFlavour).calls(function():void {
-      trace("its mystery flavour");
-    });
-        
-    // stub a method to throw an Error
-    stub(flavour).method("combine").args(nullValue()).throws(new ArgumentError("Do you really want to combine this flavour with <null>?"));
-
-## verifying Mockolates
-
-For all strict Mocks an easy call to `verify(instance)` will check that all the stubbed methods have been called at least once. 
-
-    import mockolate.verify;
-
-    [Test]
-    public function verifyThusly():void 
-    {
-        var flavour:Flavour = strict(Flavour);
-        stub(flavour).property("name").returns("");
-        
-        // use our mockolate
-        var name:String = flavour.name;
-        
-        // its a good thing we called 'flavour.name' else we would have got a mockolate.errors.VerifyFailedError.
-        verify(flavour);
-    }
-
-## spying on Mockolates
-
-Spying on Mockolates is a little bit like verifying and a lot more like stubbing. Spying works on a cascade system where each additional verification step we add narrows the acceptable range of how a method or property should have been called. 
-
-    [Test]
-    public function iSpyWithMyLittleEye():void 
-    {
-        var flavour:Flavour = nice(Flavour);
-        var otherFlavour:Flavour = nice(Flavour);
-        
-        // ... do some work with the instances.
-      
-        // check that flavour.name was called at all.
-        verify(flavour).method("name");
-        
-        // check that flavour.combine() was called with any args
-        verify(flavour).method("combine").args(anything());
-        
-        // check that flavour.combine() was called with a specific instance of flavour
-        verify(flavour).method("combine").args(strictlyEqualTo(otherFlavour));        
-        
-        // check that flavour.combine() was called with a number of flavours, any instance.
-        verify(flavour).method("combine").args(instanceOf(DarkChocolate), instanceOf(Flavour));
-        
-        // check that flavour.combine() was called at least 3 times
-        verify(flavour).method("combine").atLeast(3);
-    }
-
-## gotchas
-
-`toString()`: Classes or interfaces that explicitly define `toString():String` as a method, when invoked on a nice Mockolate will return `null` unless a `returns` has been set. 
-
-    var flavour:Flavour = nice(Flavour);
-    // will return 'null'
-    trace(flavour); 
-    // will return 'My String'
-    stub(flavour).method('toString').noArgs().returns('My String');
-    trace(flavour)
-
-Fields declared as `public var` cannot be proxied which means Mockolate cannot set expectations or record invocations for those fields. 
-
-
-## notes
-
-Mockolate internals is currently a bit rough and are being whipped into shape rather promptly. If theres a test or example and its passes, then that feature possibly works. Anything outside the tests and examples is unspecified, or unimplemented, or likely to change. Even the things in the tests and examples may well be under-specified. User beware and all that. 
-
-## thanks
+## Thanks
 
 Richard Szalay with [FLoxy](http://code.google.com/p/floxy/), and Maxim Porges with [Loom](http://code.google.com/p/loom-as3/) for their work on Class proxy generation. 
 
-Brian LeGros for hassling me about [mock-as3](http://code.google.com/p/mock-as3/) enough that I added class proxy generation to it. Except you can probably ignore that project in favour of Mockolate.
+Brian LeGros for hassling me about -mock-as3- enough that I added class proxy generation to it. Except you can ignore that project in favour of Mockolate.
