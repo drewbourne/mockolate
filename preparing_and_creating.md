@@ -31,10 +31,10 @@ See [Writing an Async Test](http://docs.flexunit.org/index.php?title=Writing_an_
 
 ## Creating Mockolates nicely, or strictly
 
-Each Mockolate instance operates as either a 'nice' Mock or a 'strict' Mock Object. 
+Each Mockolate instance operates as either a 'nice' or a 'strict' Mock Object. 
 
-- 'nice' Mocks will play nice and return false-y values for methods and properties that aren't mocked or stubbed. 
-- 'strict' Mocks will whinge and cry if you mistreat them by calling methods that aren't mocked. 
+- 'nice' Mock Objects will play nice and return false-y values for methods and properties that aren't mocked or stubbed. 
+- 'strict' Mock Objects will whinge and cry if you mistreat them by calling methods that aren't mocked or stubbed. By whinge and cry I mean throw `InvocationError`s. 
 
 Create a nice mock using `nice(Class)`, or a strict Mock using `strict(Class)` giving them the Class you want an instance of.
 
@@ -47,12 +47,12 @@ public function nicelyPlease():void
     assertThat(flavour.name, nullValue());
 }
 
-[Test(expected="mockolate.mistakes.StubMissingError")]
+[Test(expected="mockolate.errors.InvocationError")]
 public function strictlyIfYouMust():void 
 {
     var flavour:Flavour = strict(DarkChocolate);
     
-    // just accessing a property without a stub will cause a strict to throw a StubMissingError
+    // accessing a property without a mock or stub will cause a strict Mock Object to throw an InvocationError
     var name:String = flavour.name;
 }
 {% endhighlight %}
@@ -68,13 +68,13 @@ There are two options that can be given to `[Mock]`.
 
 By default a nice Mockolate is created and injected. 
 
-Using the `MockolateRunner` for FlexUnit 4.1+
+Using the `MockolateRule` for FlexUnit 4.1+
 
 {% highlight as3 %}
 public class ExampleWithRule
 {
     [Rule]
-    public var mockolateRule:MockolateRule = new MockolateRule();
+    public var mocks:MockolateRule = new MockolateRule();
     
     [Mock(type="strict")]
     public var strictlyThanks:Example;
