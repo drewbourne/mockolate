@@ -9,6 +9,8 @@ package mockolate.ingredients.answers
     /**
      * Dispatches an Event with an optional delay. 
      * 
+	 * @see mockolate.ingredients.MockingCouverture#dispatches()
+	 * 
      * @example
      * <listing version="3.0">
      *  mock(instance).method("update").dispatches(new Event("now"));

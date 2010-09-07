@@ -3,9 +3,13 @@ package mockolate.ingredients.answers
 	import mockolate.ingredients.Invocation;
 	
 	/**
+	 * Calls the super method or property.
+	 * 
+	 * @see mockolate.ingredients.MockingCouverture#callsSuper()
+	 * 
      * @example
      * <listing version="3.0">
-     *  stub.callsSuper();
+     *  mock(instance).method("example").callsSuper();
      * </listing>
      */
     public class CallsSuperAnswer implements Answer
@@ -15,6 +19,7 @@ package mockolate.ingredients.answers
 		 */
 		public function CallsSuperAnswer()
 		{
+			super();
 		}
 
 		/**

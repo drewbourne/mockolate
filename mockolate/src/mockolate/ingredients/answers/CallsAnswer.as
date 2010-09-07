@@ -5,7 +5,7 @@ package mockolate.ingredients.answers
     /**
      * Calls a Function.
      * 
-     * @see mockolate.ingredients.MockingCouverture
+     * @see mockolate.ingredients.MockingCouverture#calls()
      * 
      * @example
      * <listing version="3.0">

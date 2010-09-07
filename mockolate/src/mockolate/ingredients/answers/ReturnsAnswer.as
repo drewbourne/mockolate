@@ -5,9 +5,9 @@ package mockolate.ingredients.answers
     import mockolate.ingredients.Invocation;
     
     /**
-     * Returns values for possible assignment to Invocation.returnValue. 
-     *
-     * @see ReturnsCallAnswer
+     * Returns values for possible assignment to Invocation.returnValue.
+	 * 
+	 * @see ReturnsCallAnswer
      * @see ReturnsValueAnswer
      * @see mockolate.ingredients.Invocation#returnValue
      * @see mockolate.ingredients.MockingCouverture#returns()
