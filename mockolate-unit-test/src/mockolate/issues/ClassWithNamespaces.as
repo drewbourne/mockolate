@@ -49,6 +49,16 @@ package mockolate.issues
 			return false;	
 		}
 		
+		test_namespace function get testGetter():Boolean 
+		{
+			return false;
+		}
+		
+		test_namespace function set testSetter(value:Boolean):void 
+		{
+			
+		}
+		
 		public function publicMethod():Boolean 
 		{
 			return false;

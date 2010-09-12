@@ -170,12 +170,6 @@ package mockolate.ingredients
 			
 			createMethodExpectation(name, null);
 			
-			// when expectation mode is mock
-			// than should be called at least once
-			// -- will be overridden if set by the user. 
-			if (mockolate.isStrict || _expectationsAsMocks)
-				atLeast(1);
-			
 			return this;
 		}
 		
@@ -196,12 +190,6 @@ package mockolate.ingredients
 			// FIXME when this checks if the method exists, remember we have to support Proxy as well! 
 			
 			createMethodExpectation(name, ns);
-			
-			// when expectation mode is mock
-			// than should be called at least once
-			// -- will be overridden if set by the user. 
-			if (mockolate.isStrict || _expectationsAsMocks)
-				atLeast(1);
 			
 			return this;
 		}
@@ -246,6 +234,24 @@ package mockolate.ingredients
 		}
 		
 		/**
+		 * Defines an Expectation to get a property value.
+		 * 
+		 * @param ns Namespace of the getter
+		 * @param name Name of the getter
+		 * 
+		 * @example
+		 * <listing version="3.0">
+		 * 	stub(instance).getter("name").returns("Current Name");
+		 * </listing>
+		 */
+		public function nsGetter(ns:Namespace, name:String):IMockingGetterCouverture
+		{
+			createGetterExpectation(name, ns);
+			
+			return new MockingGetterCouverture(this.mockolate);
+		}
+		
+		/**
 		 * Defines an Expectation to set a property value.
 		 * 
 		 * @param name Name of the property
@@ -258,6 +264,23 @@ package mockolate.ingredients
 		public function setter(name:String/*, ns:String=null*/):IMockingSetterCouverture
 		{
 			createSetterExpectation(name);
+			
+			return new MockingSetterCouverture(this.mockolate);
+		}
+		
+		/**
+		 * Defines an Expectation to set a property value.
+		 * 
+		 * @param name Name of the property
+		 * 
+		 * @example
+		 * <listing version="3.0">
+		 * 	stub(instance).setter("name").arg("New Name");
+		 * </listing>
+		 */
+		public function nsSetter(ns:Namespace, name:String):IMockingSetterCouverture
+		{
+			createSetterExpectation(name, ns);
 			
 			return new MockingSetterCouverture(this.mockolate);
 		}
@@ -820,7 +843,7 @@ package mockolate.ingredients
 			// when expectation mode is mock
 			// than should be called at least once
 			// -- will be overridden if set by the user. 
-			if (this.mockolate.isStrict)
+			if (this.mockolate.isStrict || _expectationsAsMocks)
 				atLeast(1);	
 		}
 		
@@ -839,7 +862,7 @@ package mockolate.ingredients
 			// when expectation mode is mock
 			// than should be called at least once
 			// -- will be overridden if set by the user. 
-			if (this.mockolate.isStrict)
+			if (this.mockolate.isStrict || _expectationsAsMocks)
 				atLeast(1);				
 		}
 		
@@ -854,6 +877,12 @@ package mockolate.ingredients
 			_currentExpectation.invocationType = InvocationType.METHOD;
 			
 			addExpectation(_currentExpectation);						
+
+			// when expectation mode is mock
+			// than should be called at least once
+			// -- will be overridden if set by the user. 
+			if (mockolate.isStrict || _expectationsAsMocks)
+				atLeast(1);
 		}
 		
 		/**

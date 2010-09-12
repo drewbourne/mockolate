@@ -50,13 +50,29 @@ package mockolate.issues
 		}
 		
 		[Test]
-		public function doesInstanceHaveProxiedNamespacedMethod():void 
+		public function mockTestNamespaceGetter():void
 		{
-			instance[2];
+			mock(instance).nsGetter(test_namespace, "testGetter").returns(true);
 			
-			instance.methodInNamespace();
+			assertThat(instance.testGetter, isTrue());
+		}
+		
+		[Test]
+		public function mockTestNamespaceSetter():void 
+		{
+			mock(instance).nsSetter(test_namespace, "testSetter").arg(true);
 			
-			instance.publicMethod();
-		}	
+			instance.testSetter = true;
+		}
+		
+//		[Test]
+//		public function doesInstanceHaveProxiedNamespacedMethod():void 
+//		{
+//			instance[2];
+//			
+//			instance.methodInNamespace();
+//			
+//			instance.publicMethod();
+//		}	
 	}
 }
