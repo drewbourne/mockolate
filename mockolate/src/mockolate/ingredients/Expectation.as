@@ -61,17 +61,17 @@ package mockolate.ingredients
 	    /**
 	     *  Namespace of the method or property this Expectation is for. 
 	     */
-	    public function get namespace():String 
+	    public function get namespace():Namespace 
 	    {
 	    	return _namespace;
 	    }
 	    
-	    public function set namespace(value:String):void
+	    public function set namespace(value:Namespace):void
 	    {
 	    	_namespace = value;
 	    }
 	    
-	    private var _namespace:String;
+	    private var _namespace:Namespace;
 		
 		/**
 		 * 
@@ -265,6 +265,7 @@ package mockolate.ingredients
 	    public function eligible(invocation:Invocation):Boolean 
 	    {
 			return eligibleByInvocationType(invocation.invocationType) 
+				&& eligibleByNamespaceURI(invocation.uri)
 				&& eligibleByName(invocation.name)
 				&& eligibleByArguments(invocation.arguments)
 				&& eligibleByConstraints()
@@ -277,6 +278,14 @@ package mockolate.ingredients
 		protected function eligibleByInvocationType(invocationType:InvocationType):Boolean 
 		{
 			return this.invocationType == invocationType;	
+		}
+		
+		/**
+		 * Determine if this Expectation is eligible for the given Namespace URI.
+		 */
+		protected function eligibleByNamespaceURI(uri:String):Boolean 
+		{
+			return !this.namespace || this.namespace.uri == uri;
 		}
 		
 		/**

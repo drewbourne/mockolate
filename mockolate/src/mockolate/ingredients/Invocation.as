@@ -16,6 +16,11 @@ package mockolate.ingredients
          * Name of the Method, Getter or Setter.
          */
         function get name():String;
+		
+		/**
+		 * Namespace URI.
+		 */
+		function get uri():String;
         
         /**
          * InvocationType indicates if this invocation is a Method, Getter or Setter.

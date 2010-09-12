@@ -163,12 +163,39 @@ package mockolate.ingredients
 		 *	mock(instance).method("toString").returns("[Instance]");
 		 * </listing>
 		 */
-		public function method(name:String/*, ns:String=null*/):IMockingMethodCouverture
+		public function method(name:String):IMockingMethodCouverture
 		{
 			// FIXME this _really_ should check that the method actually exists on the Class we are mocking
 			// FIXME when this checks if the method exists, remember we have to support Proxy as well! 
 			
 			createMethodExpectation(name, null);
+			
+			// when expectation mode is mock
+			// than should be called at least once
+			// -- will be overridden if set by the user. 
+			if (mockolate.isStrict || _expectationsAsMocks)
+				atLeast(1);
+			
+			return this;
+		}
+		
+		/**
+		 * Defines an Expectation of the given namespaced method name.
+		 * 
+		 * @param namespace Namespace of the method to expect.
+		 * @param name Name of the method to expect.
+		 * 
+		 * @example
+		 * <listing version="3.0">
+		 *	mock(instance).nsMethod(flash_proxy, "getProperty").returns("[Instance]");
+		 * </listing>
+		 */
+		public function nsMethod(ns:Namespace, name:String):IMockingMethodCouverture
+		{
+			// FIXME this _really_ should check that the method actually exists on the Class we are mocking
+			// FIXME when this checks if the method exists, remember we have to support Proxy as well! 
+			
+			createMethodExpectation(name, ns);
 			
 			// when expectation mode is mock
 			// than should be called at least once
@@ -732,10 +759,11 @@ package mockolate.ingredients
 		 * 
 		 * @private
 		 */
-		protected function createExpectation(name:String, ns:String=null):Expectation
+		protected function createExpectation(name:String, namespace:Namespace=null):Expectation
 		{
 			var expectation:Expectation = new Expectation();
 			expectation.name = name;
+			expectation.namespace = namespace;
 			
 			return expectation;
 		}
@@ -763,7 +791,7 @@ package mockolate.ingredients
 		 * 
 		 * @private
 		 */
-		protected function createPropertyExpectation(name:String, ns:String=null):void
+		protected function createPropertyExpectation(name:String, ns:Namespace=null):void
 		{
 			_currentExpectation = createExpectation(name, ns);
 			_currentExpectation.invocationType = InvocationType.GETTER;
@@ -782,7 +810,7 @@ package mockolate.ingredients
 		 * 
 		 * @private
 		 */
-		protected function createGetterExpectation(name:String, ns:String=null):void 
+		protected function createGetterExpectation(name:String, ns:Namespace=null):void 
 		{
 			_currentExpectation = createExpectation(name, ns);
 			_currentExpectation.invocationType = InvocationType.GETTER;
@@ -801,7 +829,7 @@ package mockolate.ingredients
 		 * 
 		 * @private
 		 */
-		protected function createSetterExpectation(name:String, ns:String=null):void 
+		protected function createSetterExpectation(name:String, ns:Namespace=null):void 
 		{
 			_currentExpectation = createExpectation(name, ns);
 			_currentExpectation.invocationType = InvocationType.SETTER;
@@ -820,7 +848,7 @@ package mockolate.ingredients
 		 * 
 		 * @private
 		 */
-		protected function createMethodExpectation(name:String, ns:String=null):void
+		protected function createMethodExpectation(name:String, ns:Namespace=null):void
 		{
 			_currentExpectation = createExpectation(name, ns);
 			_currentExpectation.invocationType = InvocationType.METHOD;

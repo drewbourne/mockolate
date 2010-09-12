@@ -19,6 +19,7 @@ package mockolate.ingredients.proxy
 		private var _name:String;
 		private var _arguments:Array;
 		private var _returnValue:*;
+		private var _uri:String;
 		
 		/**
 		 * Constructor.
@@ -32,7 +33,8 @@ package mockolate.ingredients.proxy
 			target:Object,
 			invocationType:InvocationType, 
 			name:String, 
-			arguments:Array)
+			arguments:Array, 
+			uri:String = null)
 		{
 			_target = target;
 			_invocationType = invocationType;
@@ -50,6 +52,11 @@ package mockolate.ingredients.proxy
 		public function get name():String
 		{
 			return _name;
+		}
+		/** @inheritDoc */
+		public function get uri():String 
+		{
+			return _uri;
 		}
 		
 		/** @inheritDoc */
