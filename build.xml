@@ -164,7 +164,7 @@
             localTrusted="true" />
     </target>
     
-    <target name="report" if="build.test">
+    <target name="report">
         <junitreport todir="${report.flexunit.loc}">
             <fileset dir="${report.flexunit.loc}">
                 <include name="TEST-*.xml" />
