@@ -14,6 +14,12 @@ package mockolate.decorations.rpc
 	import org.hamcrest.object.hasProperties;
 	import mx.rpc.events.FaultEvent;
 	import mockolate.mock;
+	import mockolate.verify;
+	import mockolate.runner.MockolateRule;
+	import mockolate.errors.ExpectationError;
+	import org.flexunit.asserts.fail;
+	import mockolate.nice;
+	import flash.events.EventDispatcher;
 	
 	[RunWith("mockolate.runner.MockolateRunner")]
 	public class StubbingHttpService
@@ -25,6 +31,9 @@ package mockolate.decorations.rpc
 		
 		[Mock]
 		public var service:HTTPService;
+		
+		[Mock]
+		public var nonHTTPService:EventDispatcher;
 		
 		[Before]
 		public function setUp():void
@@ -96,7 +105,7 @@ package mockolate.decorations.rpc
 			person.phone = PERSON_PHONE;
 			person.save();
 		}
-	
+		
 		[Ignore]
 		[Test(async)]
 		public function destroy_withPerson_notifiesOfSaveAndDoesntUpdatePerson():void 
@@ -116,6 +125,37 @@ package mockolate.decorations.rpc
 			person.name = PERSON_NAME;
 			person.phone = PERSON_PHONE;
 			person.destroy();
+		}
+		
+		[Test]
+		public function mockedHttpServiceThatIsNotInvokedShouldFailVerify():void 
+		{
+			// recreate service so that the Runner doesn't verify this instance
+			service = nice(HTTPService);
+			
+			mock(service)
+				.asHTTPService()
+				.method("POST")
+				.send(hasProperties({ name: PERSON_NAME, phone: PERSON_PHONE }))
+				.result(42);
+			
+			// dont invoke
+				
+			try 
+			{
+				verify(service);
+				fail("expecting ExpectationError");
+			}
+			catch (e:ExpectationError)
+			{
+				// expected.
+			}
+		}
+		
+		[Test(expected="mockolate.errors.MockolateError")]
+		public function asHTTPServiceShouldComplainIfTargetIsNotHTTPService():void 
+		{
+			mock(nonHTTPService).asHTTPService();
 		}
 	}
 }

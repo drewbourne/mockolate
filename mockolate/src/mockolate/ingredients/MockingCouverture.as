@@ -633,10 +633,14 @@ package mockolate.ingredients
 		
 		/**
 		 * 
+		 * 
+		 * @example
+		 * <listing version="3.0">
+		 * </listing>
 		 */
 		public function asHTTPService():HTTPServiceDecorator
 		{
-			return stub().decorate(HTTPService) as HTTPServiceDecorator;
+			return decorate(HTTPService) as HTTPServiceDecorator;
 		}
 		
 		//
@@ -989,8 +993,6 @@ package mockolate.ingredients
 					this.mockolate, 
 					this.mockolate.target);
 			}
-			
-			map(_mockExpectations, verifyExpectation);
 			
 			// stub expectations are not verified
 		}	
