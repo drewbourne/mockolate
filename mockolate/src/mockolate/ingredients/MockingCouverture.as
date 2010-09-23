@@ -168,13 +168,28 @@ package mockolate.ingredients
 			// FIXME this _really_ should check that the method actually exists on the Class we are mocking
 			// FIXME when this checks if the method exists, remember we have to support Proxy as well! 
 			
-			createMethodExpectation(name, null);
+			createMethodExpectation(name, null);			
 			
-			// when expectation mode is mock
-			// than should be called at least once
-			// -- will be overridden if set by the user. 
-			if (mockolate.isStrict || _expectationsAsMocks)
-				atLeast(1);
+			return this;
+		}
+		
+		/**
+		 * Defines an Expectation for methods with a name that matches the given RegExp.
+		 * 
+		 * @param regexp RegExp the method name should match.
+		 * 
+		 * @example
+		 * <listing version="3.0">
+		 * 	mock(permissions).methods(/^allow/).returns(true);
+		 * 
+		 * 	if (permissions.allowEdit()) {
+		 * 		// do work.
+		 * 	}
+		 * </listing> 
+		 */
+		public function methods(regexp:RegExp):IMockingMethodCouverture
+		{
+			createMethodsExpectation(regexp);
 			
 			return this;
 		}
@@ -731,15 +746,17 @@ package mockolate.ingredients
 		/**
 		 * Create an Expectation.
 		 * 
-		 * @see #createPropertyExpectation
 		 * @see #createMethodExpectation
+		 * @see #createGetterExpectation
+		 * @see #createSetterExpectation
 		 * 
 		 * @private
 		 */
-		protected function createExpectation(name:String, ns:String=null):Expectation
+		protected function createExpectation(name:String, ns:String=null, nameMatcher:Matcher=null):Expectation
 		{
 			var expectation:Expectation = new Expectation();
 			expectation.name = name;
+			expectation.nameMatcher = nameMatcher || equalTo(name);
 			
 			return expectation;
 		}
@@ -829,7 +846,32 @@ package mockolate.ingredients
 			_currentExpectation = createExpectation(name, ns);
 			_currentExpectation.invocationType = InvocationType.METHOD;
 			
-			addExpectation(_currentExpectation);						
+			addExpectation(_currentExpectation);
+			
+			// when expectation mode is mock
+			// than should be called at least once
+			// -- will be overridden if set by the user. 
+			if (mockolate.isStrict || _expectationsAsMocks)
+				atLeast(1);			
+		}
+		
+		/**
+		 * Create an Expectation for methods with names that match the given RegExp.
+		 * 
+		 * @private
+		 */
+		protected function createMethodsExpectation(regexp:RegExp):void
+		{
+			_currentExpectation = createExpectation(regexp.toString(), null, re(regexp));
+			_currentExpectation.invocationType = InvocationType.METHOD;
+			
+			addExpectation(_currentExpectation);
+			
+			// when expectation mode is mock
+			// than should be called at least once
+			// -- will be overridden if set by the user. 
+			if (mockolate.isStrict || _expectationsAsMocks)
+				atLeast(1);
 		}
 		
 		/**

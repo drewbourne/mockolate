@@ -74,7 +74,22 @@ package mockolate.ingredients
 	    private var _namespace:String;
 		
 		/**
-		 * 
+		 * Matcher for the anme of the method or propety this Expectation is for. 
+		 */
+		public function get nameMatcher():Matcher
+		{
+			return _nameMatcher;
+		}
+		
+		public function set nameMatcher(value:Matcher):void 
+		{
+			_nameMatcher = value;
+		}
+		
+		private var _nameMatcher:Matcher;
+		
+		/**
+		 * Type of Invocation: METHOD, GETTER, or SETTER.
 		 */
 		public function get invocationType():InvocationType
 		{
@@ -284,7 +299,7 @@ package mockolate.ingredients
 		 */		
 		protected function eligibleByName(name:String):Boolean 
 		{
-			return this.name == name;
+			return nameMatcher.matches(name);	
 		}
 		
 		/**
@@ -339,8 +354,8 @@ package mockolate.ingredients
 	    public function toString():String 
 	    {
 	       return substitute(
-	        	isMethod ? "#{}({})" : "#{}={}",
-	        	name, 
+	        	isMethod ? "#{}({})" : isSetter ? "#{}={}" : "#{}",
+	        	(namespace ? namespace + "::" : "") + name, 
 	        	argsMatcher ? StringDescription.toString(argsMatcher) : "");
 	    }
 	}

@@ -102,6 +102,40 @@ package mockolate.ingredients
 		}
 		
 		//
+		//	method(s) by RegExp 
+		//
+		
+		[Test(expected="mockolate.errors.ExpectationError")]
+		public function methods_byRegExp_shouldFailIfNotInvoked():void 
+		{
+			mocker.methods(/^do/);
+			mocker.verify();
+		}
+		
+		[Test]
+		public function methods_byRegExp_shouldFailWithANiceMessage():void 
+		{
+			mocker.methods(/^do/);
+			
+			try
+			{
+				mocker.verify();
+			}
+			catch (error:ExpectationError)
+			{
+				assertThat(error.message, equalTo("1 unmet Expectation\n\tflash.events::EventDispatcher<\"Example\">#/^do/()"));
+			}
+		}
+		
+		[Test]
+		public function methods_byRegExp_shouldPassIfMethodWithMatchingNameInvoked():void 
+		{
+			mocker.methods(/^do/);
+			invoke({ name: "doPass" });
+			mocker.verify();
+		}
+		
+		//
 		//	property
 		//
 		
