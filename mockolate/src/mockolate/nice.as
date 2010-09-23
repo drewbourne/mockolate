@@ -23,8 +23,8 @@ package mockolate
      * 
      * @author drewbourne
      */
-    public function nice(klass:Class, name:String=null, constructorArgs:Array=null):*
+    public function nice(classReference:Class, name:String=null, constructorArgs:Array=null):*
     {
-        return MockolatierMaster.nice(klass, name, constructorArgs);
+        return MockolatierMaster.nice(classReference, name, constructorArgs);
     }
 }
