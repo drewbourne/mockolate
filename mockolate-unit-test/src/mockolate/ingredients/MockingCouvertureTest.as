@@ -166,6 +166,55 @@ package mockolate.ingredients
 			mocker.verify();
 		}
 		
+		[Test]
+		public function getter_shouldFailWithNiceMessage():void 
+		{
+			mocker.getter("example");
+			
+			try
+			{
+				mocker.verify();
+			}
+			catch (error:ExpectationError)
+			{
+				assertThat(error.message, equalTo("1 unmet Expectation\n\tflash.events::EventDispatcher<\"Example\">#example"));	
+			}
+		}
+		
+		//
+		//	getters by RegExp
+		//
+		
+		[Test]
+		public function getters_shouldPassIfInvoked():void 
+		{
+			mocker.getters(/^example/);
+			invoke({ name: "exampleGetter", invocationType: InvocationType.GETTER });
+			mocker.verify();
+		}
+		
+		[Test(expected="mockolate.errors.ExpectationError")]
+		public function getters_shouldFailIfNotInvoked():void 
+		{
+			mocker.getters(/^example/);
+			mocker.verify();
+		}
+		
+		[Test]
+		public function getters_shouldFailWithNiceMessage():void 
+		{
+			mocker.getters(/^example/);
+			
+			try
+			{
+				mocker.verify();
+			}
+			catch (error:ExpectationError)
+			{
+				assertThat(error.message, equalTo("1 unmet Expectation\n\tflash.events::EventDispatcher<\"Example\">#/^example/"));
+			}
+		}	
+		
 		//
 		//	setter
 		//
@@ -183,6 +232,55 @@ package mockolate.ingredients
 		{
 			mocker.setter("example").arg(true);
 			mocker.verify();
+		}
+		
+		[Test]
+		public function setter_shouldFailWithNiceMessage():void 
+		{
+			mocker.setter("example").arg(true);
+			
+			try
+			{
+				mocker.verify();
+			}
+			catch (error:ExpectationError)
+			{
+				assertThat(error.message, equalTo("1 unmet Expectation\n\tflash.events::EventDispatcher<\"Example\">#example = <true>"));
+			}
+		}
+		
+		//
+		//	setters by RegExp
+		//
+		
+		[Test]
+		public function setters_shouldPassIfInvoked():void 
+		{
+			mocker.setters(/^example/).arg(true);
+			invoke({ name: "exampleSetter", invocationType: InvocationType.SETTER, arguments: [true] });
+			mocker.verify();
+		}
+		
+		[Test(expected="mockolate.errors.ExpectationError")]
+		public function setters_shouldFailIfNotInvoked():void 
+		{
+			mocker.setters(/^example/).arg(true);
+			mocker.verify();
+		}
+		
+		[Test]
+		public function setters_shouldFailWithNiceMessage():void 
+		{
+			mocker.setters(/^example/).arg(true);
+			
+			try
+			{
+				mocker.verify();
+			}
+			catch (error:ExpectationError)
+			{
+				assertThat(error.message, equalTo("1 unmet Expectation\n\tflash.events::EventDispatcher<\"Example\">#/^example/ = <true>"));
+			}
 		}
 		
 		//

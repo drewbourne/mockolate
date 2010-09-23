@@ -354,7 +354,7 @@ package mockolate.ingredients
 	    public function toString():String 
 	    {
 	       return substitute(
-	        	isMethod ? "#{}({})" : isSetter ? "#{}={}" : "#{}",
+	        	isMethod ? "#{}({})" : isSetter ? "#{} = {}" : "#{}",
 	        	(namespace ? namespace + "::" : "") + name, 
 	        	argsMatcher ? StringDescription.toString(argsMatcher) : "");
 	    }

@@ -182,8 +182,12 @@ package mockolate.ingredients
 		 * <listing version="3.0">
 		 * 	mock(permissions).methods(/^allow/).returns(true);
 		 * 
-		 * 	if (permissions.allowEdit()) {
-		 * 		// do work.
+		 * 	if (permissions.allowEdit(value)) {
+		 * 		// do edit.
+		 * 	}
+		 * 
+		 * 	if (permissions.allowView(value)) {
+		 * 		// do view.
 		 * 	}
 		 * </listing> 
 		 */
@@ -234,6 +238,27 @@ package mockolate.ingredients
 		}
 		
 		/**
+		 * Defines an Expectation to get a property value for any property with a name that matches the RegExp.
+		 * 
+		 * @param name Name of the property
+		 * 
+		 * @example
+		 * <listing version="3.0">
+		 * 	stub(instance).getters(/^slot\d/).returns(42);
+		 * 
+		 * 	trace(instance.slot0) 	// matches
+		 *  trace(instance.slot1) 	// matches
+		 *  trace(instance.slot10) 	// does not match
+		 * </listing>
+		 */
+		public function getters(regexp:RegExp):IMockingGetterCouverture
+		{
+			createGettersExpectation(regexp);
+			
+			return new MockingGetterCouverture(this.mockolate);
+		}
+		
+		/**
 		 * Defines an Expectation to set a property value.
 		 * 
 		 * @param name Name of the property
@@ -246,6 +271,27 @@ package mockolate.ingredients
 		public function setter(name:String/*, ns:String=null*/):IMockingSetterCouverture
 		{
 			createSetterExpectation(name);
+			
+			return new MockingSetterCouverture(this.mockolate);
+		}
+		
+		/**
+		 * Defines an Expectation to set a property value for any property with a name that matches the RegExp.
+		 * 
+		 * @param name Name of the property
+		 * 
+		 * @example
+		 * <listing version="3.0">
+		 * 	stub(instance).setters(/^slot\d/).arg(Number);
+		 * 
+		 * 	instance.slot0 = 1;		// matches
+		 * 	instance.slot9 = 3;		// matches
+		 * 	instance.slot10 = 4; 	// does not match
+		 * </listing>
+		 */
+		public function setters(regexp:RegExp):IMockingSetterCouverture
+		{
+			createSettersExpectation(regexp);
 			
 			return new MockingSetterCouverture(this.mockolate);
 		}
@@ -639,7 +685,7 @@ package mockolate.ingredients
 		//
 		
 		/**
-		 * 
+		 * Decorates the current instance with stubbed behaviour for an EventDispatcher.
 		 */
 		public function asEventDispatcher():EventDispatcherDecorator
 		{
@@ -647,11 +693,8 @@ package mockolate.ingredients
 		}
 		
 		/**
-		 * 
-		 * 
-		 * @example
-		 * <listing version="3.0">
-		 * </listing>
+		 * Returns a HTTPServiceDecorator around the current instance to provide
+		 * an easier API for mocking HTTPService calls.
 		 */
 		public function asHTTPService():HTTPServiceDecorator
 		{
@@ -752,11 +795,14 @@ package mockolate.ingredients
 		 * 
 		 * @private
 		 */
-		protected function createExpectation(name:String, ns:String=null, nameMatcher:Matcher=null):Expectation
+		protected function createExpectation(name:String, ns:String=null, nameMatcher:Matcher=null, invocationType:InvocationType=null):Expectation
 		{
 			var expectation:Expectation = new Expectation();
 			expectation.name = name;
 			expectation.nameMatcher = nameMatcher || equalTo(name);
+			expectation.invocationType = invocationType;
+			
+			
 			
 			return expectation;
 		}
@@ -775,7 +821,23 @@ package mockolate.ingredients
 			else
 				_stubExpectations[_stubExpectations.length] = expectation;		
 			
+			expectationAdded();
+			
 			return expectation;
+		}
+		
+		/**
+		 * Called after an Expectation has been added. 
+		 */
+		protected function expectationAdded():void 
+		{
+			// when expectation mode is mock
+			// than should be called at least once
+			// -- will be overridden if set by the user. 
+			if (this.mockolate.isStrict)
+			{
+				atLeast(1);
+			}
 		}
 		
 		[Deprecated]
@@ -786,16 +848,9 @@ package mockolate.ingredients
 		 */
 		protected function createPropertyExpectation(name:String, ns:String=null):void
 		{
-			_currentExpectation = createExpectation(name, ns);
-			_currentExpectation.invocationType = InvocationType.GETTER;
+			_currentExpectation = createExpectation(name, ns, null, InvocationType.GETTER);
 			
 			addExpectation(_currentExpectation);
-			
-			// when expectation mode is mock
-			// than should be called at least once
-			// -- will be overridden if set by the user. 
-			if (this.mockolate.isStrict)
-				atLeast(1);			   
 		}
 		
 		/**
@@ -805,16 +860,21 @@ package mockolate.ingredients
 		 */
 		protected function createGetterExpectation(name:String, ns:String=null):void 
 		{
-			_currentExpectation = createExpectation(name, ns);
-			_currentExpectation.invocationType = InvocationType.GETTER;
+			_currentExpectation = createExpectation(name, ns, null, InvocationType.GETTER);
 			
 			addExpectation(_currentExpectation);
+		}
+		
+		/**
+		 * Creates a Expectation for a getters with names that match the given RegExp.
+		 * 
+		 * @private
+		 */
+		protected function createGettersExpectation(regexp:RegExp):void 
+		{
+			_currentExpectation = createExpectation(regexp.toString(), null, re(regexp), InvocationType.GETTER);
 			
-			// when expectation mode is mock
-			// than should be called at least once
-			// -- will be overridden if set by the user. 
-			if (this.mockolate.isStrict)
-				atLeast(1);	
+			addExpectation(_currentExpectation);
 		}
 		
 		/**
@@ -824,16 +884,21 @@ package mockolate.ingredients
 		 */
 		protected function createSetterExpectation(name:String, ns:String=null):void 
 		{
-			_currentExpectation = createExpectation(name, ns);
-			_currentExpectation.invocationType = InvocationType.SETTER;
+			_currentExpectation = createExpectation(name, ns, null, InvocationType.SETTER);
+
+			addExpectation(_currentExpectation);
+		}
+		
+		/**
+		 * Creates an Expectation for a setters with names that match the given RegExp.
+		 * 
+		 * @private
+		 */
+		protected function createSettersExpectation(regexp:RegExp):void 
+		{
+			_currentExpectation = createExpectation(regexp.toString(), null, re(regexp), InvocationType.SETTER);
 			
 			addExpectation(_currentExpectation);
-			
-			// when expectation mode is mock
-			// than should be called at least once
-			// -- will be overridden if set by the user. 
-			if (this.mockolate.isStrict)
-				atLeast(1);				
 		}
 		
 		/**
@@ -843,16 +908,9 @@ package mockolate.ingredients
 		 */
 		protected function createMethodExpectation(name:String, ns:String=null):void
 		{
-			_currentExpectation = createExpectation(name, ns);
-			_currentExpectation.invocationType = InvocationType.METHOD;
+			_currentExpectation = createExpectation(name, ns, null, InvocationType.METHOD);
 			
 			addExpectation(_currentExpectation);
-			
-			// when expectation mode is mock
-			// than should be called at least once
-			// -- will be overridden if set by the user. 
-			if (mockolate.isStrict || _expectationsAsMocks)
-				atLeast(1);			
 		}
 		
 		/**
@@ -862,16 +920,9 @@ package mockolate.ingredients
 		 */
 		protected function createMethodsExpectation(regexp:RegExp):void
 		{
-			_currentExpectation = createExpectation(regexp.toString(), null, re(regexp));
-			_currentExpectation.invocationType = InvocationType.METHOD;
+			_currentExpectation = createExpectation(regexp.toString(), null, re(regexp), InvocationType.METHOD);
 			
 			addExpectation(_currentExpectation);
-			
-			// when expectation mode is mock
-			// than should be called at least once
-			// -- will be overridden if set by the user. 
-			if (mockolate.isStrict || _expectationsAsMocks)
-				atLeast(1);
 		}
 		
 		/**
