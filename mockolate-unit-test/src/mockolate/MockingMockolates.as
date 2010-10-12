@@ -6,6 +6,7 @@ package mockolate
     import flash.events.IEventDispatcher;
     import flash.utils.describeType;
     
+    import mockolate.errors.InvocationError;
     import mockolate.ingredients.Mockolate;
     import mockolate.ingredients.Sequence;
     import mockolate.sample.DarkChocolate;
@@ -13,6 +14,7 @@ package mockolate
     import mockolate.sample.FlavourMismatchError;
     
     import org.flexunit.assertThat;
+    import org.flexunit.asserts.fail;
     import org.flexunit.async.Async;
     import org.hamcrest.core.anything;
     import org.hamcrest.core.not;
@@ -271,6 +273,51 @@ package mockolate
 			
 			verify(flavourA);
 			verify(flavourB);
+		}
+		
+		[Test]
+		public function invocationMissingMethodExpectationShouldHaveNiceErrorMessage():void 
+		{
+			try 
+			{
+				var flavour:Flavour = strict(Flavour, "flavour");
+				flavour.combine(null, true, 2);
+				fail("expecting InvocationError");
+			}
+			catch (error:InvocationError)
+			{
+				assertThat(error.message, equalTo("No Expectation defined for Flavour(flavour).combine(null, <true>, <2>)"));
+			}
+		}
+		
+		[Test]
+		public function invocationMissingGetterExpectationShouldHaveNiceErrorMessage():void 
+		{
+			try 
+			{
+				var flavour:Flavour = strict(Flavour, "flavour");
+				flavour.name;
+				fail("expecting InvocationError");
+			}
+			catch (error:InvocationError)
+			{
+				assertThat(error.message, equalTo("No Expectation defined for Flavour(flavour).name;"));
+			}
+		}
+		
+		[Test]
+		public function invocationMissingSetterExpectationShouldHaveNiceErrorMessage():void 
+		{
+			try 
+			{
+				var flavour:Flavour = strict(Flavour, "flavour");
+				flavour.liked = true;
+				fail("expecting InvocationError");
+			}
+			catch (error:InvocationError)
+			{
+				assertThat(error.message, equalTo("No Expectation defined for Flavour(flavour).liked = <true>;"));
+			}
 		}
     }
 }

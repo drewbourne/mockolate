@@ -2,6 +2,10 @@ package mockolate.ingredients
 {
 	import flash.events.EventDispatcher;
 	import flash.events.IEventDispatcher;
+	import flash.utils.getQualifiedClassName;
+	
+	import org.hamcrest.Description;
+	import org.hamcrest.SelfDescribing;
 	
     use namespace mockolate_ingredient;
     
@@ -12,7 +16,7 @@ package mockolate.ingredients
      * 
      * @author drewbourne
      */
-    public class Mockolate
+    public class Mockolate implements SelfDescribing
     {
 		private var _recorder:RecordingCouverture;
         private var _mocker:MockingCouverture;
@@ -236,6 +240,24 @@ package mockolate.ingredients
 		{
 			_isRecording = false;
 			return this;
+		}
+		
+		/**
+		 * Describes this Mockolate to the given Description.
+		 */
+		public function describeTo(description:Description):void 
+		{
+			var qname:String = getQualifiedClassName(targetClass);
+			
+			description.appendText(qname.slice(qname.lastIndexOf('::') + 2));
+			
+			if (name)
+			{
+				description
+					.appendText("(")
+					.appendText(name)
+					.appendText(")");
+			}
 		}
     }
 }

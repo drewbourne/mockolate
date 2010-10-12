@@ -1,11 +1,13 @@
 package mockolate.ingredients
 {
+	import org.hamcrest.SelfDescribing;
+
     /**
-     * Interface implemented by facades to the invocation objects provided by ASMock and Loom.
+     * Interface implemented by facades to the invocation objects provided by FLoxy and Loom.
      * 
      * @author drewbourne
      */
-    public interface Invocation
+    public interface Invocation extends SelfDescribing
     {
         /**
          * Object this Invocation was triggered by.

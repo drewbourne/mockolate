@@ -88,6 +88,7 @@
     <classEntry path="mockolate.received"/>
     <classEntry path="mockolate.ingredients.InvocationsMatcher"/>
     <classEntry path="mockolate.ingredients.AbstractMockolateFactory"/>
+    <classEntry path="mockolate.ingredients.AbstractInvocation"/>
   </includeClasses>
   <includeResources/>
   <namespaceManifests/>

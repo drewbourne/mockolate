@@ -2,17 +2,19 @@ package mockolate.ingredients.floxy
 {
     import asx.string.formatToString;
     
+    import mockolate.ingredients.AbstractInvocation;
     import mockolate.ingredients.Invocation;
     import mockolate.ingredients.InvocationType;
     
     import org.floxy.IInvocation;
+    import org.hamcrest.Description;
     
     /**
      * Wraps the FLoxy IInvocation type in the Mockolate Invocation interface.
      * 
      * @author drewbourne. 
      */
-    public class FloxyInvocation implements Invocation
+    public class FloxyInvocation extends AbstractInvocation implements Invocation
     {
         private var _invocation:IInvocation;
         private var _invocationType:InvocationType;

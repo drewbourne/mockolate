@@ -1,6 +1,8 @@
 package mockolate.ingredients
 {	
+	import org.hamcrest.Description;
 	import org.hamcrest.Matcher;
+	import org.hamcrest.SelfDescribing;
 	
 	// FIXME Verification is not the most appropriate name for this class. 
 	/**
@@ -11,7 +13,7 @@ package mockolate.ingredients
 	 * 
 	 * @author drewbourne
 	 */
-	public class Verification
+	public class Verification implements SelfDescribing
 	{    
 	    /**
 	     * Constructor. 
@@ -138,6 +140,30 @@ package mockolate.ingredients
 		    _invokedCountMatcher = value;
 		}
 		
-		private var _invokedCountMatcher:Matcher;    
+		private var _invokedCountMatcher:Matcher;
+		
+		/**
+		 * Describes this Verification to the given Description.
+		 */
+		public function describeTo(description:Description):void 
+		{
+			description.appendText(name);
+				
+			if (invocationType.isMethod)
+			{
+				description.appendList("(", ", ", ")", this.arguments);
+			}
+			else if (invocationType.isSetter)
+			{
+				description
+					.appendText(" = ")
+					.appendValue(this.arguments[0])
+					.appendText(";");
+			}
+			else if (invocationType.isGetter)
+			{
+				description.appendText(";");	
+			}
+		}
 	}
 }

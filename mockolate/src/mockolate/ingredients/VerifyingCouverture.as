@@ -8,6 +8,8 @@ package mockolate.ingredients
     
     import mockolate.errors.VerificationError;
     
+    import org.hamcrest.Description;
+    import org.hamcrest.StringDescription;
     import org.hamcrest.collection.array;
     import org.hamcrest.collection.arrayWithSize;
     import org.hamcrest.collection.emptyArray;
@@ -122,7 +124,7 @@ package mockolate.ingredients
             if (_currentVerification.invocationType == InvocationType.GETTER)
                 throw new VerificationError(
                 	"getters do not accept arguments", 
-                	_currentVerification, mockolate, mockolate.target);
+                	_currentVerification, this.mockolate, this.mockolate.target);
             
             _currentVerification.arguments = rest;
             _currentVerification.argumentsMatcher = hasProperty("arguments", array(map(rest, valueToMatcher)));
@@ -136,7 +138,7 @@ package mockolate.ingredients
             if (_currentVerification.invocationType == InvocationType.GETTER)
                 throw new VerificationError(
                 	"getters do not accept arguments", 
-                	_currentVerification, mockolate, mockolate.target);
+                	_currentVerification, this.mockolate, this.mockolate.target);
             
             _currentVerification.arguments = null;
             _currentVerification.argumentsMatcher = hasProperty("arguments", emptyArray());
@@ -268,7 +270,7 @@ package mockolate.ingredients
         protected function doVerify():void
         {
             var matchingInvocations:Array = invocations;
-            var description:String = "";
+//            var description:String = "";
 			var failed:Boolean = false;
 			
             if (_currentVerification.invocationTypeMatcher)
@@ -314,39 +316,17 @@ package mockolate.ingredients
 			
 			if (failed)
 			{
-				var qname:String = getQualifiedClassName(this.mockolate.targetClass);
+				var description:Description = new StringDescription();
 				
-				description = qname.indexOf("::") != -1 ? qname.slice(qname.lastIndexOf('::') + 2) : qname;
-				description += this.mockolate.name ? "(" + this.mockolate.name + ")" : ""
-				description += '.';
-				description += _currentVerification.name;
-				
-				if (_currentVerification.invocationType.isMethod)
-				{
-					description += "(";
-					if (_currentVerification.arguments)
-						description += _currentVerification.arguments.join(", ");
-					description += ")";
-				}
-				else if (_currentVerification.invocationType.isGetter)
-				{
-					description += ";";
-				}
-				else if (_currentVerification.invocationType.isSetter)
-				{
-					if (_currentVerification.arguments)
-					{
-						description += " = ";
-						description += _currentVerification.arguments.join(", ");
-					}
-					description += ";";
-				}
-				
-				description += " invoked ";
-				description += matchingInvocations.length;
-				description += " times";
-									
-				fail(description);
+				description
+					.appendDescriptionOf(this.mockolate)
+					.appendText(".")
+					.appendDescriptionOf(_currentVerification)
+					.appendText(" invoked ")
+					.appendText(matchingInvocations.length.toString())
+					.appendText(" times");
+
+				fail(description.toString());
 			}
         }
         
@@ -367,7 +347,7 @@ package mockolate.ingredients
         protected function fail(description:String):void 
         {
             throw new VerificationError(
-                description, _currentVerification, mockolate, mockolate.target);
+                description, _currentVerification, this.mockolate, this.mockolate.target);
         }
     }
 }

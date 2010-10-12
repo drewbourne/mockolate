@@ -2,8 +2,12 @@ package mockolate.ingredients.faux
 {
     import asx.string.formatToString;
     
+    import flash.errors.IllegalOperationError;
+    
     import mockolate.ingredients.Invocation;
     import mockolate.ingredients.InvocationType;
+    
+    import org.hamcrest.Description;
     
 	/**
 	 * FauxInvocation provides an Invocation implementation for use in testing.
@@ -106,5 +110,13 @@ package mockolate.ingredients.faux
         {
             return formatToString(this, "FauxInvocation", ["invocationType", "name", "arguments"]);
         }
+		
+		/**
+		 * Describes the FauxInvocation to the Description. 
+		 */
+		public function describeTo(description:Description):void 
+		{
+			description.appendText(toString());
+		}
     }
 }

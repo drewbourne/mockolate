@@ -162,7 +162,7 @@ package mockolate
 			}
 			catch (error:VerificationError)
 			{
-				assertThat(error.message, equalTo("Flavour.combine([class Flavour]) invoked 0 times"));
+				assertThat(error.message, equalTo("Flavour.combine(<[class Flavour]>) invoked 0 times"));
 			}
 		}
 		
@@ -181,7 +181,7 @@ package mockolate
 			}
 			catch (error:VerificationError)
 			{
-				assertThat(error.message, equalTo("Flavour.combine([class Flavour]) invoked 1 times"));
+				assertThat(error.message, equalTo("Flavour.combine(<[class Flavour]>) invoked 1 times"));
 			}
 		}
 		
@@ -244,7 +244,7 @@ package mockolate
 			}
 			catch (error:VerificationError)
 			{
-				assertThat(error.message, equalTo("Flavour.liked = true; invoked 0 times"));
+				assertThat(error.message, equalTo("Flavour.liked = <true>; invoked 0 times"));
 			}
 		}
         

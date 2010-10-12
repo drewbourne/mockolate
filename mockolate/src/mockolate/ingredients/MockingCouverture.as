@@ -35,6 +35,7 @@ package mockolate.ingredients
 	
 	import mx.rpc.http.HTTPService;
 	
+	import org.hamcrest.Description;
 	import org.hamcrest.Matcher;
 	import org.hamcrest.StringDescription;
 	import org.hamcrest.collection.IsArrayMatcher;
@@ -730,8 +731,15 @@ package mockolate.ingredients
 			
 			if (!expectation && this.mockolate.isStrict)
 			{
-				throw new InvocationError(
-					["No Expectation defined for Invocation:{}", [invocation]], 
+				var description:Description = new StringDescription();
+				
+				description
+					.appendDescriptionOf(this.mockolate)
+					.appendText(".")
+					.appendDescriptionOf(invocation);
+				
+				throw new InvocationError( 
+					["No Expectation defined for {}", [description.toString()]],
 					invocation, this.mockolate, this.mockolate.target);
 			}
 			
@@ -1033,7 +1041,11 @@ package mockolate.ingredients
 				decoratorClass = _decoratorClassesByClass[classToDecorate];
 			
 			if (!decoratorClass)
-				throw new MockolateError(["No Decorator registered for {0}", [classToDecorate]], this.mockolate, this.mockolate.target);
+			{
+				throw new MockolateError(
+					["No Decorator registered for {0}", [classToDecorate]], 
+					this.mockolate, this.mockolate.target);
+			}
 			
 			var decorator:Decorator = _decorationsByClass[classToDecorate];
 			
