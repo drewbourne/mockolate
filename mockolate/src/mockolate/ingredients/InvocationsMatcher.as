@@ -15,6 +15,7 @@ package mockolate.ingredients
 	import org.hamcrest.number.lessThanOrEqualTo;
 	import org.hamcrest.object.equalTo;
 	import org.hamcrest.object.hasProperties;
+	import org.hamcrest.text.re;
 	
 	use namespace mockolate_ingredient;
 	
@@ -93,6 +94,24 @@ package mockolate.ingredients
 		}
 		
 		/**
+		 * Match Invocations for methods with a name that matches the given RegExp.
+		 * 
+		 * @param regexp RegExp the method name to match.
+		 * 
+		 * @example
+		 * <listing version="3.0">
+		 * 	assertThat(flavour, received().methods(/^allow/).atLeast(2));
+		 * </listing> 
+		 */
+		public function methods(regexp:RegExp):InvocationsMatcher
+		{
+			_invocation.invocationType = InvocationType.METHOD;
+			_invocation.name = regexp.toString(); 
+			_invocation.nameMatcher = re(regexp);
+			return this;
+		}
+		
+		/**
 		 * Match Invocations for the given property getter name.
 		 * 
 		 * @example
@@ -105,6 +124,17 @@ package mockolate.ingredients
 			_invocation.invocationType = InvocationType.GETTER;
 			_invocation.name = name;
 			return this;
+		}
+		
+		/**
+		 * 
+		 */
+		public function getters(regexp:RegExp):InvocationsMatcher
+		{
+			_invocation.invocationType = InvocationType.GETTER;
+			_invocation.name = regexp.toString(); 
+			_invocation.nameMatcher = re(regexp);
+			return this;	
 		}
 		
 		/**
@@ -121,6 +151,17 @@ package mockolate.ingredients
 			_invocation.name = name;
 			return this;
 		}
+		
+		/**
+		 * 
+		 */
+		public function setters(regexp:RegExp):InvocationsMatcher
+		{
+			_invocation.invocationType = InvocationType.SETTER;
+			_invocation.name = regexp.toString(); 
+			_invocation.nameMatcher = re(regexp);
+			return this;	
+		}		
 		
 		/**
 		 * Match Invocations for with the given arguments. Accepts values or matchers.  
@@ -336,8 +377,8 @@ package mockolate.ingredients
 			if (_invocation.invocationType)
 				properties['invocationType'] = _invocation.invocationType;
 			
-			if (_invocation.name)
-				properties['name'] = _invocation.name;
+			if (_invocation.nameMatcher)
+				properties['name'] = _invocation.nameMatcher;
 			
 			if (_invocation.argumentsMatcher)
 				properties['arguments'] = _invocation.argumentsMatcher;
