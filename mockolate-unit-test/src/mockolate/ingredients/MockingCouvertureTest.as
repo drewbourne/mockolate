@@ -17,8 +17,10 @@ package mockolate.ingredients
 	import org.hamcrest.core.anything;
 	import org.hamcrest.number.greaterThanOrEqualTo;
 	import org.hamcrest.object.equalTo;
+	import org.hamcrest.object.hasProperties;
 	import org.hamcrest.object.hasProperty;
 	import org.hamcrest.object.isTrue;
+	import org.hamcrest.object.notNullValue;
 	
 	use namespace mockolate_ingredient;
 	
@@ -668,6 +670,44 @@ package mockolate.ingredients
 		{
 			mocker.method("example").answers(new ThrowsAnswer(new Error("thrown by ThrowsAnswer")));
 			invoke({ name: "example" });
+		}
+		
+		//
+		//    callsWithInvocation
+		//
+		
+		[Test]
+		public function callsWithInvocation_shouldCallFunctionWithInvocation():void 
+		{
+			var receivedInvocation:Invocation;
+			
+			function callClosure(invocation:Invocation):void 
+			{
+				receivedInvocation = invocation;
+			}
+			
+			mocker.method("example").callsWithInvocation(callClosure);
+			invoke({ name: "example" });
+			
+			assertThat(receivedInvocation, hasProperties({ name: "example" }));
+			mocker.verify();			
+		}
+		
+		//
+		//	  callsWithArguments
+		//
+		
+		[Test]
+		public function callsWithArguments_shouldCallFunctionWithInvocationArguments():void 
+		{
+			var receivedArguments:Array;
+			
+			mocker.method("example").args(Number, Array).callsWithArguments(function(a:int, b:Array):void {
+				receivedArguments = [a, b];
+			});
+			invoke({ name: "example", arguments: [1, [2]] });
+			
+			assertThat(receivedArguments, array(1, array(2)));
 		}
 	}
 }

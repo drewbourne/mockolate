@@ -28,6 +28,7 @@ package mockolate.ingredients
 	import mockolate.ingredients.answers.Answer;
 	import mockolate.ingredients.answers.CallsAnswer;
 	import mockolate.ingredients.answers.CallsSuperAnswer;
+	import mockolate.ingredients.answers.CallsWithInvocationAnswer;
 	import mockolate.ingredients.answers.DispatchesEventAnswer;
 	import mockolate.ingredients.answers.MethodInvokingAnswer;
 	import mockolate.ingredients.answers.ReturnsAnswer;
@@ -441,6 +442,44 @@ package mockolate.ingredients
 		public function calls(fn:Function, args:Array=null):IMockingCouverture
 		{
 			addCalls(fn, args);
+			return this;
+		}
+		
+		/**
+		 * Calls the given Function with the Invocation when the current 
+		 * Expectation is invoked.
+		 * 
+		 * @example
+		 * <listing version="3.0">
+		 *	mock(instance).method("message").callsWithInvocation(function(invocation:Invocation):void {
+		 * 		trace(invocation.name, invocation.arguments);
+		 * 	});
+		 * 
+		 * 	instance.message(1, [2, 3]);
+		 * </listing> 
+		 */
+		public function callsWithInvocation(fn:Function, args:Array=null):IMockingCouverture
+		{
+			addCallsWithInvocationAnswer(fn, args);
+			return this;
+		}
+		
+		/**
+		 * Calls the given Function with the Invocation.arguments when the 
+		 * current Expectation is invoked.
+		 * 
+		 * @example
+		 * <listing version="3.0">
+		 *	mock(instance).method("message").callsWithArguments(function(a:int, b:Array):void {
+		 * 		trace("message", a, b);
+		 * 	});
+		 * 
+		 * 	instance.message(1, [2, 3]);
+		 * </listing> 
+		 */
+		public function callsWithArguments(fn:Function, args:Array=null):IMockingCouverture
+		{
+			addCallsWithArgumentsAnswer(fn, args);
 			return this;
 		}
 		
@@ -1007,6 +1046,24 @@ package mockolate.ingredients
 		{
 			addAnswer(new CallsAnswer(fn, args));
 		}
+		
+		/**
+		 * @private
+		 */
+		protected function addCallsWithInvocationAnswer(fn:Function, args:Array=null):void
+		{
+			addAnswer(new CallsWithInvocationAnswer(fn, args));
+		}
+		
+		/**
+		 * @private
+		 */
+		protected function addCallsWithArgumentsAnswer(fn:Function, args:Array=null):void
+		{
+			addAnswer(new CallsWithInvocationAnswer(function(invocation:Invocation):void {
+				fn.apply(null, (invocation.arguments || []).concat(args || []));
+			}));
+		}		
 		
 		/**
 		 * @private

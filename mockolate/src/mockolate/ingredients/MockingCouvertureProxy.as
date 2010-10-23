@@ -50,6 +50,24 @@ package mockolate.ingredients
 		}
 		
 		/**
+		 * @copy MockingCouverture#callsWithInvocation()
+		 */
+		public function callsWithInvocation(fn:Function, args:Array=null):IMockingCouverture
+		{
+			mocker.callsWithInvocation(fn, args);
+			return this;
+		}
+		
+		/**
+		 * @copy MockingCouverture#callsWithArguments()
+		 */
+		public function callsWithArguments(fn:Function, args:Array=null):IMockingCouverture
+		{
+			mocker.callsWithArguments(fn, args);
+			return this;
+		}
+		
+		/**
 		 * @copy MockingCouverture#dispatches()
 		 */
 		public function dispatches(event:Event, delay:Number=0):IMockingCouverture
