@@ -28,7 +28,7 @@ package mockolate
 		}
 		
 		[Test]
-		public function receivedMethodShouldFailIfNoMatchingInvocations():void 
+		public function receivedMethodShouldFailIfNoInvocations():void 
 		{
 			try 
 			{
@@ -39,6 +39,22 @@ package mockolate
 			{
 				assertThat(error.mismatchDescription, equalTo("Flavour(flavour).combine() invoked 0/1 (-1) times"));
 			}
+		}
+		
+		[Test]
+		public function receivedMethodShouldFailIfNoMatchingInvocations():void 
+		{
+			flavour.toString();
+			
+			try 
+			{
+				assertThat(flavour, received().method('combine'));
+				fail("Expecting AssertionError");
+			}
+			catch (error:AssertionError)
+			{
+				assertThat(error.mismatchDescription, equalTo("Flavour(flavour).combine() invoked 0/1 (-1) times"));
+			}			
 		}
 		
 		[Test]
@@ -118,8 +134,24 @@ package mockolate
 		}
 		
 		[Test]
+		public function receivedGetterShouldFailIfNoInvocations():void 
+		{
+			try 
+			{
+				assertThat(flavour, received().getter("name"));
+				fail("Expecting AssertionError");
+			}
+			catch (error:AssertionError)
+			{
+				assertThat(error.mismatchDescription, equalTo("Flavour(flavour).name; invoked 0/1 (-1) times"));
+			}			
+		}
+		
+		[Test]
 		public function receivedGetterShouldFailIfNoMatchingInvocations():void 
 		{
+			flavour.ingredients;
+			
 			try 
 			{
 				assertThat(flavour, received().getter("name"));
@@ -162,8 +194,24 @@ package mockolate
 		}
 		
 		[Test]
+		public function receivedSetterShouldFailIfNoInvocations():void 
+		{
+			try 
+			{
+				assertThat(flavour, received().setter("liked").arg(true));
+				fail("Expecting AssertionError");
+			}
+			catch (error:AssertionError)
+			{
+				assertThat(error.mismatchDescription, equalTo("Flavour(flavour).liked = <true>; invoked 0/1 (-1) times"));
+			}
+		}
+		
+		[Test]
 		public function receivedSetterShouldFailIfNoMatchingInvocations():void 
 		{
+			flavour.ingredients = [];
+			
 			try 
 			{
 				assertThat(flavour, received().setter("liked").arg(true));

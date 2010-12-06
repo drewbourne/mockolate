@@ -90,6 +90,7 @@ package mockolate.ingredients
 		{
 			_invocation.invocationType = InvocationType.METHOD;
 			_invocation.name = name;
+			_invocation.nameMatcher = equalTo(name);
 			return this;	
 		}
 		
@@ -123,6 +124,7 @@ package mockolate.ingredients
 		{
 			_invocation.invocationType = InvocationType.GETTER;
 			_invocation.name = name;
+			_invocation.nameMatcher = equalTo(name);
 			return this;
 		}
 		
@@ -149,6 +151,7 @@ package mockolate.ingredients
 		{
 			_invocation.invocationType = InvocationType.SETTER;
 			_invocation.name = name;
+			_invocation.nameMatcher = equalTo(name);
 			return this;
 		}
 		
