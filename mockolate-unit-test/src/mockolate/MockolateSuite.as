@@ -5,6 +5,7 @@ package mockolate
 	import mockolate.ingredients.floxy.InterceptingCouvertureTest;
 	import mockolate.ingredients.proxy.ProxyMockolateTest;
 	import mockolate.issues.ClassInDefaultPackageCannotBeMockedTest;
+	import mockolate.issues.FunctionApplyTest;
 	import mockolate.issues.MockingClassWithConstructorGetter;
 	import mockolate.runner.MockolateRuleExample;
 	import mockolate.runner.MockolateRunnerExample;
@@ -42,6 +43,7 @@ package mockolate
 		public var usingStub:StubbingMockolates;
 		public var usingMock:MockingMockolates;
 		public var usingVerify:VerifyingMockolates;
+		public var usingTestSpies:SpyingMockolates;
 		public var usingFlashClasses:UsingFlashClasses;
 		public var usingProxies:ProxyMockolateTest;
 		public var usingDisplayObjects:UsingDisplayObjects;
@@ -65,5 +67,6 @@ package mockolate
 		//
 		public var mockingClassWithConstructorGetter:MockingClassWithConstructorGetter;
 		public var classInDefaultPackageCannotBeMocked:ClassInDefaultPackageCannotBeMockedTest;
+		public var functionApply:FunctionApplyTest;
 	}
 }
