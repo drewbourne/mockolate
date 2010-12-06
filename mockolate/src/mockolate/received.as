@@ -13,7 +13,7 @@ package mockolate
 	 * 
 	 * 	flavour1.combine(flavour2);
 	 * 
-	 * 	assertThat(flavour1, received().method('combine').args(flavour2).once()); 	
+	 * 	assertThat(flavour1, received().method('combine').args(flavour2).once());
 	 * </listing>
 	 * 
 	 * @author drewbourne

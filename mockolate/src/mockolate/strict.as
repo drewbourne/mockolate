@@ -18,7 +18,7 @@ package mockolate
      * 
      * @example
      * <listing version="3.0">
-     *  var flavour:Flavour = nice(Flavour);
+     *  var flavour:Flavour = strict(Flavour);
      * </listing>
      * 
      * @author drewbourne

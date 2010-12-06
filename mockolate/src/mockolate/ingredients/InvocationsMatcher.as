@@ -229,10 +229,10 @@ package mockolate.ingredients
 		 * 	assetThat(flavour, received().method("combine").times(2));
 		 * </listing>
 		 */
-		public function times(n:int):InvocationsMatcher
+		public function times(numberOfTimes:int):InvocationsMatcher
 		{
-			_invocation.invocationCount = n;
-			_invocation.invocationCountMatcher = equalTo(n);
+			_invocation.invocationCount = numberOfTimes;
+			_invocation.invocationCountMatcher = equalTo(numberOfTimes);
 			return this;
 		}
 		
@@ -296,10 +296,10 @@ package mockolate.ingredients
 		 * 	assetThat(flavour, received().method("combine").atLeast(3));
 		 * </listing>
 		 */
-		public function atLeast(n:int):InvocationsMatcher
+		public function atLeast(numberOfTimes:int):InvocationsMatcher
 		{
-			_invocation.invocationCount = n;
-			_invocation.invocationCountMatcher = greaterThanOrEqualTo(n);
+			_invocation.invocationCount = numberOfTimes;
+			_invocation.invocationCountMatcher = greaterThanOrEqualTo(numberOfTimes);
 			
 			return this;
 		}
@@ -312,10 +312,10 @@ package mockolate.ingredients
 		 * 	assetThat(flavour, received().method("combine").atLeast(4));
 		 * </listing>
 		 */
-		public function atMost(n:int):InvocationsMatcher
+		public function atMost(numberOfTimes:int):InvocationsMatcher
 		{
-			_invocation.invocationCount = n;
-			_invocation.invocationCountMatcher = lessThanOrEqualTo(n);
+			_invocation.invocationCount = numberOfTimes;
+			_invocation.invocationCountMatcher = lessThanOrEqualTo(numberOfTimes);
 			
 			return this;
 		}

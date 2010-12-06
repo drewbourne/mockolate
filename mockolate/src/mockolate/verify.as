@@ -18,6 +18,10 @@ package mockolate
      * 
      * @example
      * <listing version="3.0">
+     *  var target:Flavour = nice(Flavour);
+     *  mock(target).method("combine").args(Flavour).returns(target);
+     *  // use target
+     *  verify(target);
      * </listing>
      * 
      * @author drewbourne
