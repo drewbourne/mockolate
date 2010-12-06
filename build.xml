@@ -17,7 +17,7 @@
     <property name="FLEX_HOME" location="${env.FLEX_HOME}" />
 
     <taskdef resource="flexTasks.tasks" classpath="${FLEX_HOME}/ant/lib/flexTasks.jar" />
-    <taskdef resource="flexUnitTasks.tasks" classpath="${build.loc}/flexUnitTasks-4.1.0-beta3.x.jar" />
+    <taskdef resource="flexUnitTasks.tasks" classpath="${build.loc}/flexUnitTasks-${flexunit.version}.jar" />
     
     <target name="clean">
         <delete dir="${target.loc}" />
@@ -117,8 +117,8 @@
           <arg line="-external-library-path+='${FLEX_HOME}/frameworks/libs/framework.swc'" />
           <arg line="-external-library-path+='${FLEX_HOME}/frameworks/libs/rpc.swc'" />
           <arg line="-external-library-path+='${FLEX_HOME}/frameworks/libs/utilities.swc'" />
-          <arg line="-external-library-path+='${libs.loc}/flexunit-core-flex-4.1.0-beta3.x-sdky.y.y.y.swc'" />
-          <arg line="-external-library-path+='${libs.loc}/hamcrest-as3-1.1.0.swc'" />
+          <arg line="-external-library-path+='${libs.loc}/flexunit-core-flex-${flexunit.version}-sdky.y.y.y.swc'" />
+          <arg line="-external-library-path+='${libs.loc}/hamcrest-as3-${hamcrest.version}.swc'" />
           <arg line="-include-libraries+='${libs.loc}/FLoxy.swc'" />
           <arg line="-library-path+='${libs.loc}'" />
           <arg line="-output=${bin.loc}/${library.swc}" />
