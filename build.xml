@@ -209,8 +209,8 @@
         depends="compile, test, docs">
         
         <zip destfile="${target.loc}/${library.zip}">
-            <zipfileset dir="${doc.loc}" prefix="mockolate/docs" />
-            <zipfileset dir="${bin.loc}" prefix="mockolate">
+            <zipfileset dir="${doc.loc}" prefix="mockolate-${build.version}/docs" />
+            <zipfileset dir="${bin.loc}" prefix="mockolate-${build.version}">
                 <include name="*.swc" />
              </zipfileset>
         </zip>
