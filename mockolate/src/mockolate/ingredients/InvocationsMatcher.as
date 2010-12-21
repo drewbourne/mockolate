@@ -11,6 +11,7 @@ package mockolate.ingredients
 	import org.hamcrest.collection.arrayWithSize;
 	import org.hamcrest.collection.emptyArray;
 	import org.hamcrest.core.allOf;
+	import org.hamcrest.core.describedAs;
 	import org.hamcrest.number.greaterThanOrEqualTo;
 	import org.hamcrest.number.lessThanOrEqualTo;
 	import org.hamcrest.object.equalTo;
@@ -302,7 +303,7 @@ package mockolate.ingredients
 		public function atLeast(numberOfTimes:int):InvocationsMatcher
 		{
 			_invocation.invocationCount = numberOfTimes;
-			_invocation.invocationCountMatcher = greaterThanOrEqualTo(numberOfTimes);
+			_invocation.invocationCountMatcher = describedAs("at least %0", greaterThanOrEqualTo(numberOfTimes), numberOfTimes);
 			
 			return this;
 		}
@@ -318,7 +319,7 @@ package mockolate.ingredients
 		public function atMost(numberOfTimes:int):InvocationsMatcher
 		{
 			_invocation.invocationCount = numberOfTimes;
-			_invocation.invocationCountMatcher = lessThanOrEqualTo(numberOfTimes);
+			_invocation.invocationCountMatcher = describedAs("at most %0", lessThanOrEqualTo(numberOfTimes), numberOfTimes);
 			
 			return this;
 		}
@@ -333,7 +334,7 @@ package mockolate.ingredients
 			// mockolateByTarget will throw a MockolateError if there is no Mockolate for the target.  
 			MockolatierMaster.mockolatier.mockolateByTarget(target);
 			
-			var invocations:Array = matchInvocations(target);
+			var invocations:Array = filterInvocations(target);
 			
 			return arrayWithSize(_invocation.invocationCountMatcher).matches(invocations);
 		}
@@ -342,7 +343,7 @@ package mockolate.ingredients
 		public function describeMismatch(target:Object, description:Description):void
 		{
 			var instance:Mockolate = MockolatierMaster.mockolatier.mockolateByTarget(target);
-			var invocations:Array = matchInvocations(target);
+			var invocations:Array = filterInvocations(target);
 			
 			description
 				.appendDescriptionOf(instance)
@@ -371,7 +372,7 @@ package mockolate.ingredients
 		}
 
 		/** @private */
-		protected function matchInvocations(target:Object):Array 
+		protected function filterInvocations(target:Object):Array 
 		{
 			var instance:Mockolate = MockolatierMaster.mockolatier.mockolateByTarget(target);
 			var invocations:Array = instance.recorder.invocations;			

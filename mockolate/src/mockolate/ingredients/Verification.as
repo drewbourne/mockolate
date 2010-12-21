@@ -4,7 +4,8 @@ package mockolate.ingredients
 	import org.hamcrest.Matcher;
 	import org.hamcrest.SelfDescribing;
 	
-	// FIXME Verification is not the most appropriate name for this class. 
+	// FIXME Verification is not the most appropriate name for this class.
+	[Deprecated(since="0.9.5")]
 	/**
 	 * Verification. 
 	 * 
@@ -14,26 +15,26 @@ package mockolate.ingredients
 	 * @author drewbourne
 	 */
 	public class Verification implements SelfDescribing
-	{    
-	    /**
-	     * Constructor. 
-	     */
-	    public function Verification()
-	    {
-	    }
-	    
+	{	 
+		/**
+		 * Constructor. 
+		 */
+		public function Verification()
+		{
+		}
+		
 		/**
 		 * When set verifies Invocations with this InvocationType.
 		 */
 		public function get invocationType():InvocationType
 		{
-		    return _invocationType;
+			return _invocationType;
 		}
 		
 		/** @private */
 		public function set invocationType(value:InvocationType):void 
 		{
-		    _invocationType = value;
+			_invocationType = value;
 		}
 		
 		private var _invocationType:InvocationType;
@@ -41,13 +42,13 @@ package mockolate.ingredients
 		/** @private */
 		public function get invocationTypeMatcher():Matcher
 		{
-		    return _invocationTypeMatcher;
+			return _invocationTypeMatcher;
 		}
 		
 		/** @private */
 		public function set invocationTypeMatcher(value:Matcher):void 
 		{
-		    _invocationTypeMatcher = value;
+			_invocationTypeMatcher = value;
 		}
 		
 		private var _invocationTypeMatcher:Matcher;
@@ -57,13 +58,13 @@ package mockolate.ingredients
 		 */
 		public function get name():String
 		{
-		    return _name;
+			return _name;
 		}
 		
 		/** @private */
 		public function set name(value:String):void 
 		{
-		    _name = value;
+			_name = value;
 		}
 		
 		private var _name:String;
@@ -71,13 +72,13 @@ package mockolate.ingredients
 		/** @private */
 		public function get nameMatcher():Matcher
 		{
-		    return _nameMatcher;
+			return _nameMatcher;
 		}
 		
 		/** @private */
 		public function set nameMatcher(value:Matcher):void 
 		{
-		    _nameMatcher = value;
+			_nameMatcher = value;
 		}
 		
 		private var _nameMatcher:Matcher;
@@ -87,13 +88,13 @@ package mockolate.ingredients
 		 */
 		public function get arguments():Array
 		{
-		    return _arguments;
+			return _arguments;
 		}
 		
 		/** @private */
 		public function set arguments(value:Array):void 
 		{
-		    _arguments = value;
+			_arguments = value;
 		}
 		
 		private var _arguments:Array;
@@ -101,13 +102,13 @@ package mockolate.ingredients
 		/** @private */
 		public function get argumentsMatcher():Matcher
 		{
-		    return _argumentsMatcher;
+			return _argumentsMatcher;
 		}
 		
 		/** @private */
 		public function set argumentsMatcher(value:Matcher):void 
 		{
-		    _argumentsMatcher = value;
+			_argumentsMatcher = value;
 		}
 		
 		private var _argumentsMatcher:Matcher;
@@ -117,13 +118,13 @@ package mockolate.ingredients
 		 */
 		public function get invokedCount():String
 		{
-		    return _invokedCount;
+			return _invokedCount;
 		}
 		
 		/** @private */
 		public function set invokedCount(value:String):void 
 		{
-		    _invokedCount = value;
+			_invokedCount = value;
 		}
 		
 		private var _invokedCount:String;
@@ -131,13 +132,13 @@ package mockolate.ingredients
 		/** @private */
 		public function get invokedCountMatcher():Matcher
 		{
-		    return _invokedCountMatcher;
+			return _invokedCountMatcher;
 		}
 		
 		/** @private */
 		public function set invokedCountMatcher(value:Matcher):void 
 		{
-		    _invokedCountMatcher = value;
+			_invokedCountMatcher = value;
 		}
 		
 		private var _invokedCountMatcher:Matcher;
@@ -148,7 +149,7 @@ package mockolate.ingredients
 		public function describeTo(description:Description):void 
 		{
 			description.appendText(name);
-				
+			
 			if (invocationType.isMethod)
 			{
 				description.appendList("(", ", ", ")", this.arguments);
@@ -156,7 +157,7 @@ package mockolate.ingredients
 			else if (invocationType.isSetter)
 			{
 				description
-					.appendText(" = ")
+				.appendText(" = ")
 					.appendValue(this.arguments[0])
 					.appendText(";");
 			}
