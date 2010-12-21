@@ -28,7 +28,7 @@ package mockolate.ingredients
 		 */
 		protected function get mocker():MockingCouverture
 		{
-			return this.mockolate.mocker;	
+			return this.mockolateInstance.mocker;	
 		}
 		
 		/**

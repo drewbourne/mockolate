@@ -236,7 +236,7 @@ package mockolate.ingredients
 		{
 			createGetterExpectation(name);
 			
-			return new MockingGetterCouverture(this.mockolate);
+			return new MockingGetterCouverture(this.mockolateInstance);
 		}
 		
 		/**
@@ -257,7 +257,7 @@ package mockolate.ingredients
 		{
 			createGettersExpectation(regexp);
 			
-			return new MockingGetterCouverture(this.mockolate);
+			return new MockingGetterCouverture(this.mockolateInstance);
 		}
 		
 		/**
@@ -274,7 +274,7 @@ package mockolate.ingredients
 		{
 			createSetterExpectation(name);
 			
-			return new MockingSetterCouverture(this.mockolate);
+			return new MockingSetterCouverture(this.mockolateInstance);
 		}
 		
 		/**
@@ -295,7 +295,7 @@ package mockolate.ingredients
 		{
 			createSettersExpectation(regexp);
 			
-			return new MockingSetterCouverture(this.mockolate);
+			return new MockingSetterCouverture(this.mockolateInstance);
 		}
 		
 		/**
@@ -768,18 +768,18 @@ package mockolate.ingredients
 			if (!expectation)
 				expectation = detect(_stubExpectations, isEligibleExpectation, invocation) as Expectation;
 			
-			if (!expectation && this.mockolate.isStrict)
+			if (!expectation && this.mockolateInstance.isStrict)
 			{
 				var description:Description = new StringDescription();
 				
 				description
-					.appendDescriptionOf(this.mockolate)
+					.appendDescriptionOf(this.mockolateInstance)
 					.appendText(".")
 					.appendDescriptionOf(invocation);
 				
 				throw new InvocationError( 
 					["No Expectation defined for {}", [description.toString()]],
-					invocation, this.mockolate, this.mockolate.target);
+					invocation, this.mockolateInstance, this.mockolateInstance.target);
 			}
 			
 			return expectation;
@@ -881,7 +881,7 @@ package mockolate.ingredients
 			// when expectation mode is mock
 			// than should be called at least once
 			// -- will be overridden if set by the user. 
-			if (this.mockolate.isStrict)
+			if (this.mockolateInstance.isStrict)
 			{
 				atLeast(1);
 			}
@@ -1101,14 +1101,14 @@ package mockolate.ingredients
 			{
 				throw new MockolateError(
 					["No Decorator registered for {0}", [classToDecorate]], 
-					this.mockolate, this.mockolate.target);
+					this.mockolateInstance, this.mockolateInstance.target);
 			}
 			
 			var decorator:Decorator = _decorationsByClass[classToDecorate];
 			
 			if (!decorator)
 			{
-				decorator = new decoratorClass(this.mockolate);
+				decorator = new decoratorClass(this.mockolateInstance);
 				
 				_decorations[_decorations.length] = decorator;
 				_decorationsByClass[classToDecorate] = decorator; 
@@ -1140,10 +1140,10 @@ package mockolate.ingredients
 				{
 					message += "\n\t";
 					// TODO move to mockolate.targetClassName
-					message += getQualifiedClassName(this.mockolate.targetClass);
+					message += getQualifiedClassName(this.mockolateInstance.targetClass);
 					
-					if (this.mockolate.name)
-						message += "<\"" + this.mockolate.name + "\">";
+					if (this.mockolateInstance.name)
+						message += "<\"" + this.mockolateInstance.name + "\">";
 					
 					// TOOD include more description from the Expectation
 					message += expectation.toString();
@@ -1152,8 +1152,8 @@ package mockolate.ingredients
 				throw new ExpectationError(
 					message, 
 					unmetExpectations, 
-					this.mockolate, 
-					this.mockolate.target);
+					this.mockolateInstance, 
+					this.mockolateInstance.target);
 			}
 			
 			// stub expectations are not verified

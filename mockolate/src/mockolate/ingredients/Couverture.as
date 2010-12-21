@@ -28,7 +28,7 @@ package mockolate.ingredients
         /**
          * Mockolate instance this Couverture belongs to.
          */
-        public function get mockolate():Mockolate
+        public function get mockolateInstance():Mockolate
         {
             return _mockolate;
         }
