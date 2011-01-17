@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<annotations version="1.0">
+    <metadata name="Mock" description="%mockolate.mock">
+        <context name="variable" />
+        <attribute  name="type"
+                    type="String" 
+                    required="false" 
+                    values="nice,strict"
+                    defaultValue="nice"
+                    description="%mockolate.type"
+                    />
+        <attribute  name="inject"
+                    type="Boolean" 
+                    hint="boolean"
+                    required="false"
+                    defaultValue="true" 
+                    description="%mockolate.inject"
+                    />
+    </metadata>
+</annotations>

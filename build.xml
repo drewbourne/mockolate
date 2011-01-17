@@ -120,6 +120,7 @@
           <arg line="-external-library-path+='${libs.loc}/flexunit-core-flex-${flexunit.version}-sdky.y.y.y.swc'" />
           <arg line="-external-library-path+='${libs.loc}/hamcrest-as3-${hamcrest.version}.swc'" />
           <arg line="-include-libraries+='${libs.loc}/FLoxy.swc'" />
+          <arg line="-include-file=metadata.xml,'${src.loc}'/metadata.xml" />
           <arg line="-library-path+='${libs.loc}'" />
           <arg line="-output=${bin.loc}/${library.swc}" />
           <arg line="-include-sources=${src.loc}" />
