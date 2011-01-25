@@ -26,7 +26,7 @@ package mockolate.ingredients
 		{
 			var invocation:Invocation = (this as Invocation);
 			
-			description.appendText(invocation.name)
+			description.appendText(invocation.name);
 			
 			if (invocation.isMethod)
 			{
@@ -34,10 +34,13 @@ package mockolate.ingredients
 			}
 			else if (invocation.isSetter)
 			{
-				description
-					.appendText(" = ")
-					.appendValue(invocation.arguments[0])
-					.appendText(";");
+				description.appendText(" = ");
+				
+				(invocation.arguments)
+					? description.appendValue(invocation.arguments[0])
+					: description.appendText("?");
+				
+				description.appendText(";");
 			}
 			else if (invocation.isGetter)
 			{

@@ -31,6 +31,7 @@ package mockolate.ingredients
 	{
 		private var _currentVerification:Verification;
 		private var _invocationsMatcher:InvocationsMatcher;
+		private var _defaultExpectedInvocationCount:int = 1;
 		
 		/**
 		 * Constructor.
@@ -38,6 +39,26 @@ package mockolate.ingredients
 		public function VerifyingCouverture(mockolate:Mockolate)
 		{
 			super(mockolate);
+		}
+		
+		/**
+		 * Sets the default expected invocation count for calls to method(), getter(), setter().
+		 * 
+		 * Current default is <code>1</code>.
+		 * 
+		 * Set to <code>0</code> to get correct results when using <code>never()</code>.  
+		 * 
+		 * @example
+		 * <listing version="3.0">
+		 * 	var yum:Flavour = nice(Flavour);
+		 * 	verify(yum).setDefaultExpectedInvocationCount(0);
+		 * 	verify(yum).method("doNotInvoke").anyArgs().never();
+		 * </listing>
+		 */
+		public function setDefaultExpectedInvocationCount(value:int):VerifyingCouverture
+		{
+			_defaultExpectedInvocationCount = value;
+			return this;
 		}
 		
 		/**
@@ -50,7 +71,7 @@ package mockolate.ingredients
 		 */
 		public function method(name:String/*, ns:String=null*/):VerifyingCouverture
 		{
-			_invocationsMatcher = received().method(name).atLeast(0);
+			_invocationsMatcher = received().method(name).atLeast(_defaultExpectedInvocationCount);
 			doVerify();
 			return this;
 		}
@@ -65,7 +86,7 @@ package mockolate.ingredients
 		 */
 		public function getter(name:String/*, ns:String=null*/):VerifyingCouverture
 		{
-			_invocationsMatcher = received().getter(name).atLeast(0);
+			_invocationsMatcher = received().getter(name).atLeast(_defaultExpectedInvocationCount);
 			doVerify();
 			return this;
 		}		 
@@ -80,7 +101,7 @@ package mockolate.ingredients
 		 */
 		public function setter(name:String/*, ns:String=null*/):VerifyingCouverture
 		{
-			_invocationsMatcher = received().setter(name).atLeast(0);
+			_invocationsMatcher = received().setter(name).atLeast(_defaultExpectedInvocationCount);
 			doVerify();
 			return this;
 		}
@@ -241,7 +262,7 @@ package mockolate.ingredients
 			{
 				var errorDescription:StringDescription = new StringDescription();
 				errorDescription
-				.appendText("Expected: ")
+					.appendText("Expected: ")
 					.appendDescriptionOf(_invocationsMatcher)
 					.appendText("\n		but: ")
 					.appendMismatchOf(_invocationsMatcher, this.mockolateInstance.target);
