@@ -95,14 +95,6 @@ package mockolate.ingredients
 		//	never
 		//
 		
-		[Test]
-		public function never_implicitly_shouldNotOccur():void 
-		{
-			// this does not check the invocation count
-			// so it should pass at this point.
-			verifier.method("notCalled");
-		}
-		
 		[Test(expected="mockolate.errors.VerificationError")]
 		public function never_shouldFailIfInvokedAtLeastOnce():void 
 		{
@@ -112,6 +104,9 @@ package mockolate.ingredients
 		[Test]
 		public function never_shouldPassIfNotInvoked():void 
 		{
+			// to use never() the default expected invocation count must be set to 0.
+			//
+			verifier.setDefaultExpectedInvocationCount(0);
 			verifier.method("notCalled").never();
 		}
 		
