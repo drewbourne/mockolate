@@ -19,9 +19,9 @@ package mockolate.decorations
 	/**
 	 * Decorates the MockingCouverture with expectations specific to IEventDispatcher.
 	 * 
-	 * @see mockolate.ingredients.MockingCouverture#asHTTPService() 
+	 * @see mockolate.ingredients.MockingCouverture#asEventDispatcher() 
 	 */
-	public class EventDispatcherDecorator extends Decorator implements InvocationDecorator
+	public class EventDispatcherDecorator extends Decorator
 	{
 		private var _usingProxyEventDispatcher:Boolean;
 		private var _eventDispatcher:IEventDispatcher;
@@ -107,27 +107,6 @@ package mockolate.decorations
 			for each (var methodName:String in _eventDispatcherMethods)
 			{
 				mocker.method(methodName).callsSuper();    
-			}
-		}
-		
-		/**
-		 * Handles any Invocations for IEventDispatcher methods by forwarding to
-		 * the <code>eventDispatcher</code>.
-		 */
-		override mockolate_ingredient function invoked(invocation:Invocation):void 
-		{
-			// when the invocation is for an IEventDispatcher method
-			// then call that method on the _eventDispatcher
-			// 
-			// IEventDispatcher methods must to be forwarded to a separate
-			// EventDispatcher instance than the proxied instance in order to
-			// actually dispatch events and avoid recursive stack overflows. 
-			//
-			if (invocation.invocationType == InvocationType.METHOD
-				&& _usingProxyEventDispatcher
-				&& contains(_eventDispatcherMethods, invocation.name))
-			{
-				_eventDispatcher[invocation.name].apply(null, invocation.arguments);	
 			}
 		}
 	}
