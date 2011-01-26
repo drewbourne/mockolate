@@ -23,7 +23,6 @@ package mockolate.decorations
 	 */
 	public class EventDispatcherDecorator extends Decorator
 	{
-		private var _usingProxyEventDispatcher:Boolean;
 		private var _eventDispatcher:IEventDispatcher;
 		private var _eventDispatcherMethods:Array = [
 			'addEventListener', 
@@ -74,7 +73,6 @@ package mockolate.decorations
 		protected function initializeForIEventDispatcher():void 
 		{
 			_eventDispatcher = new EventDispatcher(this.mockolate.target);
-			_usingProxyEventDispatcher = true;
 			
 			for each (var methodName:String in _eventDispatcherMethods)
 			{
@@ -88,7 +86,6 @@ package mockolate.decorations
 		protected function initializeForEventDispatcher():void 
 		{
 			_eventDispatcher = this.mockolate.target as IEventDispatcher;
-			_usingProxyEventDispatcher = false;
 			
 			for each (var methodName:String in _eventDispatcherMethods)
 			{
@@ -102,7 +99,6 @@ package mockolate.decorations
 		protected function initializeForDisplayObject():void 
 		{
 			_eventDispatcher = this.mockolate.target as IEventDispatcher;
-			_usingProxyEventDispatcher = false;
 			
 			for each (var methodName:String in _eventDispatcherMethods)
 			{

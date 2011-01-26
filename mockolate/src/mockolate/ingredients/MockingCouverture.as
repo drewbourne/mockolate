@@ -712,9 +712,7 @@ package mockolate.ingredients
 			// after the decorator has been created.
 			
 			var previousExpectation:Expectation = _currentExpectation;
-			
 			var decorator:Decorator = createDecoratorFor(classToDecorate, decoratorClass);
-			
 			_currentExpectation = previousExpectation;
 			
 			return decorator;
@@ -729,7 +727,11 @@ package mockolate.ingredients
 		 */
 		public function asEventDispatcher():EventDispatcherDecorator
 		{
-			return stub().decorate(IEventDispatcher) as EventDispatcherDecorator;
+			var wasExpectingMocks:Boolean = _expectationsAsMocks;
+			_expectationsAsMocks = false;
+			var decorator:EventDispatcherDecorator = stub().decorate(IEventDispatcher) as EventDispatcherDecorator; 
+			_expectationsAsMocks = wasExpectingMocks;
+			return decorator;  
 		}
 		
 		/**
