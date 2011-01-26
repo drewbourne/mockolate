@@ -5,6 +5,7 @@ package mockolate.ingredients
 	import flash.events.IEventDispatcher;
 	import flash.utils.getTimer;
 	
+	import mockolate.decorations.EventDispatcherDecorator;
 	import mockolate.errors.ExpectationError;
 	import mockolate.ingredients.answers.CallsAnswer;
 	import mockolate.ingredients.answers.CallsWithInvocationAnswer;
@@ -623,6 +624,15 @@ package mockolate.ingredients
 			mocker.verify();
 		}
 		
+		[Test]
+		public function asEventDispatcher_calledMultipleTimes_shouldOnlyCreateOneDecorator():void 
+		{
+			var eventDispatcherDecorator1:EventDispatcherDecorator = mocker.asEventDispatcher();
+			var eventDispatcherDecorator2:EventDispatcherDecorator = mocker.asEventDispatcher();
+			
+			assertThat(eventDispatcherDecorator1, equalTo(eventDispatcherDecorator2));
+		}
+				
 		//
 		//    callsSuper
 		//
