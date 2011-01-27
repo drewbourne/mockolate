@@ -31,9 +31,9 @@ package mockolate.ingredients
         private var _target:*;
         private var _targetClass:Class;
         
-        // identifier
         private var _name:String;
-        
+		private var _mockType:MockType;
+		
         /**
          * Constructor.
          */
@@ -43,6 +43,7 @@ package mockolate.ingredients
             
             _name = name;
             _isStrict = true;
+			_mockType = MockType.STRICT;
         }
         
         /**
@@ -109,6 +110,7 @@ package mockolate.ingredients
 			_expecter = value;
 		}
         
+		[Deprecated]
         /**
          * Indicates if this Mockolate is in strict mode. 
          * 
@@ -134,6 +136,20 @@ package mockolate.ingredients
         {
             _isStrict = value;
         }
+		
+		/**
+		 * @see MockType
+		 */
+		mockolate_ingredient function get mockType():MockType
+		{
+			return _mockType;
+		}
+		
+		/** @private */
+		mockolate_ingredient function set mockType(value:MockType):void
+		{
+			_mockType = value;
+		}
         
         /**
          * Reference to the instance this Mockolate is managing.

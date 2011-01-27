@@ -2,6 +2,7 @@ package mockolate.ingredients
 {
     import flash.events.IEventDispatcher;
     
+    
     /**
      * Factory interface to prepare and create Mockolate instances.
      * 
@@ -31,6 +32,6 @@ package mockolate.ingredients
          * 
          * @see Mockolate#isStrict
          */
-        function create(classReference:Class, constructorArgs:Array=null, asStrict:Boolean=true, name:String=null):Mockolate;
+        function create(mockType:MockType, classReference:Class, constructorArgs:Array=null, name:String=null):Mockolate;
     }
 }

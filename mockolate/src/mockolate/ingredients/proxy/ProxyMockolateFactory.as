@@ -6,6 +6,7 @@ package mockolate.ingredients.proxy
 	import mockolate.ingredients.AbstractMockolateFactory;
 	import mockolate.ingredients.ExpectingCouverture;
 	import mockolate.ingredients.IMockolateFactory;
+	import mockolate.ingredients.MockType;
 	import mockolate.ingredients.MockingCouverture;
 	import mockolate.ingredients.Mockolate;
 	import mockolate.ingredients.RecordingCouverture;
@@ -44,11 +45,11 @@ package mockolate.ingredients.proxy
 		/**
 		 * @inheritDoc
 		 */
-		public function create(classReference:Class, constructorArgs:Array=null, asStrict:Boolean=true, name:String=null):Mockolate 
+		public function create(mockType:MockType, classReference:Class, constructorArgs:Array=null, name:String=null):Mockolate 
 		{
 			var instance:Mockolate = new Mockolate(name);
 			instance.targetClass = classReference;
-			instance.isStrict = asStrict;
+			instance.mockType = mockType || MockType.STRICT;
 			instance.recorder = createRecorder(instance);
 			instance.mocker = createMocker(instance);
 			instance.verifier = createVerifier(instance);

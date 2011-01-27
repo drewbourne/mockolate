@@ -2,10 +2,12 @@ package mockolate.runner
 {
 	import asx.array.contains;
 	import asx.string.substitute;
-
+	
 	import flex.lang.reflect.Klass;
 	import flex.lang.reflect.metadata.MetaDataAnnotation;
 	import flex.lang.reflect.metadata.MetaDataArgument;
+	
+	import mockolate.ingredients.MockType;
 
 	[ExcludeClass]
 	/**
@@ -33,9 +35,9 @@ package mockolate.runner
 		public var type:Class;
 		
 		/**
-		 * Type of the mock to inject, "nice" or "strict"
+		 * Type of the mock to inject, "nice" or "strict" or "partial".
 		 */
-		public var mockType:String;
+		public var mockType:MockType;
 		
 		/**
 		 * Indicates if the mock should be injected. 
@@ -60,18 +62,17 @@ package mockolate.runner
 		/**
 		 * @private
 		 */
-		protected function parseMockType(argument:MetaDataArgument):String
+		protected function parseMockType(argument:MetaDataArgument):MockType
 		{
-			const NICE:String = "nice";
-			const STRICT:String = "strict";
-
-			//default value
-			var result:String = argument ? argument.value : NICE;
-
-			//possible string values
-			if (!contains([ NICE, STRICT ], result))
+			var result:MockType = MockType.NICE;
+			
+			try 
 			{
-				var message:String = substitute("Property '{}' must declare a mock type of either 'nice' or 'strict'; '{}' is NOT a valid type.", this.name, result);
+				 result = argument ? MockType.enumFor(argument.value) : MockType.NICE;
+			}
+			catch (error:Error)
+			{
+				var message:String = substitute("Property '{}' must declare a mock type of either 'nice' or 'strict' or 'partial', '{}' is NOT a valid type.", this.name, result);
 				throw new Error(message);
 			}
 

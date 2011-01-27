@@ -521,7 +521,7 @@ package mockolate.ingredients
 		public function dispatches_shouldDispatchEvent():void 
 		{
 			// disable strict checking to enable implicit EventDispatcher behaviour
-			this.mockolate.isStrict = false;
+			this.mockolate.mockType = MockType.NICE;
 			
 			// unfortunately convoluted to work around proxy & flexunit
 			var dispatcher:IEventDispatcher = new EventDispatcher();
@@ -550,7 +550,7 @@ package mockolate.ingredients
 		public function dispatches_withDelay_shouldDispatchEventAfterDelay():void 
 		{
 			// disable strict checking to enable implicit EventDispatcher behaviour
-			this.mockolate.isStrict = false;
+			this.mockolate.mockType = MockType.NICE;
 			
 			// measure delay
 			var delay:int = 0;
@@ -586,7 +586,7 @@ package mockolate.ingredients
 		public function asEventDispatcher_enablesNiceEventDispatcherExpectations():void 
 		{
 			// as strict so we get errors for undefined expectations
-			this.mockolate.isStrict = true;
+			this.mockolate.mockType = MockType.STRICT;
 			
 			// unfortunately convoluted to work around proxy & flexunit
 			var dispatcher:IEventDispatcher = new EventDispatcher();

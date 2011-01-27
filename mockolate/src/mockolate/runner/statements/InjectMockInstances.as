@@ -5,6 +5,7 @@ package mockolate.runner.statements
 	import mockolate.ingredients.Mockolatier;
 	import mockolate.nice;
 	import mockolate.runner.MockMetadata;
+	import mockolate.ingredients.MockType;
 	import mockolate.runner.MockolateRunnerData;
 	import mockolate.runner.MockolateRunnerStatement;
 	import mockolate.strict;
@@ -43,6 +44,11 @@ package mockolate.runner.statements
 			var mockolatier:Mockolatier = data.mockolatier;
 			data.mockInstances = [];
 			
+			var mockFactories:Object = {};
+			mockFactories[MockType.NICE] = mockolatier.nice;
+			mockFactories[MockType.STRICT] = mockolatier.strict;
+			mockFactories[MockType.PARTIAL] = mockolatier.partial;
+			
 			try
 			{
 				for each (var metadata:MockMetadata in data.mockMetadatas)
@@ -50,10 +56,7 @@ package mockolate.runner.statements
 					if (metadata.injectable)
 					{
 						var klass:Class = metadata.type;
-						var mock:Object 
-							= metadata.mockType == "strict" 
-							? mockolatier.strict(klass, metadata.name)
-							: mockolatier.nice(klass, metadata.name);					
+						var mock:Object = mockFactories[metadata.mockType](klass, metadata.name);
 						data.mockInstances.push(mock);					
 						data.test[metadata.name] = mock as klass;
 					}

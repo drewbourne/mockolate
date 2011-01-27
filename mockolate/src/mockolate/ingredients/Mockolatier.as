@@ -113,7 +113,7 @@ package mockolate.ingredients
          */
         public function nice(klass:Class, name:String=null, constructorArgs:Array=null):*
         {
-            return createTarget(klass, constructorArgs, false, name);
+            return createTarget(MockType.NICE, klass, constructorArgs, name);
         }
         
         /**
@@ -121,8 +121,16 @@ package mockolate.ingredients
          */
         public function strict(klass:Class, name:String=null, constructorArgs:Array=null):*
         {
-            return createTarget(klass, constructorArgs, true, name);
+            return createTarget(MockType.STRICT, klass, constructorArgs, name);
         }
+		
+		/**
+		 * @see mockolate#strict()
+		 */
+		public function partial(klass:Class, name:String=null, constructorArgs:Array=null):*
+		{
+			return createTarget(MockType.PARTIAL, klass, constructorArgs, name);
+		}
 
         /**
          * @see mockolate#mock()
@@ -224,9 +232,9 @@ package mockolate.ingredients
          * 
          * @private
          */
-        protected function createTarget(klass:Class, constructorArgs:Array=null, asStrict:Boolean=true, name:String=null):*
+        protected function createTarget(mockType:MockType, klass:Class, constructorArgs:Array=null, name:String=null):*
         {
-            var mockolate:Mockolate = _mockolateFactory.create(klass, constructorArgs, asStrict, name);
+            var mockolate:Mockolate = _mockolateFactory.create(mockType, klass, constructorArgs, name);
             var target:* = mockolate.target;
             
             registerTargetMockolate(target, mockolate);

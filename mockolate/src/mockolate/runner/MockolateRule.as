@@ -8,12 +8,10 @@ package mockolate.runner
 	import mockolate.ingredients.MockolatierMaster;
 	import mockolate.ingredients.VerifyingCouverture;
 	import mockolate.ingredients.mockolate_ingredient;
-	import mockolate.nice;
 	import mockolate.runner.statements.IdentifyMockClasses;
 	import mockolate.runner.statements.InjectMockInstances;
 	import mockolate.runner.statements.PrepareMockClasses;
 	import mockolate.runner.statements.VerifyMockInstances;
-	import mockolate.strict;
 	
 	import org.flexunit.internals.runners.statements.IAsyncStatement;
 	import org.flexunit.internals.runners.statements.MethodRuleBase;

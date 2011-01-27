@@ -28,7 +28,7 @@ package mockolate.ingredients.answers
 		public function invoke(invocation:Invocation):*
 		{
 			invocation.proceed();
-			return undefined;
+			return invocation.returnValue;
 		}
 	}
 }

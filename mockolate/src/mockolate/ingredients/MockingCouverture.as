@@ -770,18 +770,27 @@ package mockolate.ingredients
 			if (!expectation)
 				expectation = detect(_stubExpectations, isEligibleExpectation, invocation) as Expectation;
 			
-			if (!expectation && this.mockolateInstance.isStrict)
+			if (!expectation)
 			{
-				var description:Description = new StringDescription();
+				if (mockolateInstance.mockType == MockType.STRICT)
+				{
+					var description:Description = new StringDescription();
+					
+					description
+						.appendDescriptionOf(this.mockolateInstance)
+						.appendText(".")
+						.appendDescriptionOf(invocation);
+					
+					throw new InvocationError( 
+						["No Expectation defined for {}", [description.toString()]],
+						invocation, this.mockolateInstance, this.mockolateInstance.target);
+				}
 				
-				description
-					.appendDescriptionOf(this.mockolateInstance)
-					.appendText(".")
-					.appendDescriptionOf(invocation);
-				
-				throw new InvocationError( 
-					["No Expectation defined for {}", [description.toString()]],
-					invocation, this.mockolateInstance, this.mockolateInstance.target);
+				if (mockolateInstance.mockType == MockType.PARTIAL)
+				{
+					expectation = createExpectation(invocation.name, null, null, invocation.invocationType);
+					expectation.addAnswer(new CallsSuperAnswer());
+				}
 			}
 			
 			return expectation;
@@ -849,10 +858,7 @@ package mockolate.ingredients
 			var expectation:Expectation = new Expectation();
 			expectation.name = name;
 			expectation.nameMatcher = nameMatcher || equalTo(name);
-			expectation.invocationType = invocationType;
-			
-			
-			
+			expectation.invocationType = invocationType;			
 			return expectation;
 		}
 		
@@ -883,7 +889,7 @@ package mockolate.ingredients
 			// when expectation mode is mock
 			// than should be called at least once
 			// -- will be overridden if set by the user. 
-			if (this.mockolateInstance.isStrict)
+			if (this.mockolateInstance.mockType == MockType.STRICT)
 			{
 				atLeast(1);
 			}

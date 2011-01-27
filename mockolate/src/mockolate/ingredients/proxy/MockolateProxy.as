@@ -6,6 +6,7 @@ package mockolate.ingredients.proxy
 	import flash.utils.getQualifiedClassName;
 	
 	import mockolate.ingredients.InvocationType;
+	import mockolate.ingredients.MockType;
 	import mockolate.ingredients.Mockolate;
 	import mockolate.ingredients.MockolatierMaster;
 	import mockolate.ingredients.mockolate_ingredient;
@@ -78,9 +79,9 @@ package mockolate.ingredients.proxy
 		 * @param asStrict
 		 * @param name
 		 */
-		public function MockolateProxy(target:Object, asStrict:Boolean=true, name:String=null)
+		public function MockolateProxy(mockType:MockType, target:Object, name:String=null)
 		{
-			_mockolate = new ProxyMockolateFactory().create(Class(getDefinitionByName(getQualifiedClassName(target))), null, asStrict, name);
+			_mockolate = new ProxyMockolateFactory().create(mockType, Class(getDefinitionByName(getQualifiedClassName(target))), null, name);
 			_mockolate.target = _target = target;
 			
 			MockolatierMaster.registerTargetMockolate(_target, _mockolate);
