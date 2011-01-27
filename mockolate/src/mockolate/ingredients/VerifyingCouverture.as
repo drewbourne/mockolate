@@ -1,24 +1,9 @@
 package mockolate.ingredients
 {
-	import asx.array.empty;
-	import asx.array.filter;
-	import asx.array.map;
-	
-	import flash.utils.getQualifiedClassName;
-	
 	import mockolate.errors.VerificationError;
 	import mockolate.received;
 	
-	import org.hamcrest.Description;
 	import org.hamcrest.StringDescription;
-	import org.hamcrest.assertThat;
-	import org.hamcrest.collection.array;
-	import org.hamcrest.collection.arrayWithSize;
-	import org.hamcrest.collection.emptyArray;
-	import org.hamcrest.core.describedAs;
-	import org.hamcrest.number.greaterThanOrEqualTo;
-	import org.hamcrest.number.lessThanOrEqualTo;
-	import org.hamcrest.object.hasProperty;
 	
 	use namespace mockolate_ingredient;
 	
@@ -29,7 +14,6 @@ package mockolate.ingredients
 	 */
 	public class VerifyingCouverture extends RecordingCouverture
 	{
-		private var _currentVerification:Verification;
 		private var _invocationsMatcher:InvocationsMatcher;
 		private var _defaultExpectedInvocationCount:int = 1;
 		
@@ -268,7 +252,7 @@ package mockolate.ingredients
 					.appendMismatchOf(_invocationsMatcher, this.mockolateInstance.target);
 				
 				throw new VerificationError(
-					errorDescription.toString(), null, this.mockolateInstance, this.mockolateInstance.target);
+					errorDescription.toString(), this.mockolateInstance, this.mockolateInstance.target);
 			}			
 		}
 	}
