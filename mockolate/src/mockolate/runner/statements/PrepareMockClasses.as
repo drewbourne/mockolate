@@ -8,9 +8,8 @@ package mockolate.runner.statements
 	import flash.events.Event;
 	import flash.events.IEventDispatcher;
 	
-	import mockolate.prepare;
-	import mockolate.runner.MockolateRunnerStatement;
 	import mockolate.runner.MockolateRunnerData;
+	import mockolate.runner.MockolateRunnerStatement;
 	
 	import org.flexunit.internals.runners.InitializationError;
 	import org.flexunit.internals.runners.statements.IAsyncStatement;
@@ -48,7 +47,7 @@ package mockolate.runner.statements
 			
 			try 
 			{
-				var preparer:IEventDispatcher = prepare(classes);			
+				var preparer:IEventDispatcher = data.mockolatier.prepare(classes);
 				preparer.addEventListener(Event.COMPLETE, prepareComplete);
 			}
 			catch (e:Error)

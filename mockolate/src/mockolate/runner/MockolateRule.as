@@ -1,5 +1,13 @@
 package mockolate.runner
 {
+	import flash.events.IEventDispatcher;
+	
+	import mockolate.ingredients.ExpectingCouverture;
+	import mockolate.ingredients.MockingCouverture;
+	import mockolate.ingredients.Mockolatier;
+	import mockolate.ingredients.MockolatierMaster;
+	import mockolate.ingredients.VerifyingCouverture;
+	import mockolate.ingredients.mockolate_ingredient;
 	import mockolate.nice;
 	import mockolate.runner.statements.IdentifyMockClasses;
 	import mockolate.runner.statements.InjectMockInstances;
@@ -13,6 +21,8 @@ package mockolate.runner
 	import org.flexunit.rules.IMethodRule;
 	import org.flexunit.runners.model.FrameworkMethod;
 	import org.flexunit.token.AsyncTestToken;
+	
+	use namespace mockolate_ingredient;
 	
 	/**
 	 * MockolateRule is the recommended way to enable Mockolate support in
@@ -49,6 +59,9 @@ package mockolate.runner
 	 */
 	public class MockolateRule extends MethodRuleBase implements IMethodRule
 	{
+		/** @private */
+		mockolate_ingredient var mockolatier:Mockolatier;
+		
 		protected var sequence:StatementSequencer;
 		protected var data:MockolateRunnerData;
 		
@@ -58,6 +71,16 @@ package mockolate.runner
 		public function MockolateRule()
 		{
 			super();
+			
+			mockolatier = MockolatierMaster.mockolatier;
+		}
+		
+		/**
+		 * @copy mockolate#prepare()
+		 */
+		public function prepare(...rest):IEventDispatcher
+		{
+			return mockolatier.prepare.apply(null, rest);
 		}
 		
 		/**
@@ -83,8 +106,9 @@ package mockolate.runner
 		 */
 		public function nice(classReference:Class):*
 		{
-			var instance:* = mockolate.nice(classReference);
-			this.data.mockInstances.push(instance);
+			var instance:* = mockolatier.nice(classReference);
+			if (instance)
+				this.data.mockInstances.push(instance);
 			return instance;
 		}
 		
@@ -111,10 +135,83 @@ package mockolate.runner
 		 */
 		public function strict(classReference:Class):* 
 		{
-			var instance:* = mockolate.strict(classReference);
-			this.data.mockInstances.push(instance);
+			var instance:* = mockolatier.strict(classReference);
+			if (instance)			
+				this.data.mockInstances.push(instance);
 			return instance;
 		}
+		
+//		/**
+//		 * @copy mockolate#partial()
+//		 */
+//		public function partial(classReference:Class):*
+//		{
+//			var instance:* = mockolatier.partial(classReference);
+//			if (instance)
+//				this.data.mockInstances.push(instance);
+//			return instance;
+//			return null;
+//		}
+		
+		/**
+		 * @copy mockolate#mock()
+		 */
+		public function mock(target:*):MockingCouverture
+		{
+			return mockolatier.mock(target);
+		}
+		
+		/**
+		 * @copy mockolate#stub()
+		 */
+		public function stub(target:*):MockingCouverture
+		{
+			return mockolatier.stub(target);
+		}
+		
+		/**
+		 * @copy mockolate#verify()
+		 */
+		public function verify(target:*):VerifyingCouverture
+		{
+			return mockolatier.verify(target);
+		}
+		
+		/**
+		 * @copy mockolate#record()
+		 */
+		public function record(target:*):*
+		{
+			return mockolatier.record(target);
+		}
+		
+		/**
+		 * @copy mockolate#replay()
+		 */
+		public function replay(target:*):*
+		{
+			return mockolatier.replay(target);
+		}
+		
+		/**
+		 * @copy mockolate#expect()
+		 */
+		public function expect(target:*):ExpectingCouverture
+		{
+			return mockolatier.expect(target);
+		}
+		
+		/**
+		 * @copy mockolate#expectArg()
+		 */
+		public function expectArg(value:*):*
+		{
+			return mockolatier.expectArg(value);
+		}
+		
+		//
+		//	IMethodRule
+		//
 		
 		/**
 		 * @private
@@ -124,6 +221,7 @@ package mockolate.runner
 			super.apply(base, method, test);
 			
 			this.data = new MockolateRunnerData();
+			this.data.mockolatier = mockolatier;
 			this.data.test = test;
 			this.data.method = method;
 			

@@ -2,10 +2,11 @@ package mockolate.runner.statements
 {
 	import asx.string.formatToString;
 	
+	import mockolate.ingredients.Mockolatier;
 	import mockolate.nice;
 	import mockolate.runner.MockMetadata;
-	import mockolate.runner.MockolateRunnerStatement;
 	import mockolate.runner.MockolateRunnerData;
+	import mockolate.runner.MockolateRunnerStatement;
 	import mockolate.strict;
 	
 	import org.flexunit.internals.runners.InitializationError;
@@ -39,7 +40,7 @@ package mockolate.runner.statements
 			this.parentToken = parentToken;	
 			
 			var error:Error = null;
-			
+			var mockolatier:Mockolatier = data.mockolatier;
 			data.mockInstances = [];
 			
 			try
@@ -51,8 +52,8 @@ package mockolate.runner.statements
 						var klass:Class = metadata.type;
 						var mock:Object 
 							= metadata.mockType == "strict" 
-							? strict(klass, metadata.name)
-							: nice(klass, metadata.name);					
+							? mockolatier.strict(klass, metadata.name)
+							: mockolatier.nice(klass, metadata.name);					
 						data.mockInstances.push(mock);					
 						data.test[metadata.name] = mock as klass;
 					}
