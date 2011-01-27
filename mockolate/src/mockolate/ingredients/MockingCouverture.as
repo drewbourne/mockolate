@@ -200,28 +200,6 @@ package mockolate.ingredients
 			return this;
 		}
 		
-		// TODO Should return a MockingPropertyCouverture that hides method() and property() and provides only arg() not args()
-		[Deprecated(since="0.8.0", replacement="#getter() or #setter()")]
-		/**
-		 * Defines an Expectation to get a property value.
-		 * 
-		 * @param name Name of the method to expect.
-		 * 
-		 * @example
-		 * <listing version="3.0">
-		 *	stub(instance).property("name").returns("[Instance]");
-		 * </listing>  
-		 */
-		public function property(name:String/*, ns:String=null*/):MockingCouverture
-		{
-			// FIXME this _really_ should check that the property actually exists on the Class we are mocking
-			// FIXME when this checks if the method exists, remember we have to support Proxy as well!
-			
-			createPropertyExpectation(name, null);
-			
-			return this;
-		}
-		
 		/**
 		 * Defines an Expectation to get a property value.
 		 * 
@@ -690,14 +668,6 @@ package mockolate.ingredients
 		}
 		
 		/**
-		 * @inheritDoc
-		 */
-		public function pass():IMockingCouverture
-		{
-			return callsSuper();
-		}
-		
-		/**
 		 * @example
 		 * <listing version="3.0">
 		 *	(mock(httpService).decorate(HTTPService) as HTTPServiceDecorator)
@@ -893,19 +863,6 @@ package mockolate.ingredients
 			{
 				atLeast(1);
 			}
-		}
-		
-		[Deprecated]
-		/**
-		 * Create an Expectation for a property.
-		 * 
-		 * @private
-		 */
-		protected function createPropertyExpectation(name:String, ns:String=null):void
-		{
-			_currentExpectation = createExpectation(name, ns, null, InvocationType.GETTER);
-			
-			addExpectation(_currentExpectation);
 		}
 		
 		/**

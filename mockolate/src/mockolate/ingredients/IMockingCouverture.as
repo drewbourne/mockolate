@@ -236,12 +236,6 @@ package mockolate.ingredients
 		 *	mock(instance).method("addEventListener").anyArgs().callsSuper();
 		 * </listing>
 		 */
-		function callsSuper():IMockingCouverture;
-		
-		[Deprecated(since="0.9", replacement="#callsSuper()")]
-		/**
-		 * Alias for callSuper()
-		 */
-		function pass():IMockingCouverture;
+		function callsSuper():IMockingCouverture;		
 	}
 }

@@ -44,8 +44,6 @@ package mockolate
            // mock api
            // mock: method
            mock(instance:*).method(methodName:String):Stub
-           // mock: property
-           mock(instance:*).property(propertyName:String):Stub
 		   // mock: getter
 		   mock(instance:*).getter(propertyName:String):Stub
 		   // mock: setter
@@ -76,17 +74,6 @@ package mockolate
            .ordered(group:String="global")
          */
         
-        [Test]
-        public function mockingPropertyGetter():void
-        {
-            var instance:Flavour = nice(Flavour);
-            var result:Object = "Butterscotch";
-            
-            mock(instance).property("name").returns(result);
-            
-            assertThat(instance.name, strictlyEqualTo(result));
-        }
-		
 		[Test]
 		public function mockingGetter():void 
 		{

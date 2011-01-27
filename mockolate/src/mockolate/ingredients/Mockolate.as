@@ -109,35 +109,11 @@ package mockolate.ingredients
 		{
 			_expecter = value;
 		}
-        
-		[Deprecated]
-        /**
-         * Indicates if this Mockolate is in strict mode. 
-         * 
-         * Given <code>isStrict</code> is <code>true</code>
-         * when a method or property is invoked that does not have a 
-         * <code>mock()</code> or <code>stub()</code> expectation set
-         * then an ExpectationError will be thrown.
-         * 
-         * Given <code>isStrict</code> is <code>false</code>
-         * when a method or property is invoked that does not have a
-         * <code>mock()</code> or <code>stub()</code> expectation set
-         * then an appropriate false-y value will be returned.
-         *  
-         * Eg: <code>false, NaN, 0, null, undefined</code>. 
-         */
-        mockolate_ingredient function get isStrict():Boolean
-        {
-            return _isStrict;
-        }
-        
-        /** @private */
-        mockolate_ingredient function set isStrict(value:Boolean):void
-        {
-            _isStrict = value;
-        }
 		
 		/**
+		 * Used to indicate the behaviour of a Mockolate instance when an Expectation
+	 	 * is not defined for an Invocation.
+		 * 
 		 * @see MockType
 		 */
 		mockolate_ingredient function get mockType():MockType

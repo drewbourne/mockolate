@@ -66,12 +66,12 @@ package mockolate
          */
         
         [Test]
-        public function stubbingPropertyGetter():void
+        public function stubbingGetter():void
         {
             var instance:Flavour = nice(Flavour);
             var answer:Object = "Butterscotch";
             
-            stub(instance).property("name").returns(answer);
+            stub(instance).getter("name").returns(answer);
             
             assertThat(instance.name, strictlyEqualTo(answer));
         }

@@ -137,19 +137,7 @@ package mockolate.ingredients
 			invoke({ name: "doPass" });
 			mocker.verify();
 		}
-		
-		//
-		//	property
-		//
-		
-		[Test]
-		public function property_getter_shouldPassIfInvoked():void 
-		{
-			mocker.property("example").noArgs();
-			invoke({ name: "example", invocationType: InvocationType.GETTER });
-			mocker.verify();
-		}
-		
+
 		//
 		//	getter
 		//
@@ -648,23 +636,6 @@ package mockolate.ingredients
 			Async.proceedOnEvent(this, target, Event.COMPLETE);
 			
 			mocker.method("dispatchEvent").anyArgs().callsSuper();
-			
-			invoke({ target: target, name: "dispatchEvent", arguments: [new Event(Event.COMPLETE)] });
-			
-			mocker.verify();
-		}
-		
-		[Test(async)]
-		public function pass_shouldBeAnAliasOfCallsSuper():void 
-		{
-			// target is an actual EventDispatcher instance
-			// so we should be able to listen for events directly
-			// and pass should forward the invocation to the target
-			// thus dispatching the event 
-			
-			Async.proceedOnEvent(this, target, Event.COMPLETE);
-			
-			mocker.method("dispatchEvent").anyArgs().pass();
 			
 			invoke({ target: target, name: "dispatchEvent", arguments: [new Event(Event.COMPLETE)] });
 			

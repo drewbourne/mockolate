@@ -68,8 +68,8 @@ package mockolate
         {
             var instance:Flavour = strict(Flavour);
             
-            mock(instance).property("name").returns("blueberry");
-            mock(instance).property("ingredients").returns([]);
+            mock(instance).getter("name").returns("blueberry");
+            mock(instance).getter("ingredients").returns([]);
             mock(instance).method("toString").returns("blueberry");
             
             try 

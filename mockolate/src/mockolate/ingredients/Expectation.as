@@ -127,15 +127,6 @@ package mockolate.ingredients
 			return _invocationType.isSetter;
 		}
 	    
-		[Deprecated(since="0.8.0", replacement="#isGetter() or #isSetter()")]
-	    /**
-	     * Indicates if this Expectation is for a property.
-	     */
-	    public function get isProperty():Boolean
-	    {
-	    	return !isMethod;
-	    }
-	    
 	    /**
 	     * Matcher for the invocation arguments.
 	     * 
