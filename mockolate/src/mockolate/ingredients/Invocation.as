@@ -3,7 +3,7 @@ package mockolate.ingredients
 	import org.hamcrest.SelfDescribing;
 
     /**
-     * Interface implemented by facades to the invocation objects provided by FLoxy and Loom.
+     * Interface implemented by facades to the invocation objects provide by the proxy factories. 
      * 
      * @author drewbourne
      */
@@ -28,21 +28,6 @@ package mockolate.ingredients
          * InvocationType indicates if this invocation is a Method, Getter or Setter.
          */
         function get invocationType():InvocationType;
-        
-        /**
-         * Indicates this Invocation is a Method
-         */
-        function get isMethod():Boolean;
-        
-        /**
-         * Indicates this Invocation is a Getter
-         */
-        function get isGetter():Boolean;
-        
-        /**
-         * Indicates this Invocation is a Setter
-         */
-        function get isSetter():Boolean;
         
         /**
          * Array of arguments received by this Invocation

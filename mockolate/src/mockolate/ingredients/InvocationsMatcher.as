@@ -524,21 +524,6 @@ internal class InvocationsMatcherInvocation extends AbstractInvocation implement
 		_invocationType = value;
 	}
 
-	public function get isGetter():Boolean
-	{
-		return _invocationType.isGetter;
-	}
-
-	public function get isMethod():Boolean
-	{
-		return _invocationType.isMethod;
-	}
-
-	public function get isSetter():Boolean
-	{
-		return _invocationType.isSetter;
-	}
-
 	public function get name():String
 	{
 		return _name;

@@ -28,11 +28,11 @@ package mockolate.ingredients
 			
 			description.appendText(invocation.name);
 			
-			if (invocation.isMethod)
+			if (invocation.invocationType.isMethod)
 			{
 				description.appendList("(", ", ", ")", invocation.arguments || []);
 			}
-			else if (invocation.isSetter)
+			else if (invocation.invocationType.isSetter)
 			{
 				description.appendText(" = ");
 				
@@ -42,7 +42,7 @@ package mockolate.ingredients
 				
 				description.appendText(";");
 			}
-			else if (invocation.isGetter)
+			else if (invocation.invocationType.isGetter)
 			{
 				description.appendText(";");
 			}

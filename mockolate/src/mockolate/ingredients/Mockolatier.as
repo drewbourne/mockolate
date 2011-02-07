@@ -10,6 +10,7 @@ package mockolate.ingredients
     import flash.utils.setTimeout;
     
     import mockolate.errors.MockolateError;
+    import mockolate.ingredients.bytecode.BytecodeProxyMockolateFactory;
     import mockolate.ingredients.floxy.FloxyMockolateFactory;
     
     import org.hamcrest.Matcher;
@@ -50,7 +51,8 @@ package mockolate.ingredients
 			_applicationDomain = ApplicationDomain.currentDomain;
             _mockolates = [];
             _mockolatesByTarget = new Dictionary();
-            _mockolateFactory = new FloxyMockolateFactory(this, _applicationDomain);
+//            _mockolateFactory = new FloxyMockolateFactory(this, _applicationDomain);
+			_mockolateFactory = new BytecodeProxyMockolateFactory(this, _applicationDomain);
         }
 		
 		public function get applicationDomain():ApplicationDomain
@@ -269,9 +271,11 @@ package mockolate.ingredients
         {
             var mockolate:Mockolate = _mockolatesByTarget[target];
             if (!mockolate)
+			{
                 throw new MockolateError(
 					["No Mockolate for that target, received:{}", [target]], 
 					null, target);
+			}
             
             return mockolate;
         }
@@ -283,6 +287,13 @@ package mockolate.ingredients
 		 */
 		mockolate_ingredient function invoked(invocation:Invocation):void 
 		{
+			// constructor invocations are too early for any expectations
+			// to be setup yet so ignore them for now. 
+			if (invocation.invocationType.isConstructor)
+			{
+				return;
+			}
+			
 			_lastInvocation = invocation;
 			
 			mockolateByTarget(invocation.target).invoked(invocation);

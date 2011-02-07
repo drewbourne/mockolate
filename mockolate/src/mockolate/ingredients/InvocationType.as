@@ -4,6 +4,7 @@ package mockolate.ingredients
      * Type of an Invocation.
      * 
      * <ul>
+	 * <li><code>CONSTRUCTOR</code> indicates the Invocation is a Constructor.</li>
      * <li><code>METHOD</code> indicates the Invocation is a Method.</li>
      * <li><code>GETTER</code> indicates the Invocation is for the getter of a Property.</li>
      * <li><code>SETTER</code> indicates the Invocation is for the setter of a Property.</li>
@@ -13,7 +14,12 @@ package mockolate.ingredients
      */
     public class InvocationType
     {
-    	/**
+		/**
+		 * Used to indicate a Constructor Invocation. 
+		 */
+		public static const CONSTRUCTOR:InvocationType = new InvocationType("CONSTRUCTOR");
+
+		/**
     	 * Used to indicate a Method Invocation. 
     	 */
         public static const METHOD:InvocationType = new InvocationType("METHOD");
@@ -40,6 +46,14 @@ package mockolate.ingredients
             _name = name;
         }
         
+		/**
+		 * Indicates if this InvocationType is InvocationType.CONSTRUCTOR.
+		 */
+		public function get isConstructor():Boolean
+		{
+			return this == CONSTRUCTOR;
+		}
+		
     	/**
     	 * Indicates if this InvocationType is InvocationType.METHOD.
     	 */
