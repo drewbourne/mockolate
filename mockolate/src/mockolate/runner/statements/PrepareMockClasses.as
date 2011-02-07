@@ -52,7 +52,8 @@ package mockolate.runner.statements
 			}
 			catch (e:Error)
 			{
-				error = new InitializationError(e.message);	
+				error = e;
+//				error = new InitializationError(e.message);	
 				parentToken.sendResult(error);
 			}
 		}
