@@ -24,7 +24,6 @@ package mockolate.ingredients
 		private var _expecter:ExpectingCouverture;
         
         // flags
-        private var _isStrict:Boolean;
 		private var _isRecording:Boolean;
         
         // target!
@@ -42,7 +41,6 @@ package mockolate.ingredients
             super();
             
             _name = name;
-            _isStrict = true;
 			_mockType = MockType.STRICT;
         }
         
