@@ -13,6 +13,7 @@ package mockolate.ingredients
 	import mockolate.ingredients.faux.FauxInvocation;
 	
 	import org.flexunit.assertThat;
+	import org.flexunit.asserts.fail;
 	import org.flexunit.async.Async;
 	import org.hamcrest.collection.array;
 	import org.hamcrest.core.anything;
@@ -277,6 +278,79 @@ package mockolate.ingredients
 		//
 		//	invoke counts
 		//
+		
+		[Test]
+		public function defaultInvocationCount_forStrictMock_shouldBeAtLeastOne():void 
+		{
+			try
+			{
+				mocker.mock().method("example");
+				mocker.verify();
+				fail("Expecting ExpectationError");
+			}
+			catch (error:ExpectationError)
+			{
+				assertThat(error.message, equalTo('1 unmet Expectation\n\tflash.events::EventDispatcher<"Example">#example()'));	
+			}
+		}
+		
+		[Test]
+		public function defaultInvocationCount_forStrictStub_shouldBeUndefined():void 
+		{
+			mocker.stub().method("example");
+			mocker.verify();
+			// no error expected, stubs are not verified.
+		}
+		
+		[Test]
+		public function defaultInvocationCount_forNiceMock_shouldBeAtLeastOne():void 
+		{
+			try
+			{
+				this.mockolate.mockType = MockType.NICE;
+				mocker.mock().method("example");
+				mocker.verify();
+				fail("Expecting ExpectationError");
+			}
+			catch (error:ExpectationError)
+			{
+				assertThat(error.message, equalTo('1 unmet Expectation\n\tflash.events::EventDispatcher<"Example">#example()'));	
+			}
+		}
+		
+		[Test]
+		public function defaultInvocationCount_forNiceStub_shouldBeUndefined():void 
+		{
+			this.mockolate.mockType = MockType.NICE;
+			mocker.stub().method("example");
+			mocker.verify();
+			// no error expected, stubs are not verified.
+		}
+		
+		[Test]
+		public function defaultInvocationCount_forPartialMock_shouldBeAtLeastOne():void 
+		{
+			try
+			{
+				this.mockolate.mockType = MockType.PARTIAL;
+				mocker.mock().method("example");
+				mocker.verify();
+				fail("Expecting ExpectationError");
+			}
+			catch (error:ExpectationError)
+			{
+				assertThat(error.message, equalTo('1 unmet Expectation\n\tflash.events::EventDispatcher<"Example">#example()'));	
+			}
+		}
+		
+		[Test]
+		public function defaultInvocationCount_forPartialStub_shouldBeUndefined():void 
+		{
+			this.mockolate.mockType = MockType.PARTIAL;
+			mocker.stub().method("example");
+			mocker.verify();
+			// no error expected, stubs are not verified.
+		}
 		
 		[Test]
 		public function once_shouldPassIfInvokedOnce():void 

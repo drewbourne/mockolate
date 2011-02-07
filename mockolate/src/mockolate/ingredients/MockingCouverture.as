@@ -859,7 +859,7 @@ package mockolate.ingredients
 			// when expectation mode is mock
 			// than should be called at least once
 			// -- will be overridden if set by the user. 
-			if (this.mockolateInstance.mockType == MockType.STRICT)
+			if (_expectationsAsMocks)
 			{
 				atLeast(1);
 			}
