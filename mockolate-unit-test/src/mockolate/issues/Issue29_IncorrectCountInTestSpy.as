@@ -20,10 +20,10 @@ package mockolate.issues
 		[Test]
 		public function shouldNotHaveIncorrectCountInTestSpy():void
 		{
+			mock(contextPart).method("useRootNode").returns(true);
+			
 			xmlPart = new Issue29_XMLPart;
 			xmlPart.context = contextPart;
-			
-			mock(contextPart).method("useRootNode").returns(true);
 			
 			xmlPart.add("var_1", "HOLA");
 			xmlPart.add("var_2", "HOLA2");

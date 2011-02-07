@@ -7,6 +7,7 @@ package mockolate.ingredients
 	
 	import mockolate.decorations.EventDispatcherDecorator;
 	import mockolate.errors.ExpectationError;
+	import mockolate.errors.InvocationError;
 	import mockolate.ingredients.answers.CallsAnswer;
 	import mockolate.ingredients.answers.CallsWithInvocationAnswer;
 	import mockolate.ingredients.answers.ThrowsAnswer;
@@ -433,11 +434,52 @@ package mockolate.ingredients
 			mocker.verify();
 		}
 		
-		[Test(expected="mockolate.errors.InvocationError")]
-		public function never():void 
+		[Test]
+		public function never_strictMock_shouldComplain():void 
 		{
-			mocker.method("example").never();
-			invoke({ name: "example" });
+			try
+			{
+				this.mockolate.mockType = MockType.STRICT;
+				mocker.mock().method("example").never();
+				invoke({ name: "example" });
+				fail("Expecting ExpectationError");
+			}
+			catch (error:InvocationError)
+			{
+				assertThat(error.message, equalTo("Unexpected invocation for EventDispatcher(Example).example()"));
+			}
+		}
+		
+		[Test]
+		public function never_niceMock_shouldComplain():void 
+		{
+			try
+			{
+				this.mockolate.mockType = MockType.NICE;
+				mocker.mock().method("example").never();
+				invoke({ name: "example" });
+				fail("Expecting ExpectationError");
+			}
+			catch (error:InvocationError)
+			{
+				assertThat(error.message, equalTo("Unexpected invocation for EventDispatcher(Example).example()"));
+			}
+		}
+		
+		[Test]
+		public function never_partialMock_shouldComplain():void 
+		{
+			try
+			{
+				this.mockolate.mockType = MockType.PARTIAL;
+				mocker.mock().method("example").never();
+				invoke({ name: "example" });
+				fail("Expecting ExpectationError");
+			}
+			catch (error:InvocationError)
+			{
+				assertThat(error.message, equalTo("Unexpected invocation for EventDispatcher(Example).example()"));
+			}
 		}
 		
 		//

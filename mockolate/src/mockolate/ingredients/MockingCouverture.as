@@ -534,7 +534,19 @@ package mockolate.ingredients
 		 */
 		public function never():IMockingCouverture
 		{
-			return times(0);
+			setInvokeCount(greaterThanOrEqualTo(0), equalTo(0));
+			callsWithInvocation(function(invocation:Invocation):void {
+				var description:Description 
+					= (new StringDescription())
+					.appendDescriptionOf(mockolateInstance)
+					.appendText(".")
+					.appendDescriptionOf(invocation);
+				
+				throw new InvocationError( 
+					["Unexpected invocation for {}", [description.toString()]],
+					invocation, mockolateInstance, mockolateInstance.target);
+			});
+			return this;
 		}
 		
 		/**
