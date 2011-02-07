@@ -368,7 +368,7 @@ public class UnTypedMetadata
     <priority>3</priority>
     <properties>
       <property name="maximum">
-        <value>15</value>
+        <value>20</value>
       </property>
     </properties>
     <example><![CDATA[import blah.blah.Baz;
