@@ -2,8 +2,11 @@ package mockolate.ingredients.proxy
 {
 	import flash.errors.IllegalOperationError;
 	
+	import mockolate.ingredients.AbstractInvocation;
 	import mockolate.ingredients.Invocation;
 	import mockolate.ingredients.InvocationType;
+	
+	import org.hamcrest.Description;
 	
 	/**
 	 * Invocation created by MockolateProxy.
@@ -12,7 +15,7 @@ package mockolate.ingredients.proxy
 	 * 
 	 * @author drewbourne
 	 */
-	public class ProxyInvocation implements Invocation
+	public class ProxyInvocation extends AbstractInvocation implements Invocation
 	{
 		private var _target:Object;
 		private var _invocationType:InvocationType;

@@ -5,20 +5,25 @@ package mockolate.ingredients
 	import flash.events.IEventDispatcher;
 	import flash.utils.getTimer;
 	
+	import mockolate.decorations.EventDispatcherDecorator;
 	import mockolate.errors.ExpectationError;
+	import mockolate.errors.InvocationError;
 	import mockolate.ingredients.answers.CallsAnswer;
 	import mockolate.ingredients.answers.CallsWithInvocationAnswer;
 	import mockolate.ingredients.answers.ThrowsAnswer;
 	import mockolate.ingredients.faux.FauxInvocation;
 	
 	import org.flexunit.assertThat;
+	import org.flexunit.asserts.fail;
 	import org.flexunit.async.Async;
 	import org.hamcrest.collection.array;
 	import org.hamcrest.core.anything;
 	import org.hamcrest.number.greaterThanOrEqualTo;
 	import org.hamcrest.object.equalTo;
+	import org.hamcrest.object.hasProperties;
 	import org.hamcrest.object.hasProperty;
 	import org.hamcrest.object.isTrue;
+	import org.hamcrest.object.notNullValue;
 	
 	use namespace mockolate_ingredient;
 	
@@ -102,17 +107,39 @@ package mockolate.ingredients
 		}
 		
 		//
-		//	property
+		//	method(s) by RegExp 
 		//
 		
-		[Test]
-		public function property_getter_shouldPassIfInvoked():void 
+		[Test(expected="mockolate.errors.ExpectationError")]
+		public function methods_byRegExp_shouldFailIfNotInvoked():void 
 		{
-			mocker.property("example").noArgs();
-			invoke({ name: "example", invocationType: InvocationType.GETTER });
+			mocker.methods(/^do/);
 			mocker.verify();
 		}
 		
+		[Test]
+		public function methods_byRegExp_shouldFailWithANiceMessage():void 
+		{
+			mocker.methods(/^do/);
+			
+			try
+			{
+				mocker.verify();
+			}
+			catch (error:ExpectationError)
+			{
+				assertThat(error.message, equalTo("1 unmet Expectation\n\tflash.events::EventDispatcher<\"Example\">#/^do/()"));
+			}
+		}
+		
+		[Test]
+		public function methods_byRegExp_shouldPassIfMethodWithMatchingNameInvoked():void 
+		{
+			mocker.methods(/^do/);
+			invoke({ name: "doPass" });
+			mocker.verify();
+		}
+
 		//
 		//	getter
 		//
@@ -131,6 +158,55 @@ package mockolate.ingredients
 			mocker.getter("example");
 			mocker.verify();
 		}
+		
+		[Test]
+		public function getter_shouldFailWithNiceMessage():void 
+		{
+			mocker.getter("example");
+			
+			try
+			{
+				mocker.verify();
+			}
+			catch (error:ExpectationError)
+			{
+				assertThat(error.message, equalTo("1 unmet Expectation\n\tflash.events::EventDispatcher<\"Example\">#example"));	
+			}
+		}
+		
+		//
+		//	getters by RegExp
+		//
+		
+		[Test]
+		public function getters_shouldPassIfInvoked():void 
+		{
+			mocker.getters(/^example/);
+			invoke({ name: "exampleGetter", invocationType: InvocationType.GETTER });
+			mocker.verify();
+		}
+		
+		[Test(expected="mockolate.errors.ExpectationError")]
+		public function getters_shouldFailIfNotInvoked():void 
+		{
+			mocker.getters(/^example/);
+			mocker.verify();
+		}
+		
+		[Test]
+		public function getters_shouldFailWithNiceMessage():void 
+		{
+			mocker.getters(/^example/);
+			
+			try
+			{
+				mocker.verify();
+			}
+			catch (error:ExpectationError)
+			{
+				assertThat(error.message, equalTo("1 unmet Expectation\n\tflash.events::EventDispatcher<\"Example\">#/^example/"));
+			}
+		}	
 		
 		//
 		//	setter
@@ -151,9 +227,131 @@ package mockolate.ingredients
 			mocker.verify();
 		}
 		
+		[Test]
+		public function setter_shouldFailWithNiceMessage():void 
+		{
+			mocker.setter("example").arg(true);
+			
+			try
+			{
+				mocker.verify();
+			}
+			catch (error:ExpectationError)
+			{
+				assertThat(error.message, equalTo("1 unmet Expectation\n\tflash.events::EventDispatcher<\"Example\">#example = <true>"));
+			}
+		}
+		
+		//
+		//	setters by RegExp
+		//
+		
+		[Test]
+		public function setters_shouldPassIfInvoked():void 
+		{
+			mocker.setters(/^example/).arg(true);
+			invoke({ name: "exampleSetter", invocationType: InvocationType.SETTER, arguments: [true] });
+			mocker.verify();
+		}
+		
+		[Test(expected="mockolate.errors.ExpectationError")]
+		public function setters_shouldFailIfNotInvoked():void 
+		{
+			mocker.setters(/^example/).arg(true);
+			mocker.verify();
+		}
+		
+		[Test]
+		public function setters_shouldFailWithNiceMessage():void 
+		{
+			mocker.setters(/^example/).arg(true);
+			
+			try
+			{
+				mocker.verify();
+			}
+			catch (error:ExpectationError)
+			{
+				assertThat(error.message, equalTo("1 unmet Expectation\n\tflash.events::EventDispatcher<\"Example\">#/^example/ = <true>"));
+			}
+		}
+		
 		//
 		//	invoke counts
 		//
+		
+		[Test]
+		public function defaultInvocationCount_forStrictMock_shouldBeAtLeastOne():void 
+		{
+			try
+			{
+				mocker.mock().method("example");
+				mocker.verify();
+				fail("Expecting ExpectationError");
+			}
+			catch (error:ExpectationError)
+			{
+				assertThat(error.message, equalTo('1 unmet Expectation\n\tflash.events::EventDispatcher<"Example">#example()'));	
+			}
+		}
+		
+		[Test]
+		public function defaultInvocationCount_forStrictStub_shouldBeUndefined():void 
+		{
+			mocker.stub().method("example");
+			mocker.verify();
+			// no error expected, stubs are not verified.
+		}
+		
+		[Test]
+		public function defaultInvocationCount_forNiceMock_shouldBeAtLeastOne():void 
+		{
+			try
+			{
+				this.mockolate.mockType = MockType.NICE;
+				mocker.mock().method("example");
+				mocker.verify();
+				fail("Expecting ExpectationError");
+			}
+			catch (error:ExpectationError)
+			{
+				assertThat(error.message, equalTo('1 unmet Expectation\n\tflash.events::EventDispatcher<"Example">#example()'));	
+			}
+		}
+		
+		[Test]
+		public function defaultInvocationCount_forNiceStub_shouldBeUndefined():void 
+		{
+			this.mockolate.mockType = MockType.NICE;
+			mocker.stub().method("example");
+			mocker.verify();
+			// no error expected, stubs are not verified.
+		}
+		
+		[Test]
+		public function defaultInvocationCount_forPartialMock_shouldBeAtLeastOne():void 
+		{
+			try
+			{
+				this.mockolate.mockType = MockType.PARTIAL;
+				mocker.mock().method("example");
+				mocker.verify();
+				fail("Expecting ExpectationError");
+			}
+			catch (error:ExpectationError)
+			{
+				assertThat(error.message, equalTo('1 unmet Expectation\n\tflash.events::EventDispatcher<"Example">#example()'));	
+			}
+		}
+		
+		[Test]
+		public function defaultInvocationCount_forPartialStub_shouldBeUndefined():void 
+		{
+			this.mockolate.mockType = MockType.PARTIAL;
+			mocker.stub().method("example");
+			mocker.verify();
+			// no error expected, stubs are not verified.
+		}
 		
 		[Test]
 		public function once_shouldPassIfInvokedOnce():void 
@@ -236,11 +434,52 @@ package mockolate.ingredients
 			mocker.verify();
 		}
 		
-		[Test(expected="mockolate.errors.InvocationError")]
-		public function never():void 
+		[Test]
+		public function never_strictMock_shouldComplain():void 
 		{
-			mocker.method("example").never();
-			invoke({ name: "example" });
+			try
+			{
+				this.mockolate.mockType = MockType.STRICT;
+				mocker.mock().method("example").never();
+				invoke({ name: "example" });
+				fail("Expecting ExpectationError");
+			}
+			catch (error:InvocationError)
+			{
+				assertThat(error.message, equalTo("Unexpected invocation for EventDispatcher(Example).example()"));
+			}
+		}
+		
+		[Test]
+		public function never_niceMock_shouldComplain():void 
+		{
+			try
+			{
+				this.mockolate.mockType = MockType.NICE;
+				mocker.mock().method("example").never();
+				invoke({ name: "example" });
+				fail("Expecting ExpectationError");
+			}
+			catch (error:InvocationError)
+			{
+				assertThat(error.message, equalTo("Unexpected invocation for EventDispatcher(Example).example()"));
+			}
+		}
+		
+		[Test]
+		public function never_partialMock_shouldComplain():void 
+		{
+			try
+			{
+				this.mockolate.mockType = MockType.PARTIAL;
+				mocker.mock().method("example").never();
+				invoke({ name: "example" });
+				fail("Expecting ExpectationError");
+			}
+			catch (error:InvocationError)
+			{
+				assertThat(error.message, equalTo("Unexpected invocation for EventDispatcher(Example).example()"));
+			}
 		}
 		
 		//
@@ -386,7 +625,7 @@ package mockolate.ingredients
 		public function dispatches_shouldDispatchEvent():void 
 		{
 			// disable strict checking to enable implicit EventDispatcher behaviour
-			this.mockolate.isStrict = false;
+			this.mockolate.mockType = MockType.NICE;
 			
 			// unfortunately convoluted to work around proxy & flexunit
 			var dispatcher:IEventDispatcher = new EventDispatcher();
@@ -415,7 +654,7 @@ package mockolate.ingredients
 		public function dispatches_withDelay_shouldDispatchEventAfterDelay():void 
 		{
 			// disable strict checking to enable implicit EventDispatcher behaviour
-			this.mockolate.isStrict = false;
+			this.mockolate.mockType = MockType.NICE;
 			
 			// measure delay
 			var delay:int = 0;
@@ -451,7 +690,7 @@ package mockolate.ingredients
 		public function asEventDispatcher_enablesNiceEventDispatcherExpectations():void 
 		{
 			// as strict so we get errors for undefined expectations
-			this.mockolate.isStrict = true;
+			this.mockolate.mockType = MockType.STRICT;
 			
 			// unfortunately convoluted to work around proxy & flexunit
 			var dispatcher:IEventDispatcher = new EventDispatcher();
@@ -489,6 +728,15 @@ package mockolate.ingredients
 			mocker.verify();
 		}
 		
+		[Test]
+		public function asEventDispatcher_calledMultipleTimes_shouldOnlyCreateOneDecorator():void 
+		{
+			var eventDispatcherDecorator1:EventDispatcherDecorator = mocker.asEventDispatcher();
+			var eventDispatcherDecorator2:EventDispatcherDecorator = mocker.asEventDispatcher();
+			
+			assertThat(eventDispatcherDecorator1, equalTo(eventDispatcherDecorator2));
+		}
+				
 		//
 		//    callsSuper
 		//
@@ -510,23 +758,6 @@ package mockolate.ingredients
 			mocker.verify();
 		}
 		
-		[Test(async)]
-		public function pass_shouldBeAnAliasOfCallsSuper():void 
-		{
-			// target is an actual EventDispatcher instance
-			// so we should be able to listen for events directly
-			// and pass should forward the invocation to the target
-			// thus dispatching the event 
-			
-			Async.proceedOnEvent(this, target, Event.COMPLETE);
-			
-			mocker.method("dispatchEvent").anyArgs().pass();
-			
-			invoke({ target: target, name: "dispatchEvent", arguments: [new Event(Event.COMPLETE)] });
-			
-			mocker.verify();
-		}
-		
 		//
 		//    answers
 		//
@@ -536,6 +767,44 @@ package mockolate.ingredients
 		{
 			mocker.method("example").answers(new ThrowsAnswer(new Error("thrown by ThrowsAnswer")));
 			invoke({ name: "example" });
+		}
+		
+		//
+		//    callsWithInvocation
+		//
+		
+		[Test]
+		public function callsWithInvocation_shouldCallFunctionWithInvocation():void 
+		{
+			var receivedInvocation:Invocation;
+			
+			function callClosure(invocation:Invocation):void 
+			{
+				receivedInvocation = invocation;
+			}
+			
+			mocker.method("example").callsWithInvocation(callClosure);
+			invoke({ name: "example" });
+			
+			assertThat(receivedInvocation, hasProperties({ name: "example" }));
+			mocker.verify();			
+		}
+		
+		//
+		//	  callsWithArguments
+		//
+		
+		[Test]
+		public function callsWithArguments_shouldCallFunctionWithInvocationArguments():void 
+		{
+			var receivedArguments:Array;
+			
+			mocker.method("example").args(Number, Array).callsWithArguments(function(a:int, b:Array):void {
+				receivedArguments = [a, b];
+			});
+			invoke({ name: "example", arguments: [1, [2]] });
+			
+			assertThat(receivedArguments, array(1, array(2)));
 		}
 	}
 }

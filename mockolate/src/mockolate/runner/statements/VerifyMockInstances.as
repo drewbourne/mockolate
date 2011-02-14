@@ -3,6 +3,7 @@ package mockolate.runner.statements
 	import asx.string.formatToString;
 	
 	import mockolate.errors.MockolateError;
+	import mockolate.ingredients.Mockolatier;
 	import mockolate.runner.MockolateRunnerConstants;
 	import mockolate.runner.MockolateRunnerData;
 	import mockolate.runner.MockolateRunnerStatement;
@@ -40,6 +41,7 @@ package mockolate.runner.statements
 			this.parentToken = parentToken;	
 			
 			var error:Error = null;
+			var mockolatier:Mockolatier = data.mockolatier;
 			
 			if (verifyMethod())
 			{				
@@ -47,7 +49,7 @@ package mockolate.runner.statements
 				{
 					try
 					{
-						verify(mock);
+						mockolatier.verify(mock);
 					}
 					catch (e:MockolateError)
 					{

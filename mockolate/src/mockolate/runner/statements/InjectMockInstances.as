@@ -2,10 +2,12 @@ package mockolate.runner.statements
 {
 	import asx.string.formatToString;
 	
+	import mockolate.ingredients.Mockolatier;
 	import mockolate.nice;
 	import mockolate.runner.MockMetadata;
-	import mockolate.runner.MockolateRunnerStatement;
+	import mockolate.ingredients.MockType;
 	import mockolate.runner.MockolateRunnerData;
+	import mockolate.runner.MockolateRunnerStatement;
 	import mockolate.strict;
 	
 	import org.flexunit.internals.runners.InitializationError;
@@ -39,8 +41,13 @@ package mockolate.runner.statements
 			this.parentToken = parentToken;	
 			
 			var error:Error = null;
-			
+			var mockolatier:Mockolatier = data.mockolatier;
 			data.mockInstances = [];
+			
+			var mockFactories:Object = {};
+			mockFactories[MockType.NICE] = mockolatier.nice;
+			mockFactories[MockType.STRICT] = mockolatier.strict;
+			mockFactories[MockType.PARTIAL] = mockolatier.partial;
 			
 			try
 			{
@@ -49,10 +56,7 @@ package mockolate.runner.statements
 					if (metadata.injectable)
 					{
 						var klass:Class = metadata.type;
-						var mock:Object 
-							= metadata.mockType == "strict" 
-							? strict(klass, metadata.name)
-							: nice(klass, metadata.name);					
+						var mock:Object = mockFactories[metadata.mockType](klass, metadata.name);
 						data.mockInstances.push(mock);					
 						data.test[metadata.name] = mock as klass;
 					}
@@ -60,7 +64,8 @@ package mockolate.runner.statements
 			}
 			catch (e:Error)
 			{
-				error = new InitializationError(e.message);
+				error = e;
+//				error = new InitializationError(e.message);
 			}
 			
 			parentToken.sendResult(error);

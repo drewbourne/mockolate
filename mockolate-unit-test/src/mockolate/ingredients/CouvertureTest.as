@@ -19,7 +19,7 @@ package mockolate.ingredients
         {
             mockolate = new Mockolate();
             couverture = new Couverture(mockolate);
-            assertThat(couverture.mockolate, sameInstance(mockolate));
+            assertThat(couverture.mockolateInstance, sameInstance(mockolate));
         }
     }
 }

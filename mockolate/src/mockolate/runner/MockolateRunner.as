@@ -1,5 +1,8 @@
 package mockolate.runner
 {
+	import mockolate.ingredients.mockolate_ingredient;
+	import mockolate.ingredients.Mockolatier;
+	import mockolate.ingredients.MockolatierMaster
 	import mockolate.runner.statements.IdentifyMockClasses;
 	import mockolate.runner.statements.InjectMockInstances;
 	import mockolate.runner.statements.PrepareMockClasses;
@@ -10,6 +13,8 @@ package mockolate.runner
 	import org.flexunit.internals.runners.statements.StatementSequencer;
 	import org.flexunit.runners.BlockFlexUnit4ClassRunner;
 	import org.flexunit.runners.model.FrameworkMethod;
+	
+	use namespace mockolate_ingredient;
 
 	/**
 	 * MockolateRunner is the recommended way to enable Mockoate support in
@@ -83,6 +88,7 @@ package mockolate.runner
 			}
 			
 			this.data = new MockolateRunnerData();
+			this.data.mockolatier = MockolatierMaster.mockolatier;
 			this.data.test = test;
 			this.data.method = method;
 			

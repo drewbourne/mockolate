@@ -18,13 +18,13 @@ package mockolate
      * 
      * @example
      * <listing version="3.0">
-     *  var flavour:Flavour = nice(Flavour);
+     *  var flavour:Flavour = strict(Flavour);
      * </listing>
      * 
      * @author drewbourne
      */
-    public function strict(klass:Class, name:String=null, constructorArgs:Array=null):*
+    public function strict(classReference:Class, name:String=null, constructorArgs:Array=null):*
     {
-        return MockolatierMaster.strict(klass, name, constructorArgs);
+        return MockolatierMaster.strict(classReference, name, constructorArgs);
     }
 }

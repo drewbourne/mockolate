@@ -2,6 +2,10 @@ package mockolate.ingredients
 {
 	import flash.events.EventDispatcher;
 	import flash.events.IEventDispatcher;
+	import flash.utils.getQualifiedClassName;
+	
+	import org.hamcrest.Description;
+	import org.hamcrest.SelfDescribing;
 	
     use namespace mockolate_ingredient;
     
@@ -12,7 +16,7 @@ package mockolate.ingredients
      * 
      * @author drewbourne
      */
-    public class Mockolate
+    public class Mockolate implements SelfDescribing
     {
 		private var _recorder:RecordingCouverture;
         private var _mocker:MockingCouverture;
@@ -20,16 +24,15 @@ package mockolate.ingredients
 		private var _expecter:ExpectingCouverture;
         
         // flags
-        private var _isStrict:Boolean;
 		private var _isRecording:Boolean;
         
         // target!
         private var _target:*;
         private var _targetClass:Class;
         
-        // identifier
         private var _name:String;
-        
+		private var _mockType:MockType;
+		
         /**
          * Constructor.
          */
@@ -38,7 +41,7 @@ package mockolate.ingredients
             super();
             
             _name = name;
-            _isStrict = true;
+			_mockType = MockType.STRICT;
         }
         
         /**
@@ -104,32 +107,23 @@ package mockolate.ingredients
 		{
 			_expecter = value;
 		}
-        
-        /**
-         * Indicates if this Mockolate is in strict mode. 
-         * 
-         * Given <code>isStrict</code> is <code>true</code>
-         * when a method or property is invoked that does not have a 
-         * <code>mock()</code> or <code>stub()</code> expectation set
-         * then an ExpectationError will be thrown.
-         * 
-         * Given <code>isStrict</code> is <code>false</code>
-         * when a method or property is invoked that does not have a
-         * <code>mock()</code> or <code>stub()</code> expectation set
-         * then an appropriate false-y value will be returned.
-         *  
-         * Eg: <code>false, NaN, 0, null, undefined</code>. 
-         */
-        mockolate_ingredient function get isStrict():Boolean
-        {
-            return _isStrict;
-        }
-        
-        /** @private */
-        mockolate_ingredient function set isStrict(value:Boolean):void
-        {
-            _isStrict = value;
-        }
+		
+		/**
+		 * Used to indicate the behaviour of a Mockolate instance when an Expectation
+	 	 * is not defined for an Invocation.
+		 * 
+		 * @see MockType
+		 */
+		mockolate_ingredient function get mockType():MockType
+		{
+			return _mockType;
+		}
+		
+		/** @private */
+		mockolate_ingredient function set mockType(value:MockType):void
+		{
+			_mockType = value;
+		}
         
         /**
          * Reference to the instance this Mockolate is managing.
@@ -236,6 +230,24 @@ package mockolate.ingredients
 		{
 			_isRecording = false;
 			return this;
+		}
+		
+		/**
+		 * Describes this Mockolate to the given Description.
+		 */
+		public function describeTo(description:Description):void 
+		{
+			var qname:String = getQualifiedClassName(targetClass);
+			
+			description.appendText(qname.slice(qname.lastIndexOf('::') + 2));
+			
+			if (name)
+			{
+				description
+					.appendText("(")
+					.appendText(name)
+					.appendText(")");
+			}
 		}
     }
 }

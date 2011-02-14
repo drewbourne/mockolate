@@ -44,7 +44,37 @@ package mockolate.ingredients
 		 *	}, [1, 2]);
 		 * </listing> 
 		 */
-		function calls(fn:Function,args:Array=null):IMockingCouverture;
+		function calls(fn:Function, args:Array=null):IMockingCouverture;
+		
+		/**
+		 * Calls the given Function with the Invocation when the current 
+		 * Expectation is invoked.
+		 * 
+		 * @example
+		 * <listing version="3.0">
+		 *	mock(instance).method("message").callsWithInvocation(function(invocation:Invocation):void {
+		 * 		trace(invocation.name, invocation.arguments);
+		 * 	});
+		 * 
+		 * 	instance.message(1, [2, 3]);
+		 * </listing> 
+		 */
+		function callsWithInvocation(fn:Function, args:Array=null):IMockingCouverture;
+		
+		/**
+		 * Calls the given Function with the Invocation.arguments when the 
+		 * current Expectation is invoked.
+		 * 
+		 * @example
+		 * <listing version="3.0">
+		 *	mock(instance).method("message").callsWithArguments(function(a:int, b:Array):void {
+		 * 		trace("message", a, b);
+		 * 	});
+		 * 
+		 * 	instance.message(1, [2, 3]);
+		 * </listing> 
+		 */
+		function callsWithArguments(fn:Function, args:Array=null):IMockingCouverture;
 
 		/**
 		 * Causes the current Expectation to dispatch the given Event with an 
@@ -206,12 +236,6 @@ package mockolate.ingredients
 		 *	mock(instance).method("addEventListener").anyArgs().callsSuper();
 		 * </listing>
 		 */
-		function callsSuper():IMockingCouverture;
-		
-		[Deprecated(since="0.9", replacement="#callsSuper()")]
-		/**
-		 * Alias for callSuper()
-		 */
-		function pass():IMockingCouverture;
+		function callsSuper():IMockingCouverture;		
 	}
 }

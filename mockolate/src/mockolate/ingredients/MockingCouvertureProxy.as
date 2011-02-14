@@ -28,7 +28,7 @@ package mockolate.ingredients
 		 */
 		protected function get mocker():MockingCouverture
 		{
-			return this.mockolate.mocker;	
+			return this.mockolateInstance.mocker;	
 		}
 		
 		/**
@@ -46,6 +46,24 @@ package mockolate.ingredients
 		public function calls(fn:Function, args:Array=null):IMockingCouverture
 		{
 			mocker.calls(fn, args);
+			return this;
+		}
+		
+		/**
+		 * @copy MockingCouverture#callsWithInvocation()
+		 */
+		public function callsWithInvocation(fn:Function, args:Array=null):IMockingCouverture
+		{
+			mocker.callsWithInvocation(fn, args);
+			return this;
+		}
+		
+		/**
+		 * @copy MockingCouverture#callsWithArguments()
+		 */
+		public function callsWithArguments(fn:Function, args:Array=null):IMockingCouverture
+		{
+			mocker.callsWithArguments(fn, args);
 			return this;
 		}
 		

@@ -2,6 +2,7 @@ package mockolate.ingredients.proxy
 {
 	import flash.events.EventDispatcher;
 	
+	import mockolate.ingredients.MockType;
 	import mockolate.ingredients.mockolate_ingredient;
 	import mockolate.ingredients.proxy.MockolateProxy;
 	import mockolate.sample.Example;
@@ -14,7 +15,7 @@ package mockolate.ingredients.proxy
 		
 		public function ExampleMock()
 		{
-			proxy = new MockolateProxy(this);
+			proxy = new MockolateProxy(MockType.NICE, this);
 		}
 		
 		public function acceptNumber( value:Number ):void

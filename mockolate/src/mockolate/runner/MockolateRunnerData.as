@@ -1,5 +1,8 @@
 package mockolate.runner
 {
+	import mockolate.ingredients.Mockolate;
+	import mockolate.ingredients.Mockolatier;
+	
 	import org.flexunit.runners.model.FrameworkMethod;
 
 	/**
@@ -9,6 +12,11 @@ package mockolate.runner
 	 */	
 	public class MockolateRunnerData
 	{
+		/** 
+		 * Mockolatier to use to prepare, instantiate and verify instances. 
+		 */
+		public var mockolatier:Mockolatier; 
+		
 		/**
 		 * Instance of the Testcase Class currently being run.
 		 */		

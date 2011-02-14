@@ -17,7 +17,7 @@
     <property name="FLEX_HOME" location="${env.FLEX_HOME}" />
 
     <taskdef resource="flexTasks.tasks" classpath="${FLEX_HOME}/ant/lib/flexTasks.jar" />
-    <taskdef resource="flexUnitTasks.tasks" classpath="${build.loc}/flexUnitTasks-4.1.0-beta3.x.jar" />
+    <taskdef resource="flexUnitTasks.tasks" classpath="${build.loc}/flexUnitTasks-${flexunit.version}.jar" />
     
     <target name="clean">
         <delete dir="${target.loc}" />
@@ -117,13 +117,15 @@
           <arg line="-external-library-path+='${FLEX_HOME}/frameworks/libs/framework.swc'" />
           <arg line="-external-library-path+='${FLEX_HOME}/frameworks/libs/rpc.swc'" />
           <arg line="-external-library-path+='${FLEX_HOME}/frameworks/libs/utilities.swc'" />
-          <arg line="-external-library-path+='${libs.loc}/flexunit-core-flex-4.1.0-beta3.x-sdky.y.y.y.swc'" />
-          <arg line="-external-library-path+='${libs.loc}/hamcrest-as3-1.1.0.swc'" />
+          <arg line="-external-library-path+='${libs.loc}/flexunit-core-flex-${flexunit.version}-sdky.y.y.y.swc'" />
+          <arg line="-external-library-path+='${libs.loc}/hamcrest-as3-${hamcrest.version}.swc'" />
           <arg line="-include-libraries+='${libs.loc}/FLoxy.swc'" />
+          <arg line="-include-file=metadata.xml,'${src.loc}'/metadata.xml" />
           <arg line="-library-path+='${libs.loc}'" />
           <arg line="-output=${bin.loc}/${library.swc}" />
           <arg line="-include-sources=${src.loc}" />
           <arg line="-source-path+=${src.loc}" />
+          <arg line="-keep-as3-metadata=Mock" />
           <arg line="-link-report=${bin.loc}/link-report.xml" />
           <arg line="-compiler.verbose-stacktraces=true" />
           <arg line="-compiler.headless-server=true" />
@@ -164,7 +166,7 @@
             localTrusted="true" />
     </target>
     
-    <target name="report" if="build.test">
+    <target name="report">
         <junitreport todir="${report.flexunit.loc}">
             <fileset dir="${report.flexunit.loc}">
                 <include name="TEST-*.xml" />
@@ -208,8 +210,8 @@
         depends="compile, test, docs">
         
         <zip destfile="${target.loc}/${library.zip}">
-            <zipfileset dir="${doc.loc}" prefix="mockolate/docs" />
-            <zipfileset dir="${bin.loc}" prefix="mockolate">
+            <zipfileset dir="${doc.loc}" prefix="mockolate-${build.version}/docs" />
+            <zipfileset dir="${bin.loc}" prefix="mockolate-${build.version}">
                 <include name="*.swc" />
              </zipfileset>
         </zip>

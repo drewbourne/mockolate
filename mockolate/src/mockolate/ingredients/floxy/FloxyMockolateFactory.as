@@ -6,13 +6,10 @@ package mockolate.ingredients.floxy
     import flash.system.ApplicationDomain;
     
     import mockolate.ingredients.AbstractMockolateFactory;
-    import mockolate.ingredients.ExpectingCouverture;
     import mockolate.ingredients.IMockolateFactory;
-    import mockolate.ingredients.MockingCouverture;
+    import mockolate.ingredients.MockType;
     import mockolate.ingredients.Mockolate;
     import mockolate.ingredients.Mockolatier;
-    import mockolate.ingredients.RecordingCouverture;
-    import mockolate.ingredients.VerifyingCouverture;
     import mockolate.ingredients.mockolate_ingredient;
     
     import org.flemit.reflection.Type;
@@ -51,12 +48,12 @@ package mockolate.ingredients.floxy
         /**
          * @inheritDoc 
          */
-        public function create(klass:Class, constructorArgs:Array=null, asStrict:Boolean=true, name:String=null):Mockolate
+        public function create(mockType:MockType, klass:Class, constructorArgs:Array=null, name:String=null):Mockolate
         {
 			if (!constructorArgs)
 				constructorArgs = repeat(null, Type.getType(klass).constructor.parameters.length);
 				
-            var mockolate:FloxyMockolate = createMockolate(asStrict, name) as FloxyMockolate;
+            var mockolate:FloxyMockolate = createMockolate(mockType || MockType.STRICT, name) as FloxyMockolate;
             var target:* = _proxyRespository.create(klass, constructorArgs || [], mockolate.interceptor);
             mockolate.target = target;
             mockolate.targetClass = klass;
@@ -66,17 +63,15 @@ package mockolate.ingredients.floxy
         /**
          * @private 
          */
-        protected function createMockolate(asStrict:Boolean=false, name:String=null):Mockolate
+        protected function createMockolate(mockType:MockType, name:String=null):Mockolate
         {
             var mockolate:FloxyMockolate = new FloxyMockolate(name);
-            mockolate.isStrict = asStrict;
-            
+            mockolate.mockType = mockType;
             mockolate.interceptor = createInterceptor(mockolate);
             mockolate.recorder = createRecorder(mockolate);
             mockolate.mocker = createMocker(mockolate);
             mockolate.verifier = createVerifier(mockolate);
 			mockolate.expecter = createExpecter(mockolate);
-            
             return mockolate;
         }
 		

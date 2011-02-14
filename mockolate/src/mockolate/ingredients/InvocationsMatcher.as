@@ -11,10 +11,12 @@ package mockolate.ingredients
 	import org.hamcrest.collection.arrayWithSize;
 	import org.hamcrest.collection.emptyArray;
 	import org.hamcrest.core.allOf;
+	import org.hamcrest.core.describedAs;
 	import org.hamcrest.number.greaterThanOrEqualTo;
 	import org.hamcrest.number.lessThanOrEqualTo;
 	import org.hamcrest.object.equalTo;
 	import org.hamcrest.object.hasProperties;
+	import org.hamcrest.text.re;
 	
 	use namespace mockolate_ingredient;
 	
@@ -58,12 +60,7 @@ package mockolate.ingredients
 	 */
 	public class InvocationsMatcher implements Matcher
 	{
-		private var _invocationType:InvocationType;
-		private var _name:String;
-		private var _arguments:Array;
-		private var _argumentsMatcher:Matcher;
-		private var _invocationCount:int;
-		private var _invocationCountMatcher:Matcher;
+		private var _invocation:InvocationsMatcherInvocation;
 		
 		/**
 		 * Constructor.
@@ -71,6 +68,8 @@ package mockolate.ingredients
 		public function InvocationsMatcher()
 		{
 			super();
+			
+			_invocation = new InvocationsMatcherInvocation();
 			
 			// default invocation count
 			atLeast(1);
@@ -90,9 +89,28 @@ package mockolate.ingredients
 		 */
 		public function method(name:String):InvocationsMatcher
 		{
-			_invocationType = InvocationType.METHOD;
-			_name = name;
+			_invocation.invocationType = InvocationType.METHOD;
+			_invocation.name = name;
+			_invocation.nameMatcher = equalTo(name);
 			return this;	
+		}
+		
+		/**
+		 * Match Invocations for methods with a name that matches the given RegExp.
+		 * 
+		 * @param regexp RegExp the method name to match.
+		 * 
+		 * @example
+		 * <listing version="3.0">
+		 * 	assertThat(flavour, received().methods(/^allow/).atLeast(2));
+		 * </listing> 
+		 */
+		public function methods(regexp:RegExp):InvocationsMatcher
+		{
+			_invocation.invocationType = InvocationType.METHOD;
+			_invocation.name = regexp.toString(); 
+			_invocation.nameMatcher = re(regexp);
+			return this;
 		}
 		
 		/**
@@ -105,9 +123,21 @@ package mockolate.ingredients
 		 */
 		public function getter(name:String):InvocationsMatcher
 		{
-			_invocationType = InvocationType.GETTER;
-			_name = name;
+			_invocation.invocationType = InvocationType.GETTER;
+			_invocation.name = name;
+			_invocation.nameMatcher = equalTo(name);
 			return this;
+		}
+		
+		/**
+		 * 
+		 */
+		public function getters(regexp:RegExp):InvocationsMatcher
+		{
+			_invocation.invocationType = InvocationType.GETTER;
+			_invocation.name = regexp.toString(); 
+			_invocation.nameMatcher = re(regexp);
+			return this;	
 		}
 		
 		/**
@@ -120,10 +150,22 @@ package mockolate.ingredients
 		 */
 		public function setter(name:String):InvocationsMatcher
 		{
-			_invocationType = InvocationType.SETTER;
-			_name = name;
+			_invocation.invocationType = InvocationType.SETTER;
+			_invocation.name = name;
+			_invocation.nameMatcher = equalTo(name);
 			return this;
 		}
+		
+		/**
+		 * 
+		 */
+		public function setters(regexp:RegExp):InvocationsMatcher
+		{
+			_invocation.invocationType = InvocationType.SETTER;
+			_invocation.name = regexp.toString(); 
+			_invocation.nameMatcher = re(regexp);
+			return this;	
+		}		
 		
 		/**
 		 * Match Invocations for with the given arguments. Accepts values or matchers.  
@@ -135,8 +177,8 @@ package mockolate.ingredients
 		 */
 		public function args(...rest):InvocationsMatcher
 		{
-			_arguments = rest;
-			_argumentsMatcher = array(map(_arguments, valueToMatcher));
+			_invocation.arguments = rest;
+			_invocation.argumentsMatcher = array(map(_invocation.arguments, valueToMatcher));
 			return this;
 		}
 		
@@ -150,8 +192,8 @@ package mockolate.ingredients
 		 */
 		public function noArgs():InvocationsMatcher
 		{
-			_arguments = null;
-			_argumentsMatcher = emptyArray();
+			_invocation.arguments = null;
+			_invocation.argumentsMatcher = emptyArray();
 			return this;
 		}
 		
@@ -165,8 +207,8 @@ package mockolate.ingredients
 		 */
 		public function anyArgs():InvocationsMatcher
 		{
-			_arguments = null;
-			_argumentsMatcher = arrayWithSize(greaterThanOrEqualTo(0));
+			_invocation.arguments = null;
+			_invocation.argumentsMatcher = arrayWithSize(greaterThanOrEqualTo(0));
 			return this;
 		}
 		
@@ -191,10 +233,10 @@ package mockolate.ingredients
 		 * 	assetThat(flavour, received().method("combine").times(2));
 		 * </listing>
 		 */
-		public function times(n:int):InvocationsMatcher
+		public function times(numberOfTimes:int):InvocationsMatcher
 		{
-			_invocationCount = n;
-			_invocationCountMatcher = equalTo(n);
+			_invocation.invocationCount = numberOfTimes;
+			_invocation.invocationCountMatcher = equalTo(numberOfTimes);
 			return this;
 		}
 		
@@ -258,10 +300,10 @@ package mockolate.ingredients
 		 * 	assetThat(flavour, received().method("combine").atLeast(3));
 		 * </listing>
 		 */
-		public function atLeast(n:int):InvocationsMatcher
+		public function atLeast(numberOfTimes:int):InvocationsMatcher
 		{
-			_invocationCount = n;
-			_invocationCountMatcher = greaterThanOrEqualTo(n);
+			_invocation.invocationCount = numberOfTimes;
+			_invocation.invocationCountMatcher = describedAs("at least %0", greaterThanOrEqualTo(numberOfTimes), numberOfTimes);
 			
 			return this;
 		}
@@ -274,10 +316,10 @@ package mockolate.ingredients
 		 * 	assetThat(flavour, received().method("combine").atLeast(4));
 		 * </listing>
 		 */
-		public function atMost(n:int):InvocationsMatcher
+		public function atMost(numberOfTimes:int):InvocationsMatcher
 		{
-			_invocationCount = n;
-			_invocationCountMatcher = lessThanOrEqualTo(n);
+			_invocation.invocationCount = numberOfTimes;
+			_invocation.invocationCountMatcher = describedAs("at most %0", lessThanOrEqualTo(numberOfTimes), numberOfTimes);
 			
 			return this;
 		}
@@ -292,42 +334,30 @@ package mockolate.ingredients
 			// mockolateByTarget will throw a MockolateError if there is no Mockolate for the target.  
 			MockolatierMaster.mockolatier.mockolateByTarget(target);
 			
-			var invocations:Array = matchInvocations(target);
+			var invocations:Array = filterInvocations(target);
 			
-			return arrayWithSize(_invocationCountMatcher).matches(invocations);
+			return arrayWithSize(_invocation.invocationCountMatcher).matches(invocations);
 		}
 		
 		/** @private */
 		public function describeMismatch(target:Object, description:Description):void
 		{
 			var instance:Mockolate = MockolatierMaster.mockolatier.mockolateByTarget(target);
-			var invocations:Array = matchInvocations(target);
-			
-			var qname:String = getQualifiedClassName(instance.targetClass);
+			var invocations:Array = filterInvocations(target);
 			
 			description
-				.appendText(qname.slice(qname.lastIndexOf('::') + 2));
-			
-			if (instance.name)
-				description
-					.appendText("(")
-					.appendText(instance.name)
-					.appendText(")");
-			
-			description
+				.appendDescriptionOf(instance)
 				.appendText(".")
-				.appendText(_name);
-				
-			describeInvocationTo(description);
+				.appendDescriptionOf(_invocation);
 			
 			description
 				.appendText(" invoked ")
 				.appendText(invocations.length.toString())
 				.appendText("/")
-				.appendText(_invocationCount.toString())
+				.appendText(_invocation.invocationCount.toString())
 				.appendText(" (")
-				.appendText(invocations.length > _invocationCount ? "+" : "")
-				.appendText(String(invocations.length - _invocationCount))
+				.appendText(invocations.length > _invocation.invocationCount ? "+" : "")
+				.appendText(String(invocations.length - _invocation.invocationCount))
 				.appendText(")")
 				.appendText(" times");
 		}
@@ -336,47 +366,162 @@ package mockolate.ingredients
 		public function describeTo(description:Description):void
 		{
 			description
-				.appendDescriptionOf(_invocationCountMatcher)
+				.appendDescriptionOf(_invocation.invocationCountMatcher)
 				.appendText(" invocations of ")
-				.appendText(_name);
-				
-			describeInvocationTo(description);
+				.appendDescriptionOf(_invocation);
 		}
 
 		/** @private */
-		protected function describeInvocationTo(description:Description):void
-		{
-			if (_invocationType.isMethod)
-				description.appendList("(", ", ", ")", _arguments);
-			else if (_invocationType.isSetter)
-				description
-					.appendText(" = ")
-					.appendValue(_arguments[0])
-					.appendText(";");
-			else if (_invocationType.isGetter)
-				description.appendText(";");
-		}
-
-		/** @private */
-		protected function matchInvocations(target:Object):Array 
+		protected function filterInvocations(target:Object):Array 
 		{
 			var instance:Mockolate = MockolatierMaster.mockolatier.mockolateByTarget(target);
 			var invocations:Array = instance.recorder.invocations;			
 			var properties:Object = {};
 			
-			if (_invocationType)
-				properties['invocationType'] = _invocationType;
+			if (_invocation.invocationType)
+				properties['invocationType'] = _invocation.invocationType;
 			
-			if (_name)
-				properties['name'] = _name;
+			if (_invocation.nameMatcher)
+				properties['name'] = _invocation.nameMatcher;
 			
-			if (_argumentsMatcher)
-				properties['arguments'] = _argumentsMatcher;
+			if (_invocation.argumentsMatcher)
+				properties['arguments'] = _invocation.argumentsMatcher;
 			
 			var invocationMatcher:Matcher = hasProperties(properties); 			
 			var matchingInvocations:Array = filter(invocations, invocationMatcher.matches);
 			
 			return matchingInvocations;
 		}
+	}
+}
+import flash.errors.IllegalOperationError;
+
+import mockolate.errors.MockolateError;
+import mockolate.ingredients.AbstractInvocation;
+import mockolate.ingredients.Invocation;
+import mockolate.ingredients.InvocationType;
+
+import org.hamcrest.Description;
+import org.hamcrest.Matcher;
+
+internal class InvocationsMatcherInvocation extends AbstractInvocation implements Invocation
+{
+	private var _invocationType:InvocationType;
+	private var _name:String;
+	private var _nameMatcher:Matcher;
+	private var _arguments:Array;
+	private var _argumentsMatcher:Matcher;
+	private var _invocationCount:int;
+	private var _invocationCountMatcher:Matcher;
+	
+	public function InvocationsMatcherInvocation()
+	{
+		super();
+	}
+	
+	public function get arguments():Array
+	{
+		return _arguments;
+	}
+	
+	public function set arguments(value:Array):void 
+	{
+		_arguments = value;
+	}
+
+	public function get argumentsMatcher():Matcher
+	{
+		return _argumentsMatcher;
+	}
+
+	public function set argumentsMatcher(value:Matcher):void
+	{
+		_argumentsMatcher = value;
+	}
+
+	public function get invocationCount():int
+	{
+		return _invocationCount;
+	}
+
+	public function set invocationCount(value:int):void
+	{
+		_invocationCount = value;
+	}
+
+	public function get invocationCountMatcher():Matcher
+	{
+		return _invocationCountMatcher;
+	}
+
+	public function set invocationCountMatcher(value:Matcher):void
+	{
+		_invocationCountMatcher = value;
+	}
+
+	public function get invocationType():InvocationType
+	{
+		return _invocationType;
+	}
+	
+	public function set invocationType(value:InvocationType):void 
+	{
+		_invocationType = value;
+	}
+
+	public function get isGetter():Boolean
+	{
+		return _invocationType.isGetter;
+	}
+
+	public function get isMethod():Boolean
+	{
+		return _invocationType.isMethod;
+	}
+
+	public function get isSetter():Boolean
+	{
+		return _invocationType.isSetter;
+	}
+
+	public function get name():String
+	{
+		return _name;
+	}
+	
+	public function set name(value:String):void
+	{
+		_name = value;
+	}	
+
+	public function get nameMatcher():Matcher
+	{
+		return _nameMatcher;
+	}
+
+	public function set nameMatcher(value:Matcher):void
+	{
+		_nameMatcher = value;
+	}
+
+	public function proceed():void
+	{
+		throw new IllegalOperationError("InvocationsMatcherInvocation.proceed() unsupported");
+	}
+
+	public function get returnValue():*
+	{
+		throw new IllegalOperationError("InvocationsMatcherInvocation.returnValue unsupported");
+	}
+
+	public function set returnValue(value:*):void
+	{
+		throw new IllegalOperationError("InvocationsMatcherInvocation.returnValue unsupported");
+	}
+
+	public function get target():Object
+	{
+		throw new IllegalOperationError("InvocationsMatcherInvocation.target unsupported");
+		return null;
 	}
 }
