@@ -8,6 +8,8 @@ package mockolate
 	import mockolate.issues.FunctionApplyTest;
 	import mockolate.issues.Issue29_IncorrectCountInTestSpy;
 	import mockolate.issues.Issue31_EventDispatchesTwice;
+	import mockolate.issues.Issue33_DefaultInvocationCount;
+	import mockolate.issues.IssueXX_NeverNotFailing;
 	import mockolate.issues.MockingClassWithConstructorGetter;
 	import mockolate.runner.MockolateRuleExample;
 	import mockolate.runner.MockolateRunnerExample;
@@ -74,5 +76,6 @@ package mockolate
 		public var functionApply:FunctionApplyTest;
 		public var issue29_IncorrectCountInTestSpy:Issue29_IncorrectCountInTestSpy;
 		public var issue31_EventDispatchesTwice:Issue31_EventDispatchesTwice;
+		public var issue33_DefaultInvocationCount:Issue33_DefaultInvocationCount;
 	}
 }
