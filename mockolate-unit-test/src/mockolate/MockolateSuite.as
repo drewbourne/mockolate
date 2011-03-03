@@ -6,6 +6,8 @@ package mockolate
 	import mockolate.ingredients.proxy.ProxyMockolateTest;
 	import mockolate.issues.ClassInDefaultPackageCannotBeMockedTest;
 	import mockolate.issues.FunctionApplyTest;
+	import mockolate.issues.Issue21_NamespaceSupportTest;
+	import mockolate.issues.Issue21_NamespaceSupport_RemoteObjectTest;
 	import mockolate.issues.Issue29_IncorrectCountInTestSpy;
 	import mockolate.issues.Issue31_EventDispatchesTwice;
 	import mockolate.issues.MockingClassWithConstructorGetter;
@@ -72,6 +74,8 @@ package mockolate
 		public var mockingClassWithConstructorGetter:MockingClassWithConstructorGetter;
 		public var classInDefaultPackageCannotBeMocked:ClassInDefaultPackageCannotBeMockedTest;
 		public var functionApply:FunctionApplyTest;
+		public var issue21_NamespaceSupport:Issue21_NamespaceSupportTest;
+		public var issue21_NamespaceSupport_RemoteObject:Issue21_NamespaceSupport_RemoteObjectTest;
 		public var issue29_IncorrectCountInTestSpy:Issue29_IncorrectCountInTestSpy;
 		public var issue31_EventDispatchesTwice:Issue31_EventDispatchesTwice;
 	}

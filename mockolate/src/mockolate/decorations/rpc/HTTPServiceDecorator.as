@@ -6,6 +6,7 @@ package mockolate.decorations.rpc
 	import mockolate.ingredients.Mockolate;
 	import mockolate.ingredients.mockolate_ingredient;
 	
+	import mx.core.mx_internal;
 	import mx.rpc.AsyncToken;
 	import mx.rpc.Fault;
 	import mx.rpc.events.FaultEvent;
@@ -51,8 +52,8 @@ package mockolate.decorations.rpc
 		{
 			if (!(this.mockolate.target is HTTPService))
 			{
-				throw new MockolateError(["Mockolate instance is not a HTTPService", [mockolate.target]], this.mockolate, this.mockolate.target);
-			}
+				throw new MockolateError(["Mockolate instance is not a HTTPService", [this.mockolate.target]], this.mockolate, this.mockolate.target);
+			}			
 		}
 		
 		/**

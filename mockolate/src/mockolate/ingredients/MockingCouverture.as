@@ -274,7 +274,7 @@ package mockolate.ingredients
 		{
 			createGetterExpectation(name, ns);
 
-			return new MockingGetterCouverture(this.mockolate);
+			return new MockingGetterCouverture(this.mockolateInstance);
 		}
 
 		/**
@@ -329,7 +329,7 @@ package mockolate.ingredients
 		{
 			createSetterExpectation(name, ns);
 
-			return new MockingSetterCouverture(this.mockolate);
+			return new MockingSetterCouverture(this.mockolateInstance);
 		}
 
 		/**
@@ -803,11 +803,22 @@ package mockolate.ingredients
 		 */
 		protected function findEligibleExpectation(invocation:Invocation):Expectation
 		{
-			var expectation:Expectation = detect(_mockExpectations, isEligibleExpectation, invocation) as Expectation;
+			var expectation:Expectation;
+			expectation = detect(_mockExpectations, isEligibleExpectation, invocation) as Expectation;
+			expectation ||= detect(_stubExpectations, isEligibleExpectation, invocation) as Expectation;
 
-			if (!expectation)
-				expectation = detect(_stubExpectations, isEligibleExpectation, invocation) as Expectation;
-
+			// regardless of MockType, 
+			// when there is no expectation
+			// and the invocation namespaced
+			// then proceed with the super call
+			// as most uses of namespace are for internals
+			// and intercepting them needlessly is surprising to the user.
+			//
+			if (!expectation && invocation.uri)
+			{
+				invocation.proceed();
+			}
+			
 			if (!expectation)
 			{
 				if (mockolateInstance.mockType == MockType.STRICT)
@@ -891,10 +902,11 @@ package mockolate.ingredients
 		 *
 		 * @private
 		 */
-		protected function createExpectation(name:String, ns:String=null, nameMatcher:Matcher=null, invocationType:InvocationType=null):Expectation
+		protected function createExpectation(name:String, ns:Namespace=null, nameMatcher:Matcher=null, invocationType:InvocationType=null):Expectation
 		{
 			var expectation:Expectation = new Expectation();
 			expectation.name = name;
+			expectation.namespace = ns;
 			expectation.nameMatcher = nameMatcher || equalTo(name);
 			expectation.invocationType = invocationType;
 			return expectation;
@@ -1093,8 +1105,10 @@ package mockolate.ingredients
 		 */
 		protected function addCallsWithArgumentsAnswer(fn:Function, args:Array=null):void
 		{
-			addAnswer(new CallsWithInvocationAnswer(function(invocation:Invocation):void {
-				fn.apply(null, (invocation.arguments || []).concat(args || []));
+			addAnswer(new CallsWithInvocationAnswer(function(invocation:Invocation):* {
+				var fnArgs:Array = (invocation.arguments || []);
+				fnArgs = fnArgs.concat(args || []);
+				return fn.apply(null, fnArgs);
 			}));
 		}
 

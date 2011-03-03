@@ -291,7 +291,13 @@ package mockolate.ingredients
 		 */
 		protected function eligibleByNamespaceURI(uri:String):Boolean 
 		{
-			return !this.namespace || this.namespace.uri == uri;
+			if (namespace && namespace.uri == uri)
+				return true;
+			
+			if (!namespace && !uri)
+				return true;
+				
+			return false;
 		}
 		
 		/**

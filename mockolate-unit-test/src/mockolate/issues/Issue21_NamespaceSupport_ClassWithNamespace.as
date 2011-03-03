@@ -5,9 +5,9 @@ package mockolate.issues
 	
 	use namespace flash_proxy;
 	
-	public class ClassWithNamespaces extends Proxy
+	public dynamic class Issue21_NamespaceSupport_ClassWithNamespace extends Proxy
 	{
-		public function ClassWithNamespaces()
+		public function Issue21_NamespaceSupport_ClassWithNamespace()
 		{
 			super();
 		}
@@ -19,7 +19,7 @@ package mockolate.issues
 		
 		override flash_proxy function hasProperty(name:*):Boolean
 		{
-			return true;
+			return false;
 		}
 		
 		protected var _item:Array; // array of object's properties
@@ -57,6 +57,21 @@ package mockolate.issues
 		test_namespace function set testSetter(value:Boolean):void 
 		{
 			
+		}
+		
+		test_namespace function get defaultValue():int 
+		{
+			return 42;
+		}
+		
+		test_namespace function getDefaultValue():int 
+		{
+			return 42;
+		}
+		
+		test_namespace function getProperty(name:String):Object
+		{
+			return null;
 		}
 		
 		public function publicMethod():Boolean 
