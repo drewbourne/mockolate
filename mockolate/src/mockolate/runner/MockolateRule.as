@@ -134,22 +134,22 @@ package mockolate.runner
 		public function strict(classReference:Class):* 
 		{
 			var instance:* = mockolatier.strict(classReference);
-			if (instance)			
+			if (instance)
 				this.data.mockInstances.push(instance);
 			return instance;
 		}
 		
-//		/**
-//		 * @copy mockolate#partial()
-//		 */
-//		public function partial(classReference:Class):*
-//		{
-//			var instance:* = mockolatier.partial(classReference);
-//			if (instance)
-//				this.data.mockInstances.push(instance);
-//			return instance;
-//			return null;
-//		}
+		/**
+		 * @copy mockolate#partial()
+		 */
+		public function partial(classReference:Class):*
+		{
+			var instance:* = mockolatier.partial(classReference);
+			if (instance)
+				this.data.mockInstances.push(instance);
+			return instance;
+			return null;
+		}
 		
 		/**
 		 * @copy mockolate#mock()
