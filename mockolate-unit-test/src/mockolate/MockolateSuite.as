@@ -9,7 +9,6 @@ package mockolate
 	import mockolate.issues.Issue29_IncorrectCountInTestSpy;
 	import mockolate.issues.Issue31_EventDispatchesTwice;
 	import mockolate.issues.Issue33_DefaultInvocationCount;
-	import mockolate.issues.IssueXX_NeverNotFailing;
 	import mockolate.issues.MockingClassWithConstructorGetter;
 	import mockolate.runner.MockolateRuleExample;
 	import mockolate.runner.MockolateRunnerExample;
