@@ -499,7 +499,7 @@ package mockolate.ingredients
 		 * number of times. 
 		 * 
 		 * If the Expectation has not been invoked the correct number of times 
-		 * when <code>verify()</code> is called then a	VerifyFailedError will 
+		 * when <code>verify()</code> is called then a	ExpectationError will 
 		 * be thrown.
 		 * 
 		 * @example
@@ -523,7 +523,7 @@ package mockolate.ingredients
 		 * Sets the current Expectation to expect not to be called. 
 		 * 
 		 * If the Expectation has been invoked then when <code>verify()</code> 
-		 * is called then a	 VerifyFailedError will be thrown.
+		 * is called then an ExpecationError will be thrown.
 		 * 
 		 * @see #times()
 		 * 
@@ -536,8 +536,9 @@ package mockolate.ingredients
 		{
 			setInvokeCount(greaterThanOrEqualTo(0), equalTo(0));
 			callsWithInvocation(function(invocation:Invocation):void {
-				var description:Description 
-					= (new StringDescription())
+				var description:Description = new StringDescription();
+				
+				description
 					.appendDescriptionOf(mockolateInstance)
 					.appendText(".")
 					.appendDescriptionOf(invocation);

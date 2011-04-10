@@ -62,7 +62,7 @@ package mockolate.ingredients
 //        /**
 //         * Indicates if the given Class has been prepared by this Mockolatier instance.
 //         */
-//        public function hasPrepared(klass:Class):Boolean
+//        public function hasPrepared(classReference:Class):Boolean
 //        {
 //            return false;
 //        }
@@ -111,25 +111,25 @@ package mockolate.ingredients
         /**
          * @see mockolate#nice()
          */
-        public function nice(klass:Class, name:String=null, constructorArgs:Array=null):*
+        public function nice(classReference:Class, name:String=null, constructorArgs:Array=null):*
         {
-            return createTarget(MockType.NICE, klass, constructorArgs, name);
+            return createTarget(MockType.NICE, classReference, constructorArgs, name);
         }
         
         /**
          * @see mockolate#strict()
          */
-        public function strict(klass:Class, name:String=null, constructorArgs:Array=null):*
+        public function strict(classReference:Class, name:String=null, constructorArgs:Array=null):*
         {
-            return createTarget(MockType.STRICT, klass, constructorArgs, name);
+            return createTarget(MockType.STRICT, classReference, constructorArgs, name);
         }
 		
 		/**
 		 * @see mockolate#strict()
 		 */
-		public function partial(klass:Class, name:String=null, constructorArgs:Array=null):*
+		public function partial(classReference:Class, name:String=null, constructorArgs:Array=null):*
 		{
-			return createTarget(MockType.PARTIAL, klass, constructorArgs, name);
+			return createTarget(MockType.PARTIAL, classReference, constructorArgs, name);
 		}
 
         /**
@@ -225,16 +225,16 @@ package mockolate.ingredients
          * Creates a proxied instance of the given Class and an associated 
          * Mockolate instance.
          * 
-         * @param klass
+         * @param classReference
          * @param constructorArgs
          * @param asStrict
          * @param name  
          * 
          * @private
          */
-        protected function createTarget(mockType:MockType, klass:Class, constructorArgs:Array=null, name:String=null):*
+        protected function createTarget(mockType:MockType, classReference:Class, constructorArgs:Array=null, name:String=null):*
         {
-            var mockolate:Mockolate = _mockolateFactory.create(mockType, klass, constructorArgs, name);
+            var mockolate:Mockolate = _mockolateFactory.create(mockType, classReference, constructorArgs, name);
             var target:* = mockolate.target;
             
             registerTargetMockolate(target, mockolate);

@@ -1,9 +1,9 @@
 package mockolate.ingredients
 {
     import flash.events.IEventDispatcher;
-	
-	use namespace mockolate_ingredient;
-	
+    
+    use namespace mockolate_ingredient;
+    
     [ExcludeClass]
     
     /**
@@ -16,7 +16,7 @@ package mockolate.ingredients
      */
     public class MockolatierMaster
     {
-    	// create a default Mockolatier
+        // create a default Mockolatier
         private static var _mockolatier:Mockolatier = new Mockolatier();
         
         /**
@@ -27,8 +27,8 @@ package mockolate.ingredients
         {
             return _mockolatier;
         }
-		
-		/** @private */
+        
+        /** @private */
         public static function set mockolatier(value:Mockolatier):void
         {
             if (value)
@@ -48,17 +48,25 @@ package mockolate.ingredients
         /**
          * @see mockolate#prepare()
          */
-        public static function nice(klass:Class, name:String=null, constructorArgs:Array=null):*
+        public static function nice(classReference:Class, name:String=null, constructorArgs:Array=null):*
         {
-            return mockolatier.nice(klass, name, constructorArgs);
+            return mockolatier.nice(classReference, name, constructorArgs);
         }
         
         /**
          * @see mockolate#strict()
          */
-        public static function strict(klass:Class, name:String=null, constructorArgs:Array=null):*
+        public static function strict(classReference:Class, name:String=null, constructorArgs:Array=null):*
         {
-            return mockolatier.strict(klass, name, constructorArgs);
+            return mockolatier.strict(classReference, name, constructorArgs);
+        }
+
+        /**
+         * @see mockolate#partial()
+         */
+        public static function partial(classReference:Class, name:String=null, constructorArgs:Array=null):*
+        {
+            return mockolatier.partial(classReference, name, constructorArgs);
         }
         
         /**
@@ -84,47 +92,47 @@ package mockolate.ingredients
         {
             return mockolatier.verify(target);
         }
-		
-		/**
-		 * @see mockolate#record()
-		 */
-		public static function record(target:*, script:Function=null):*
-		{
-			return mockolatier.record(target, script);
-		}
-		
-		/**
-		 * @see mockolate#replay()
-		 */
-		public static function replay(target:*):*
-		{
-			return mockolatier.replay(target);
-		}
-		
-		/**
-		 * @see mockolate#expect()
-		 */
-		public static function expect(target:*):ExpectingCouverture
-		{
-			return mockolatier.expect(target);
-		}
-		
-		/**
-		 * @see mockolate#expectArg()
-		 */
-		public static function expectArg(value:*):*
-		{
-			return mockolatier.expectArg(value);
-		}
-		
-		/**
-		 * Registers the target and mockolate with the Mockolatier.
-		 * 
-		 * @private
-		 */
-		mockolate_ingredient static function registerTargetMockolate(target:Object, mockolate:Mockolate):Mockolate 
-		{
-			return mockolatier.registerTargetMockolate(target, mockolate);
-		}
+        
+        /**
+         * @see mockolate#record()
+         */
+        public static function record(target:*, script:Function=null):*
+        {
+            return mockolatier.record(target, script);
+        }
+        
+        /**
+         * @see mockolate#replay()
+         */
+        public static function replay(target:*):*
+        {
+            return mockolatier.replay(target);
+        }
+        
+        /**
+         * @see mockolate#expect()
+         */
+        public static function expect(target:*):ExpectingCouverture
+        {
+            return mockolatier.expect(target);
+        }
+        
+        /**
+         * @see mockolate#expectArg()
+         */
+        public static function expectArg(value:*):*
+        {
+            return mockolatier.expectArg(value);
+        }
+        
+        /**
+         * Registers the target and mockolate with the Mockolatier.
+         * 
+         * @private
+         */
+        mockolate_ingredient static function registerTargetMockolate(target:Object, mockolate:Mockolate):Mockolate 
+        {
+            return mockolatier.registerTargetMockolate(target, mockolate);
+        }
     }
 }

@@ -19,7 +19,7 @@ package mockolate
 		[Test]
 		public function shouldCallSuperIfNoExpectationDefined():void 
 		{
-			assertThat(flavour.name, equalTo("Dark Chocolate"));	
+			assertThat(flavour.name, equalTo("Dark Chocolate"));
 		}
 		
 		[Test]
@@ -46,6 +46,30 @@ package mockolate
 			flavour.ingredients;
 			
 			assertThat(flavour, received().getter("ingredients").once());
+		}
+		
+		[Test]
+		public function partialFunction_shouldCreatePartialMockObject():void 
+		{
+		    flavour = partial(DarkChocolate);
+		    
+		    //exercise partial
+		    assertThat(flavour.name, equalTo("Dark Chocolate"));
+		    
+		    stub(flavour).getter("name").returns("Dark Mockolate");
+			assertThat(flavour.name, equalTo("Dark Mockolate"));
+		}
+		
+		[Test]
+		public function partialRuleFunction_shouldCreatePartialMockObject():void 
+		{
+		    flavour = mocks.partial(DarkChocolate);
+		    
+		    //exercise partial
+		    assertThat(flavour.name, equalTo("Dark Chocolate"));
+		    
+		    stub(flavour).getter("name").returns("Dark Mockolate");
+			assertThat(flavour.name, equalTo("Dark Mockolate"));
 		}
 	}
 }

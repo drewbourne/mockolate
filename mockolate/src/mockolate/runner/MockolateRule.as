@@ -102,9 +102,9 @@ package mockolate.runner
 		 * 	}
 		 * </listing>
 		 */
-		public function nice(classReference:Class):*
+		public function nice(classReference:Class, name:String=null, constructorArgs:Array=null):*
 		{
-			var instance:* = mockolatier.nice(classReference);
+			var instance:* = mockolatier.nice(classReference, name, constructorArgs);
 			if (instance)
 				this.data.mockInstances.push(instance);
 			return instance;
@@ -131,25 +131,24 @@ package mockolate.runner
 		 * 	}
 		 * </listing>
 		 */
-		public function strict(classReference:Class):* 
+		public function strict(classReference:Class, name:String=null, constructorArgs:Array=null):* 
 		{
-			var instance:* = mockolatier.strict(classReference);
-			if (instance)			
+			var instance:* = mockolatier.strict(classReference, name, constructorArgs);
+			if (instance)
 				this.data.mockInstances.push(instance);
 			return instance;
 		}
 		
-//		/**
-//		 * @copy mockolate#partial()
-//		 */
-//		public function partial(classReference:Class):*
-//		{
-//			var instance:* = mockolatier.partial(classReference);
-//			if (instance)
-//				this.data.mockInstances.push(instance);
-//			return instance;
-//			return null;
-//		}
+		/**
+		 * @copy mockolate#partial()
+		 */
+		public function partial(classReference:Class, name:String=null, constructorArgs:Array=null):*
+		{
+			var instance:* = mockolatier.partial(classReference, name, constructorArgs);
+			if (instance)
+				this.data.mockInstances.push(instance);
+			return instance;
+		}
 		
 		/**
 		 * @copy mockolate#mock()
