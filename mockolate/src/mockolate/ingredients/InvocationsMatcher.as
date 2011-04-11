@@ -409,6 +409,7 @@ internal class InvocationsMatcherInvocation extends AbstractInvocation implement
 	private var _invocationType:InvocationType;
 	private var _name:String;
 	private var _nameMatcher:Matcher;
+	private var _namespace:Namespace;
 	private var _arguments:Array;
 	private var _argumentsMatcher:Matcher;
 	private var _invocationCount:int;
@@ -503,6 +504,16 @@ internal class InvocationsMatcherInvocation extends AbstractInvocation implement
 	{
 		_nameMatcher = value;
 	}
+	
+	public function get namespace():Namespace 
+	{
+		return _namespace;
+	}
+	
+	public function set namespace(value:Namespace):void 
+	{
+		_namespace = value;
+	}
 
 	public function proceed():void
 	{
@@ -523,5 +534,10 @@ internal class InvocationsMatcherInvocation extends AbstractInvocation implement
 	{
 		throw new IllegalOperationError("InvocationsMatcherInvocation.target unsupported");
 		return null;
+	}
+	
+	public function get uri():String 
+	{
+		return _namespace ? _namespace.uri : null;
 	}
 }

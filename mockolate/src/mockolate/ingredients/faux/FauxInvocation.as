@@ -41,6 +41,12 @@ package mockolate.ingredients.faux
         {
             return _options.name;
         }
+		
+		/** @inheritDoc */
+		public function get uri():String 
+		{
+			return _options.uri;
+		}
         
 		/** @inheritDoc */
         public function get invocationType():InvocationType

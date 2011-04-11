@@ -41,6 +41,14 @@ package mockolate.ingredients.floxy
                 ? _invocation.method.name
                 : _invocation.property.name
         }
+		
+		/** @inheritDoc */
+		public function get uri():String 
+		{
+			return isMethod 
+				? _invocation.method.ns
+				: _invocation.property.ns;
+		}
         
 		/** @inheritDoc */
         public function get invocationType():InvocationType
