@@ -65,7 +65,6 @@ package mockolate.runner.statements
 			catch (e:Error)
 			{
 				error = e;
-//				error = new InitializationError(e.message);
 			}
 			
 			parentToken.sendResult(error);
