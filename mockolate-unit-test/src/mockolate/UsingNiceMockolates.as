@@ -1,7 +1,5 @@
 package mockolate
 {
-    import asx.object.isA;
-    
     import flash.events.Event;
     import flash.events.IEventDispatcher;
     import flash.utils.describeType;
@@ -14,6 +12,7 @@ package mockolate
     import org.flexunit.async.Async;
     import org.hamcrest.core.not;
     import org.hamcrest.object.equalTo;
+    import org.hamcrest.object.instanceOf;
     import org.hamcrest.object.nullValue;
     import org.hamcrest.object.strictlyEqualTo;
     
@@ -42,8 +41,8 @@ package mockolate
         {
             var instance:Flavour = nice(Flavour);
             
-            assertThat(instance, isA(Flavour));
-            assertThat(instance, not(isA(DarkChocolate)));
+            assertThat(instance, instanceOf(Flavour));
+            assertThat(instance, not(instanceOf(DarkChocolate)));
         }
         
         [Test]
@@ -51,8 +50,8 @@ package mockolate
         {
             var instance:Flavour = nice(DarkChocolate);
             
-            assertThat(instance, isA(Flavour));
-            assertThat(instance, isA(DarkChocolate));
+            assertThat(instance, instanceOf(Flavour));
+            assertThat(instance, instanceOf(DarkChocolate));
         }
         
         [Test]

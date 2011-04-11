@@ -1,7 +1,5 @@
 package mockolate
 {
-    import asx.object.isA;
-    
     import flash.events.Event;
     import flash.events.IEventDispatcher;
     import flash.utils.describeType;

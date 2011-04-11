@@ -43,25 +43,43 @@ package mockolate
 		public function nice_shouldBeForwardedToMockolatier():void 
 		{
 			mocks.nice(Flavour);
+			assertThat(mockolatier, received().method("nice").args(Flavour, null, null).once());
 			
-			assertThat(mockolatier, received().method("nice").args(Flavour).once());
+			mocks.nice(Flavour, "niceFlavour");
+			assertThat(mockolatier, received().method("nice").args(Flavour, "niceFlavour", null).once());
+			
+			var constructorArgs:Array = [];
+			mocks.nice(Flavour, "niceFlavour", constructorArgs);
+			assertThat(mockolatier, received().method("nice").args(Flavour, "niceFlavour", constructorArgs).once());
 		}
 		
 		[Test]
 		public function strict_shouldBeForwardedToMockolatier():void 
 		{
 			mocks.strict(Flavour);
+			assertThat(mockolatier, received().method("strict").args(Flavour, null, null).once());
 			
-			assertThat(mockolatier, received().method("strict").args(Flavour).once());
+			mocks.strict(Flavour, "strictFlavour");
+			assertThat(mockolatier, received().method("strict").args(Flavour, "strictFlavour", null).once());
+			
+			var constructorArgs:Array = [];
+			mocks.strict(Flavour, "strictFlavour", constructorArgs);
+			assertThat(mockolatier, received().method("strict").args(Flavour, "strictFlavour", constructorArgs).once());
 		}
 		
-//		[Test]
-//		public function partial_shouldBeForwardedToMockolatier():void 
-//		{
-//			mocks.partial(Flavour);
-//			
-//			assertThat(mockolatier, received().method("partial").args(Flavour).once());
-//		}
+		[Test]
+		public function partial_shouldBeForwardedToMockolatier():void 
+		{
+			mocks.partial(Flavour);
+			assertThat(mockolatier, received().method("partial").args(Flavour, null, null).once());
+			
+			mocks.partial(Flavour, "partialFlavour");
+			assertThat(mockolatier, received().method("partial").args(Flavour, "partialFlavour", null).once());
+			
+			var constructorArgs:Array = [];
+			mocks.partial(Flavour, "partialFlavour", constructorArgs);
+			assertThat(mockolatier, received().method("partial").args(Flavour, "partialFlavour", constructorArgs).once());
+		}
 		
 		[Test]
 		public function mock_shouldBeForwardedToMockolatier():void

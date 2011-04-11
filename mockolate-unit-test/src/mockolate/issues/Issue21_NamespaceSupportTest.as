@@ -3,12 +3,17 @@ package mockolate.issues
 	import flash.utils.describeType;
 	import flash.utils.flash_proxy;
 	
+	import mockolate.expect;
 	import mockolate.mock;
+	import mockolate.received;
+	import mockolate.record;
+	import mockolate.replay;
 	import mockolate.runner.MockolateRule;
 	
 	import mx.collections.ListCollectionView;
 	
 	import org.flemit.reflection.Type;
+	import org.flexunit.asserts.fail;
 	import org.hamcrest.assertThat;
 	import org.hamcrest.collection.array;
 	import org.hamcrest.object.equalTo;
