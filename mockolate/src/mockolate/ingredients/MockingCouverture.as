@@ -19,7 +19,7 @@ package mockolate.ingredients
 	import mockolate.decorations.Decorator;
 	import mockolate.decorations.EventDispatcherDecorator;
 	import mockolate.decorations.InvocationDecorator;
-	import mockolate.decorations.rpc.HTTPServiceDecorator;
+	
 	import mockolate.errors.ExpectationError;
 	import mockolate.errors.InvocationError;
 	import mockolate.errors.MockolateError;
@@ -34,7 +34,11 @@ package mockolate.ingredients
 	import mockolate.ingredients.answers.ReturnsAnswer;
 	import mockolate.ingredients.answers.ThrowsAnswer;
 
-	import mx.rpc.http.HTTPService;
+	CONFIG::useFlexClasses
+	{
+		import mockolate.decorations.rpc.HTTPServiceDecorator;
+		import mx.rpc.http.HTTPService;
+	}
 
 	import org.hamcrest.Description;
 	import org.hamcrest.Matcher;
@@ -102,7 +106,11 @@ package mockolate.ingredients
 			_decoratorClassesByClass = new Dictionary();
 			_decoratorClassesByClass[IEventDispatcher] = EventDispatcherDecorator;
 			_decoratorClassesByClass[EventDispatcher] = EventDispatcherDecorator;
-			_decoratorClassesByClass[HTTPService] = HTTPServiceDecorator;
+			
+			CONFIG::useFlexClasses
+			{
+				_decoratorClassesByClass[HTTPService] = HTTPServiceDecorator;
+			}
 		}
 
 		//
@@ -739,7 +747,7 @@ package mockolate.ingredients
 		/**
 		 * @example
 		 * <listing version="3.0">
-		 *	(mock(httpService).decorate(HTTPService) as HTTPServiceDecorator)
+		 *	(mock(httpService).decorate(HTTPService, HTTPServiceDecorator) as HTTPServiceDecorator)
 		 *		.send("What is the ultimate answer to life, the universe, everything?")
 		 *		.result(42)
 		 * </listing>
@@ -773,13 +781,16 @@ package mockolate.ingredients
 			return decorator;
 		}
 
-		/**
-		 * Returns a HTTPServiceDecorator around the current instance to provide
-		 * an easier API for mocking HTTPService calls.
-		 */
-		public function asHTTPService():HTTPServiceDecorator
+		CONFIG::useFlexClasses 
 		{
-			return decorate(HTTPService) as HTTPServiceDecorator;
+			/**
+			 * Returns a HTTPServiceDecorator around the current instance to provide
+			 * an easier API for mocking HTTPService calls.
+			 */
+			public function asHTTPService():HTTPServiceDecorator
+			{
+				return decorate(HTTPService) as HTTPServiceDecorator;
+			}
 		}
 
 		//
