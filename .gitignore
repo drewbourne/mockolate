@@ -3,6 +3,7 @@ bin/
 bin-debug/
 bin-release/
 target/
+html-template/
 
 # ignore generated build crap
 build.number
