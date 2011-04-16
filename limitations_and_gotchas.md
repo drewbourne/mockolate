@@ -39,7 +39,7 @@ trace(flavour);
 
 ## Constructor Parameters
 
-Mockolate will supply `null`s as constructor arguments if none are supplied to `nice(Class)` or `strict(Class)`. If your Class needs concrete instances pass them in.
+Mockolate will supply `null`s as constructor arguments if none are supplied to `nice(Class)`, `strict(Class)` and `partial(Class)`. If your Class needs concrete instances pass them in.
 
 ## Default Parameters
 
