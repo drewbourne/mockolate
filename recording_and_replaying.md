@@ -6,7 +6,7 @@ author: Drew Bourne
 
 ## How to make Mockolates do something (alternate syntax)
 
-In [stubbing and mocking](stubbing_and_mocking.html) the default _expectation-based_ syntax was demonstrated, however Mockolate also supports a _record-replay_ syntax for refactoring-friendly Mock Objects. To start using this syntax pass a Mockolate-created instance to `record(instance)`, call any methods, getters and setters that are expected and then call `replay(instance)` before passing the instance to whatever is going to use the it. Some expectations will use `expect(...)` set additional behaviour.
+In [stubbing and mocking](stubbing_and_mocking.html) the default _expectation-based_ syntax was demonstrated, however Mockolate also supports a _record-replay_ syntax for refactoring-friendly Mock Objects. To start using this syntax pass a Mockolate-created instance to `record(instance)`, call any methods, getters and setters that are expected and then call `replay(instance)` before passing the instance to whatever is going to use the it. Some expectations will use `expect(...)` to set additional behaviour.
 
 Using a nice Flavour, 
 
@@ -63,7 +63,6 @@ stub a method to dispatch an Event,
 {% highlight as3 %}
 expect(flavour.combine(expectArg(anything)))
     .returns(combinedFlavour)
-    .dispatches(new FlavourEvent(FlavourEvent.TASTE_EXPLOSION));
     .dispatches(new FlavourEvent(FlavourEvent.TASTE_EXPLOSION));
 {% endhighlight %}
     
