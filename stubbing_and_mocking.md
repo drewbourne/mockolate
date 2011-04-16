@@ -62,13 +62,13 @@ var flavour:Flavour = nice(Flavour);
 we can stub a getter,
 
 {% highlight as3 %}
-stub(flavour).property("name").returns("Butterscotch");
+stub(flavour).getter("name").returns("Butterscotch");
 {% endhighlight %}
 
 or a setter,
 
 {% highlight as3 %}
-stub(flavour).property("name").args(true);
+stub(flavour).setter("name").arg(true);
 {% endhighlight %}
 
 or a method with no arguments, and return a value,
