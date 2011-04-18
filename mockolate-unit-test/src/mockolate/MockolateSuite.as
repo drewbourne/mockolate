@@ -8,6 +8,7 @@ package mockolate
 	import mockolate.issues.FunctionApplyTest;
 	import mockolate.issues.Issue21_NamespaceSupportTest;
 	import mockolate.issues.Issue21_NamespaceSupport_RemoteObjectTest;
+	import mockolate.issues.Issue21_NamespaceSupport_UsingRecordReplayTest;
 	import mockolate.issues.Issue29_IncorrectCountInTestSpy;
 	import mockolate.issues.Issue31_EventDispatchesTwice;
 	import mockolate.issues.Issue33_DefaultInvocationCount;
@@ -77,6 +78,7 @@ package mockolate
 		public var functionApply:FunctionApplyTest;
 		public var issue21_NamespaceSupport:Issue21_NamespaceSupportTest;
 		public var issue21_NamespaceSupport_RemoteObject:Issue21_NamespaceSupport_RemoteObjectTest;
+		public var issue21_NamespaceSupport_UsingRecordReplay:Issue21_NamespaceSupport_UsingRecordReplayTest;
 		public var issue29_IncorrectCountInTestSpy:Issue29_IncorrectCountInTestSpy;
 		public var issue31_EventDispatchesTwice:Issue31_EventDispatchesTwice;
 		public var issue33_DefaultInvocationCount:Issue33_DefaultInvocationCount;

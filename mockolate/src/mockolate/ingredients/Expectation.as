@@ -58,6 +58,7 @@ package mockolate.ingredients
 	    
 	    private var _name:String;
 	    
+		[Deprecated(since="0.11", replacement="#namespaceURI")]
 	    /**
 	     *  Namespace of the method or property this Expectation is for. 
 	     */
@@ -72,6 +73,21 @@ package mockolate.ingredients
 	    }
 	    
 	    private var _namespace:Namespace;
+		
+		/**
+		 * Namespace URI of the method or property this Expectation is for.
+		 */
+		public function get namespaceURI():String 
+		{
+			return _namespaceURI;
+		}
+		
+		public function set namespaceURI(value:String):void 
+		{
+			_namespaceURI = value;
+		}
+		
+		private var _namespaceURI:String;
 		
 		/**
 		 * Matcher for the anme of the method or propety this Expectation is for. 
@@ -291,10 +307,10 @@ package mockolate.ingredients
 		 */
 		protected function eligibleByNamespaceURI(uri:String):Boolean 
 		{
-			if (namespace && namespace.uri == uri)
+			if (namespaceURI && namespaceURI == uri)
 				return true;
 			
-			if (!namespace && !uri)
+			if (!namespaceURI && !uri)
 				return true;
 				
 			return false;
@@ -361,7 +377,7 @@ package mockolate.ingredients
 	    {
 	       return substitute(
 	        	isMethod ? "#{}({})" : isSetter ? "#{} = {}" : "#{}",
-	        	(namespace ? namespace + "::" : "") + name, 
+	        	(namespaceURI ? namespaceURI + "::" : "") + name, 
 	        	argsMatcher ? StringDescription.toString(argsMatcher) : "");
 	    }
 	}

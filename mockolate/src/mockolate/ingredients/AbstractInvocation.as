@@ -30,7 +30,7 @@ package mockolate.ingredients
 			
 			if (invocation.isMethod)
 			{
-				description.appendList("(", ", ", ")", invocation.arguments);
+				description.appendList("(", ", ", ")", invocation.arguments || []);
 			}
 			else if (invocation.isSetter)
 			{

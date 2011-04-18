@@ -8,18 +8,17 @@ package mockolate.ingredients
 	import asx.array.reject;
 	import asx.fn.getProperty;
 	import asx.string.substitute;
-
+	
 	import flash.display.DisplayObject;
 	import flash.events.Event;
 	import flash.events.EventDispatcher;
 	import flash.events.IEventDispatcher;
 	import flash.utils.Dictionary;
 	import flash.utils.getQualifiedClassName;
-
+	
 	import mockolate.decorations.Decorator;
 	import mockolate.decorations.EventDispatcherDecorator;
 	import mockolate.decorations.InvocationDecorator;
-	
 	import mockolate.errors.ExpectationError;
 	import mockolate.errors.InvocationError;
 	import mockolate.errors.MockolateError;
@@ -196,12 +195,25 @@ package mockolate.ingredients
 		 */
 		public function nsMethod(ns:Namespace, name:String):IMockingMethodCouverture
 		{
-			// FIXME this _really_ should check that the method actually exists on the Class we are mocking
-			// FIXME when this checks if the method exists, remember we have to support Proxy as well!
-
-			createMethodExpectation(name, ns);
-
-			return this;
+			return nsMethodByNamespaceURI(ns.uri, name);
+		}
+		
+		/**
+		 * Defines an Expectation of the given namespaced method name.
+		 *
+		 * @param uri Namespace URI of the method to expect.
+		 * @param name Name of the method to expect.
+		 *
+		 * @example
+		 * <listing version="3.0">
+		 *	mock(instance).nsMethodByNamespaceURI(flash_proxy, "getProperty").returns("[Instance]");
+		 * </listing>
+		 */
+		public function nsMethodByNamespaceURI(namespaceURI:String, name:String):IMockingMethodCouverture
+		{
+			createMethodExpectation(name, namespaceURI);
+			
+			return this;			
 		}
 
 		/**
@@ -239,7 +251,7 @@ package mockolate.ingredients
 		 * 	stub(instance).getter("name").returns("Current Name");
 		 * </listing>
 		 */
-		public function getter(name:String/*, ns:String=null*/):IMockingGetterCouverture
+		public function getter(name:String):IMockingGetterCouverture
 		{
 			createGetterExpectation(name);
 
@@ -280,8 +292,24 @@ package mockolate.ingredients
 		 */
 		public function nsGetter(ns:Namespace, name:String):IMockingGetterCouverture
 		{
-			createGetterExpectation(name, ns);
-
+			return nsGetterByNamespaceURI(ns.uri, name);
+		}
+		
+		/**
+		 * Defines an Expectation to get a property value.
+		 *
+		 * @param ns Namespace of the getter
+		 * @param name Name of the getter
+		 *
+		 * @example
+		 * <listing version="3.0">
+		 * 	stub(instance).getter("name").returns("Current Name");
+		 * </listing>
+		 */
+		public function nsGetterByNamespaceURI(namespaceURI:String, name:String):IMockingGetterCouverture
+		{
+			createGetterExpectation(name, namespaceURI);
+			
 			return new MockingGetterCouverture(this.mockolateInstance);
 		}
 
@@ -335,8 +363,25 @@ package mockolate.ingredients
 		 */
 		public function nsSetter(ns:Namespace, name:String):IMockingSetterCouverture
 		{
-			createSetterExpectation(name, ns);
+			createSetterExpectation(name, ns.uri);
 
+			return new MockingSetterCouverture(this.mockolateInstance);
+		}
+		
+		/**
+		 * Defines an Expectation to set a property value.
+		 *
+		 * @param name Name of the property
+		 *
+		 * @example
+		 * <listing version="3.0">
+		 * 	stub(instance).setter("name").arg("New Name");
+		 * </listing>
+		 */
+		public function nsSetterByNamespaceURI(namespaceURI:String, name:String):IMockingSetterCouverture
+		{
+			createSetterExpectation(name, namespaceURI);
+			
 			return new MockingSetterCouverture(this.mockolateInstance);
 		}
 
@@ -914,11 +959,11 @@ package mockolate.ingredients
 		 *
 		 * @private
 		 */
-		protected function createExpectation(name:String, ns:Namespace=null, nameMatcher:Matcher=null, invocationType:InvocationType=null):Expectation
+		protected function createExpectation(name:String, namespaceURI:String=null, nameMatcher:Matcher=null, invocationType:InvocationType=null):Expectation
 		{
 			var expectation:Expectation = new Expectation();
 			expectation.name = name;
-			expectation.namespace = ns;
+			expectation.namespaceURI = namespaceURI;
 			expectation.nameMatcher = nameMatcher || equalTo(name);
 			expectation.invocationType = invocationType;
 			return expectation;
@@ -962,9 +1007,9 @@ package mockolate.ingredients
 		 *
 		 * @private
 		 */
-		protected function createGetterExpectation(name:String, ns:Namespace=null):void
+		protected function createGetterExpectation(name:String, namespaceURI:String=null):void
 		{
-			_currentExpectation = createExpectation(name, ns, null, InvocationType.GETTER);
+			_currentExpectation = createExpectation(name, namespaceURI, null, InvocationType.GETTER);
 
 			addExpectation(_currentExpectation);
 		}
@@ -986,9 +1031,9 @@ package mockolate.ingredients
 		 *
 		 * @private
 		 */
-		protected function createSetterExpectation(name:String, ns:Namespace=null):void
+		protected function createSetterExpectation(name:String, namespaceURI:String=null):void
 		{
-			_currentExpectation = createExpectation(name, ns, null, InvocationType.SETTER);
+			_currentExpectation = createExpectation(name, namespaceURI, null, InvocationType.SETTER);
 
 			addExpectation(_currentExpectation);
 		}
@@ -1010,9 +1055,9 @@ package mockolate.ingredients
 		 *
 		 * @private
 		 */
-		protected function createMethodExpectation(name:String, ns:Namespace=null):void
+		protected function createMethodExpectation(name:String, namespaceURI:String=null):void
 		{
-			_currentExpectation = createExpectation(name, ns, null, InvocationType.METHOD);
+			_currentExpectation = createExpectation(name, namespaceURI, null, InvocationType.METHOD);
 
 			addExpectation(_currentExpectation);
 		}

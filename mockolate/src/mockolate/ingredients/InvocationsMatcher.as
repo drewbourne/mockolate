@@ -114,6 +114,23 @@ package mockolate.ingredients
 		}
 		
 		/**
+		 * Match Invocations for the given Namespace and method name.
+		 * 
+		 * @example
+		 * <listing version="3.0">
+		 * 	assetThat(flavour, received().method("combine"));
+		 * </listing>
+		 */
+		public function nsMethod(ns:Namespace, name:String):InvocationsMatcher 
+		{
+			_invocation.invocationType = InvocationType.METHOD;
+			_invocation.name = name;
+			_invocation.nameMatcher = equalTo(name);
+			_invocation.namespaceMatcher = equalTo(ns.uri);
+			return this;
+		}
+		
+		/**
 		 * Match Invocations for the given property getter name.
 		 * 
 		 * @example
@@ -141,6 +158,23 @@ package mockolate.ingredients
 		}
 		
 		/**
+		 * Match Invocations for the given Namespace and property getter name.
+		 * 
+		 * @example
+		 * <listing version="3.0">
+		 * 	assetThat(flavour, received().getter("ingredients));
+		 * </listing>
+		 */
+		public function nsGetter(ns:Namespace, name:String):InvocationsMatcher
+		{
+			_invocation.invocationType = InvocationType.GETTER;
+			_invocation.name = name;
+			_invocation.nameMatcher = equalTo(name);
+			_invocation.namespaceMatcher = equalTo(ns.uri);
+			return this;
+		}
+		
+		/**
 		 * Match Invocations for the given property setter name.
 		 * 
 		 * @example
@@ -165,7 +199,24 @@ package mockolate.ingredients
 			_invocation.name = regexp.toString(); 
 			_invocation.nameMatcher = re(regexp);
 			return this;	
-		}		
+		}	
+		
+		/**
+		 * Match Invocations for the given Namespace and property setter name.
+		 * 
+		 * @example
+		 * <listing version="3.0">
+		 * 	assetThat(flavour, received().setter("ingredients));
+		 * </listing>
+		 */
+		public function nsSetter(ns:Namespace, name:String):InvocationsMatcher
+		{
+			_invocation.invocationType = InvocationType.SETTER;
+			_invocation.name = name;
+			_invocation.nameMatcher = equalTo(name);
+			_invocation.namespaceMatcher = equalTo(ns.uri);
+			return this;
+		}
 		
 		/**
 		 * Match Invocations for with the given arguments. Accepts values or matchers.  
@@ -348,9 +399,7 @@ package mockolate.ingredients
 			description
 				.appendDescriptionOf(instance)
 				.appendText(".")
-				.appendDescriptionOf(_invocation);
-			
-			description
+				.appendDescriptionOf(_invocation)
 				.appendText(" invoked ")
 				.appendText(invocations.length.toString())
 				.appendText("/")
@@ -381,6 +430,9 @@ package mockolate.ingredients
 			if (_invocation.invocationType)
 				properties['invocationType'] = _invocation.invocationType;
 			
+			if (_invocation.namespaceMatcher)
+				properties['uri'] = _invocation.namespaceMatcher;
+			
 			if (_invocation.nameMatcher)
 				properties['name'] = _invocation.nameMatcher;
 			
@@ -403,6 +455,7 @@ import mockolate.ingredients.InvocationType;
 
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
+import org.hamcrest.TypeSafeMatcher;
 
 internal class InvocationsMatcherInvocation extends AbstractInvocation implements Invocation
 {
@@ -410,6 +463,7 @@ internal class InvocationsMatcherInvocation extends AbstractInvocation implement
 	private var _name:String;
 	private var _nameMatcher:Matcher;
 	private var _namespace:Namespace;
+	private var _namespaceMatcher:Matcher;
 	private var _arguments:Array;
 	private var _argumentsMatcher:Matcher;
 	private var _invocationCount:int;
@@ -513,6 +567,16 @@ internal class InvocationsMatcherInvocation extends AbstractInvocation implement
 	public function set namespace(value:Namespace):void 
 	{
 		_namespace = value;
+	}
+	
+	public function get namespaceMatcher():Matcher 
+	{
+		return _namespaceMatcher;
+	}
+	
+	public function set namespaceMatcher(value:Matcher):void 
+	{
+		_namespaceMatcher = value;
 	}
 
 	public function proceed():void

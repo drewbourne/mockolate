@@ -15,6 +15,7 @@ package mockolate.ingredients
 	 */
 	public class ExpectingCouverture extends MockingCouvertureProxy implements IMockingCouverture
 	{
+		private var _nsInvocationHandlers:Object;
 		private var _invocationHandlers:Object;
 		
 		/**
@@ -30,6 +31,11 @@ package mockolate.ingredients
 			_invocationHandlers[InvocationType.METHOD] = expectMethod;
 			_invocationHandlers[InvocationType.GETTER] = expectGetter;
 			_invocationHandlers[InvocationType.SETTER] = expectSetter;
+			
+			_nsInvocationHandlers = {};
+			_nsInvocationHandlers[InvocationType.METHOD] = expectNSMethod;
+			_nsInvocationHandlers[InvocationType.GETTER] = expectNSGetter;
+			_nsInvocationHandlers[InvocationType.SETTER] = expectNSSetter;
 		}
 		
 		/**
@@ -42,8 +48,16 @@ package mockolate.ingredients
 		 */
 		mockolate_ingredient function expect(invocation:Invocation, args:Array):ExpectingCouverture 
 		{
-			if (_invocationHandlers[invocation.invocationType] != null)
-				_invocationHandlers[invocation.invocationType](invocation, args);
+			var handler:Function;
+			var invocationType:InvocationType = invocation.invocationType;
+			
+			handler 
+				= (_nsInvocationHandlers[invocationType] != null)
+				? _nsInvocationHandlers[invocationType]
+				: _invocationHandlers[invocationType];
+						
+			if (handler != null)
+				handler(invocation, args);
 			
 			return this;
 		}
@@ -63,7 +77,7 @@ package mockolate.ingredients
 		 * Adds a Getter Expectation.
 		 *  
 		 * @param invocation Invocation to convert
-		 * @param args Array of arguments to set on the Expectation.
+		 * @param args Ignored.
 		 */
 		protected function expectGetter(invocation:Invocation, args:Array):void
 		{
@@ -74,11 +88,44 @@ package mockolate.ingredients
 		 * Adds a Setter Expectation.
 		 *  
 		 * @param invocation Invocation to convert
-		 * @param args Array of arguments to set on the Expectation.
+		 * @param args Array of arguments to set on the Expectation. First will be used as the setter arg value.
 		 */
 		protected function expectSetter(invocation:Invocation, args:Array):void
 		{
 			mocker.setter(invocation.name).arg(args[0]);
+		}
+		
+		/**
+		 * Adds an Expectation for a namespaced method.
+		 *  
+		 * @param invocation Invocation to convert
+		 * @param args Array of arguments to set on the Expectation.
+		 */
+		protected function expectNSMethod(invocation:Invocation, args:Array):void
+		{
+			mocker.nsMethodByNamespaceURI(invocation.uri, invocation.name).args.apply(null, args);
+		}
+		
+		/**
+		 * Adds an Expectation for a namespaced getter.
+		 *  
+		 * @param invocation Invocation to convert
+		 * @param args Ignored.
+		 */
+		protected function expectNSGetter(invocation:Invocation, args:Array):void
+		{
+			mocker.nsGetterByNamespaceURI(invocation.uri, invocation.name);
+		}
+		
+		/**
+		 * Adds an Expectation for a namespaced setter.
+		 *  
+		 * @param invocation Invocation to convert
+		 * @param args Array of arguments to set on the Expectation. First will be used as the setter arg value.
+		 */
+		protected function expectNSSetter(invocation:Invocation, args:Array):void
+		{
+			mocker.nsSetterByNamespaceURI(invocation.uri, invocation.name).arg(args[0]);
 		}
 		
 		/**
