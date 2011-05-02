@@ -13,11 +13,11 @@ Stick with public methods and properties and you will be fine, (which is good de
 These are _no-nos_:
 
 - Classes, methods, and properties marked `final`,
+- Classes in the default (empty) package, 
 - `static` methods and properties,
 - `public var` variables,
 - `public const` constants,
-- `private` anything,
-- anything in a custom namespace, (feature request perhaps?)
+- `private` anything.
 
 # Gotchas
 

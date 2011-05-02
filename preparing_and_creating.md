@@ -31,12 +31,12 @@ See [Writing an Async Test](http://docs.flexunit.org/index.php?title=Writing_an_
 
 ## Creating Mockolates nicely, or strictly
 
-Each Mockolate instance operates as either a 'nice' or a 'strict' Mock Object. 
+Each Mockolate instance operates as a 'nice', or 'strict' Mock Object. 
 
 - 'nice' Mock Objects will play nice and return false-y values for methods and properties that aren't mocked or stubbed. 
 - 'strict' Mock Objects will whinge and cry if you mistreat them by calling methods that aren't mocked or stubbed. By whinge and cry I mean throw `InvocationError`s. 
 
-Create a nice mock using `nice(Class)`, or a strict Mock using `strict(Class)` giving them the Class you want an instance of.
+Create a nice mock using `nice(ClassToMock)`, or a strict Mock using `strict(ClassToMock)` giving them the Class you want an instance of.
 
 {% highlight as3 %}
 [Test]
@@ -52,57 +52,18 @@ public function strictlyIfYouMust():void
 {
     var flavour:Flavour = strict(DarkChocolate);
     
-    // accessing a property without a mock or stub will cause a strict Mock Object to throw an InvocationError
+    // accessing a property without a mock or stub 
+    // will cause a strict Mock Object to throw an InvocationError
     var name:String = flavour.name;
 }
 {% endhighlight %}
 
-## preparing and creating a little bit easier
+## Creating partial Mock Objects
 
-Mockolate provides both a [FlexUnit Rule](http://docs.flexunit.org/index.php?title=CreatingRules) and a [FlexUnit runner](http://docs.flexunit.org/index.php?title=Runners_and_Builders) that can prepare and create nice and strict Mockolate instances based on metadata. Any public instance variable marked with `[Mock]` metadata will be prepared, and injected. Using the `MockolateRule` or `MockolateRunner` will take care of the asynchronous prepare step and will wait until the classes are prepared before running your tests.
+A 'partial' Mock Object will do whatever they usually do unless you tell them otherwise. Use a partial Mock Object when you must use most of the original behaviour of an Class overriding just a fraction of its behaviour. 
 
-There are two options that can be given to `[Mock]`.
+Create a partial Mock Object using `partial(ClassToMock)`. Set expectations as usual. Only methods and property that have behaviour added by Mockolate will be modified. 
 
-- use `[Mock(type="strict")]` to create a strict Mockolate.
-- use `[Mock(inject="false")]` to prepare only, and not create a Mockolate.
+*NOTE Using a partial Mock Object is atypical. Consider well if a 'nice' or 'strict' Mock Object is a better fit.*
 
-By default a nice Mockolate is created and injected. 
-
-Using the `MockolateRule` for FlexUnit 4.1+
-
-{% highlight as3 %}
-public class ExampleWithRule
-{
-    [Rule]
-    public var mocks:MockolateRule = new MockolateRule();
-    
-    [Mock(type="strict")]
-    public var strictlyThanks:Example;
-    
-    [Mock(inject="false")]
-    public var prepareButDontCreate:Example;
-}
-{% endhighlight %}
-
-Using the `MockolateRunner` for FlexUnit 4
-
-{% highlight as3 %}
-// import and reference the runner to ensure it is compiled in.
-import mockolate.runner.MockolateRunner; 
-MockolateRunner; 
-
-[RunWith("mockolate.runner.MockolateRunner")]
-public class ExampleWithRunner
-{
-    [Mock]
-    public var nicelyPlease:Example;
-    
-    [Mock(type="strict")]
-    public var strictlyThanks:Example;
-    
-    [Mock(inject="false")]
-    public var prepareButDontCreate:Example;
-}
-{% endhighlight %}
-
-## next [stubbing and mocking](stubbing_and_mocking.html)
+## next [Preparing and Creating Easier](preparing_and_creating_easier.html)

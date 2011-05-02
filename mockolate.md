@@ -24,17 +24,31 @@ In espionage, spies infiltrate a system, recording and relaying information to t
 
 In testing, a Test Spy records which methods are called, which getters are got, which setters are set. The handler (typically a testcase) can then check the facts against what should or should not have happened and take action (typically an assertion). 
 
-# Mockolate?
+# Why Mockolate?
 
-- clean consistent syntax
-- expectation-based or record-replay
-- dynamically generates proxy Classes
-- supports handcoded proxy Classes
-- provides a FlexUnit 4 Rule and Runner
-- uses proven libraries, [FlexUnit 4](http://flexunit.org/), [FLoxy](http://code.google.com/p/floxy) and [Hamcrest-as3](http://github.com/drewbourne/hamcrest-as3)
+- choice of [expectation-based](stubbing_and_mocking.html) or refactoring-friendly [record-replay](recording_and_replaying.html) syntaxes
+- helpful guiding API provided by fluent interfaces
+- provides a FlexUnit 4 [Rule](http://docs.flexunit.org/index.php?title=CreatingRules) and [Runner](http://docs.flexunit.org/index.php?title=Custom_Runners)
+- uses proven libraries, [FlexUnit 4](http://flexunit.org/), [FLoxy](http://code.google.com/p/floxy) and [Hamcrest-AS3](http://github.com/drewbourne/hamcrest-as3)
 
-<!--
-FIXME more explanation here thanks!
--->
+# Whats the code look like?
+
+{% highlight as3 %}
+var fileReference:FileReference = nice(FileReference);
+
+// note using Hamcrest array() Matcher
+mock(fileReference).method("browse").args(array(FileFilter))
+    .dispatches(new Event(Event.SELECT));
+
+// note expecting the default parameter values
+mock(fileReference).method("upload").args(URLRequest, "uploadData", false)
+    .dispatches(new Event(Event.OPEN))
+    .dispatches(new ProgressEvent(ProgressEvent.PROGRESS, false, false, 23, 123), 10)
+    .dispatches(new ProgressEvent(ProgressEvent.PROGRESS, false, false, 104, 123), 20)
+    .dispatches(new DataEvent(DataEvent.UPLOAD_COMPLETE_DATA), 30)
+    .dispatches(new DataEvent(Event.COMPLETE), 40);
+    
+// use FileReference in the Test
+{% endhighlight %}
 
 # next [getting Mockolate](getting_mockolate.html)
