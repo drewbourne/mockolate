@@ -13,6 +13,7 @@ doc/
 
 # ignore the eclipse .settings folder, irrelevant
 .settings/
+.sourceMate
 
 # ignore generated FlexUnit apps
 FlexUnitCompilerApplication.mxml
