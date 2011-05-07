@@ -13,7 +13,7 @@ There are two options that may be given to `[Mock]`.
 - use `[Mock(type="nice")]` to create a nice Mockolate (default).
 - use `[Mock(type="strict")]` to create a strict Mockolate.
 - use `[Mock(type="partial")]` to create a partial Mockolate.
-- use `[Mock(inject="true")]` to prepare only, and not create a Mockolate (default). 
+- use `[Mock(inject="true")]` to inject the instance into the variable (default). 
 - use `[Mock(inject="false")]` to prepare only, and not create a Mockolate.
 
 There is one option that can be set per `[Test]`
