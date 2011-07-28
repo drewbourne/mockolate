@@ -25,6 +25,6 @@ package mockolate
      */
     public function nice(classReference:Class, name:String=null, constructorArgs:Array=null):*
     {
-        return MockolatierMaster.nice(classReference, name, constructorArgs);
+        return MockolatierMaster.mockolatier.nice(classReference, name, constructorArgs);
     }
 }

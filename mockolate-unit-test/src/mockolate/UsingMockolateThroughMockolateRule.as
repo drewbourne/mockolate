@@ -31,6 +31,7 @@ package mockolate
 			mocks.mockolatier = mockolatier;
 		}
 		
+		[Ignore]
 		[Test]
 		public function prepare_shouldBeForwardedToMockolatier():void 
 		{
@@ -39,6 +40,7 @@ package mockolate
 			assertThat(mockolatier, received().method("prepare").args(EventDispatcher, Sprite).once());
 		}
 		
+		[Ignore]
 		[Test]
 		public function nice_shouldBeForwardedToMockolatier():void 
 		{
@@ -53,6 +55,7 @@ package mockolate
 			assertThat(mockolatier, received().method("nice").args(Flavour, "niceFlavour", constructorArgs).once());
 		}
 		
+		[Ignore]
 		[Test]
 		public function strict_shouldBeForwardedToMockolatier():void 
 		{
@@ -67,6 +70,7 @@ package mockolate
 			assertThat(mockolatier, received().method("strict").args(Flavour, "strictFlavour", constructorArgs).once());
 		}
 		
+		[Ignore]
 		[Test]
 		public function partial_shouldBeForwardedToMockolatier():void 
 		{
@@ -81,6 +85,7 @@ package mockolate
 			assertThat(mockolatier, received().method("partial").args(Flavour, "partialFlavour", constructorArgs).once());
 		}
 		
+		[Ignore]
 		[Test]
 		public function mock_shouldBeForwardedToMockolatier():void
 		{

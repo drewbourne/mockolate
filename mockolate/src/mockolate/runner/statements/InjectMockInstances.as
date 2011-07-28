@@ -1,11 +1,17 @@
 package mockolate.runner.statements
 {
+	import asx.array.forEach;
 	import asx.string.formatToString;
 	
+	import flash.events.Event;
+	import flash.events.IEventDispatcher;
+	
+	import mockolate.ingredients.InstanceRecipe;
+	import mockolate.ingredients.MockType;
 	import mockolate.ingredients.Mockolatier;
+	import mockolate.ingredients.mockolate_ingredient;
 	import mockolate.nice;
 	import mockolate.runner.MockMetadata;
-	import mockolate.ingredients.MockType;
 	import mockolate.runner.MockolateRunnerData;
 	import mockolate.runner.MockolateRunnerStatement;
 	import mockolate.strict;
@@ -14,6 +20,8 @@ package mockolate.runner.statements
 	import org.flexunit.internals.runners.statements.IAsyncStatement;
 	import org.flexunit.token.AsyncTestToken;
 
+	use namespace mockolate_ingredient;
+	
 	/**
 	 * Creates and injects mock instances to the current testcase instance. 
 	 * 
@@ -38,36 +46,18 @@ package mockolate.runner.statements
 		 */
 		public function evaluate(parentToken:AsyncTestToken):void 
 		{
-			this.parentToken = parentToken;	
-			
-			var error:Error = null;
-			var mockolatier:Mockolatier = data.mockolatier;
-			data.mockInstances = [];
-			
-			var mockFactories:Object = {};
-			mockFactories[MockType.NICE] = mockolatier.nice;
-			mockFactories[MockType.STRICT] = mockolatier.strict;
-			mockFactories[MockType.PARTIAL] = mockolatier.partial;
-			
-			try
-			{
-				for each (var metadata:MockMetadata in data.mockMetadatas)
-				{
-					if (metadata.injectable)
-					{
-						var klass:Class = metadata.type;
-						var mock:Object = mockFactories[metadata.mockType](klass, metadata.name);
-						data.mockInstances.push(mock);					
-						data.test[metadata.name] = mock as klass;
+			var preparer:IEventDispatcher = data.mockolatier.prepareInstances(data.instanceRecipes);
+
+			preparer.addEventListener(Event.COMPLETE, function(event:Event):void {
+				
+				forEach(data.instanceRecipes.toArray(), function(instanceRecipe:InstanceRecipe):void {
+					if (instanceRecipe.inject) {
+						data.test[instanceRecipe.name] = instanceRecipe.instance;
 					}
-				}
-			}
-			catch (e:Error)
-			{
-				error = e;
-			}
-			
-			parentToken.sendResult(error);
+				});
+				
+				parentToken.sendResult();
+			});
 		}
 		
 		/**

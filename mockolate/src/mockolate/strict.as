@@ -25,6 +25,6 @@ package mockolate
      */
     public function strict(classReference:Class, name:String=null, constructorArgs:Array=null):*
     {
-        return MockolatierMaster.strict(classReference, name, constructorArgs);
+        return MockolatierMaster.mockolatier.strict(classReference, name, constructorArgs);
     }
 }

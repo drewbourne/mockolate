@@ -17,7 +17,7 @@ package mockolate.issues
 		[Rule]
 		public var mocks:MockolateRule = new MockolateRule();
 		
-		[Mock]
+		[Mock(namespaces="flash.utils.flash_proxy")]
 		public var remoteObject:RemoteObject;
 		
 		public var token:AsyncToken;

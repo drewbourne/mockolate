@@ -3,6 +3,7 @@ package mockolate.runner.statements
 	import asx.string.formatToString;
 	
 	import mockolate.errors.MockolateError;
+	import mockolate.ingredients.InstanceRecipe;
 	import mockolate.ingredients.Mockolatier;
 	import mockolate.runner.MockolateRunnerConstants;
 	import mockolate.runner.MockolateRunnerData;
@@ -44,18 +45,18 @@ package mockolate.runner.statements
 			var mockolatier:Mockolatier = data.mockolatier;
 			
 			if (verifyMethod())
-			{				
-				for each (var mock:Object in data.mockInstances)
+			{
+				for each (var instanceRecipe:InstanceRecipe in data.instanceRecipes)
 				{
 					try
 					{
-						mockolatier.verify(mock);
+						mockolatier.verify(instanceRecipe.instance);
 					}
 					catch (e:MockolateError)
 					{
 						error = e;
 						break;
-					}
+					}	
 				}
 			}
 			

@@ -36,6 +36,6 @@ package mockolate
      */
     public function stub(target:*):MockingCouverture
     {
-        return MockolatierMaster.stub(target);
+        return MockolatierMaster.mockolatier.stub(target);
     }
 }

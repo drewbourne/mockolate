@@ -1134,13 +1134,10 @@ package mockolate.ingredients
 		 */
 		protected function addDispatches(event:Event, delay:Number=0):void
 		{
-			var wasExpectingMocks:Boolean = _expectationsAsMocks;
-			_expectationsAsMocks = false;
-			var eventDispatcherDecorator:EventDispatcherDecorator = decorate(IEventDispatcher) as EventDispatcherDecorator;
-			_expectationsAsMocks = wasExpectingMocks;
+			var eventDispatcherDecorator:EventDispatcherDecorator = asEventDispatcher();
 			addAnswer(new DispatchesEventAnswer(eventDispatcherDecorator.eventDispatcher, event, delay));
 		}
-
+		
 		/**
 		 * @private
 		 */

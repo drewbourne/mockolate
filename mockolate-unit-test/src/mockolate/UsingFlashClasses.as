@@ -1,6 +1,7 @@
 package mockolate
 {
     import flash.display.MovieClip;
+    import flash.display.Sprite;
     import flash.events.Event;
     
     import org.flexunit.assertThat;
@@ -16,22 +17,22 @@ package mockolate
         public function prepareMovieClip():void 
         {
             Async.handleEvent(this, 
-                prepare(MovieClip), 
+                prepare(Sprite), 
                 Event.COMPLETE, prepareComplete, 10000); 
         }
         
         public function prepareComplete(event:Event, data:Object):void 
         {
-            var movieClip:MovieClip = nice(MovieClip);
-            assertThat(movieClip, not(nullValue()));
+            var sprite:Sprite = nice(Sprite);
+            assertThat(sprite, not(nullValue()));
             
-            mock(movieClip).method('willTrigger').args(Event.COMPLETE).returns(true);
-            mock(movieClip).method('willTrigger').args(Event.CANCEL).returns(false);
+            mock(sprite).method('willTrigger').args(Event.COMPLETE).returns(true);
+            mock(sprite).method('willTrigger').args(Event.CANCEL).returns(false);
             
-            assertThat(movieClip.willTrigger(Event.COMPLETE), isTrue());
-            assertThat(movieClip.willTrigger(Event.CANCEL), isFalse());
+            assertThat(sprite.willTrigger(Event.COMPLETE), isTrue());
+            assertThat(sprite.willTrigger(Event.CANCEL), isFalse());
             
-            verify(movieClip);
+            verify(sprite);
         }
     }
 }

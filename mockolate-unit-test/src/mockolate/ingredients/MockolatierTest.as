@@ -55,23 +55,32 @@ package mockolate.ingredients
         [Test(async, timeout=5000)]
         public function prepareWithClassDispatchesCompleteEvent():void
         {
-            Async.proceedOnEvent(this, mockolatier, Event.COMPLETE);
-            mockolatier.prepare(Flavour);
+            Async.proceedOnEvent(this, 
+            	mockolatier.prepare(Flavour), 
+				Event.COMPLETE);
         }
         
         [Test(async, timeout=5000)]
         public function prepareWithManyClassesDispatchesCompleteEvent():void
         {
-            Async.proceedOnEvent(this, mockolatier, Event.COMPLETE);
-            mockolatier.prepare(Flavour);
+            Async.proceedOnEvent(this, 
+				mockolatier.prepare(Flavour), 
+				Event.COMPLETE);
         }
         
         [Test(async, timeout=5000)]
         public function prepareIgnoresAlreadyPreparedClasses():void
         {
-            Async.proceedOnEvent(this, mockolatier, Event.COMPLETE);
-            mockolatier.prepare(Flavour, Flavour, Flavour);
+            Async.proceedOnEvent(this, 
+				mockolatier.prepare(Flavour, Flavour, Flavour), 
+				Event.COMPLETE);
         }
+		
+		//
+		// 	prepareClassRecipes()
+		//
+		
+		
         
         //
         //  Nice
@@ -80,8 +89,11 @@ package mockolate.ingredients
         [Test(async, timeout=5000)]
         public function niceWithInterface():void
         {
-            Async.handleEvent(this, mockolatier, Event.COMPLETE, niceWithInterface_shouldCreateInstance, 5000);
-            mockolatier.prepare(Flavour);
+            Async.handleEvent(this, 
+				mockolatier.prepare(Flavour), 
+				Event.COMPLETE, 
+				niceWithInterface_shouldCreateInstance, 5000);
+            ;
         }
         
         private function niceWithInterface_shouldCreateInstance(event:Event, data:Object=null):void
@@ -93,8 +105,10 @@ package mockolate.ingredients
         [Test(async, timeout=5000)]
         public function niceWithClass():void
         {
-            Async.handleEvent(this, mockolatier, Event.COMPLETE, niceWithClass_shouldCreateInstance, 5000);
-            mockolatier.prepare(DarkChocolate);
+            Async.handleEvent(this, 
+				mockolatier.prepare(DarkChocolate), 
+				Event.COMPLETE, 
+				niceWithClass_shouldCreateInstance, 5000);
         }
         
         public function niceWithClass_shouldCreateInstance(event:Event, data:Object=null):void
@@ -110,8 +124,10 @@ package mockolate.ingredients
         [Test(async, timeout=5000)]
         public function strictWithInterface():void
         {
-            Async.handleEvent(this, mockolatier, Event.COMPLETE, strictWithInterface_shouldCreateInstance, 5000);
-            mockolatier.prepare(Flavour);
+            Async.handleEvent(this, 
+				mockolatier.prepare(Flavour), 
+				Event.COMPLETE, 
+				strictWithInterface_shouldCreateInstance, 5000);
         }
         
         private function strictWithInterface_shouldCreateInstance(event:Event, data:Object=null):void
@@ -123,8 +139,10 @@ package mockolate.ingredients
         [Test(async, timeout=5000)]
         public function strictWithClass():void
         {
-            Async.handleEvent(this, mockolatier, Event.COMPLETE, strictWithClass_shouldCreateInstance, 5000);
-            mockolatier.prepare(DarkChocolate);
+            Async.handleEvent(this, 
+				mockolatier.prepare(DarkChocolate), 
+				Event.COMPLETE, 
+				strictWithClass_shouldCreateInstance, 5000);
         }
         
         private function strictWithClass_shouldCreateInstance(event:Event, data:Object=null):void
@@ -140,8 +158,10 @@ package mockolate.ingredients
         [Test(async, timeout=5000)]
         public function stubWithNice():void
         {
-            Async.handleEvent(this, mockolatier, Event.COMPLETE, stubWithNice_shouldCreateStubbingCouverture, 5000);
-            mockolatier.prepare(DarkChocolate);
+            Async.handleEvent(this, 
+				mockolatier.prepare(DarkChocolate), 
+				Event.COMPLETE, 
+				stubWithNice_shouldCreateStubbingCouverture, 5000);
         }
         
         private function stubWithNice_shouldCreateStubbingCouverture(event:Event, data:Object=null):void

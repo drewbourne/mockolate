@@ -11,12 +11,12 @@ package mockolate
 	
 	public class UsingMockolate
 	{
-        [Before(async, timeout=30000)]
+        [Before(async, timeout=5000)]
         public function prepareMockolates():void
         {
             Async.proceedOnEvent(this, 
                 prepare(Flavour, DarkChocolate),
-                Event.COMPLETE, 30000);
+                Event.COMPLETE, 5000);
         }
         
         [Test]

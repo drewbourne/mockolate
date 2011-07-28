@@ -1,6 +1,11 @@
 package mockolate.ingredients
 {
+    import asx.array.filter;
     import asx.array.flatten;
+    import asx.array.forEach;
+    import asx.array.map;
+    import asx.array.unique;
+    import asx.object.isA;
     
     import flash.events.Event;
     import flash.events.EventDispatcher;
@@ -16,7 +21,6 @@ package mockolate.ingredients
     import org.hamcrest.Matcher;
     import org.hamcrest.collection.emptyArray;
     import org.hamcrest.collection.everyItem;
-    import org.hamcrest.core.isA;
     import org.hamcrest.core.not;
     
     use namespace mockolate_ingredient;
@@ -32,13 +36,12 @@ package mockolate.ingredients
      */
     public class Mockolatier extends EventDispatcher
     {
-        // instance
-        
 		private var _applicationDomain:ApplicationDomain;
         private var _mockolates:Array;
         private var _mockolatesByTarget:Dictionary;
         private var _mockolateFactory:IMockolateFactory;
 		private var _lastInvocation:Invocation;
+		private var _preparedClassRecipes:ClassRecipes;
         
         /**
          * Constructor.
@@ -47,28 +50,33 @@ package mockolate.ingredients
         {
             super();
             
-			// _applicationDomain = new ApplicationDomain(ApplicationDomain.currentDomain);
 			_applicationDomain = ApplicationDomain.currentDomain;
             _mockolates = [];
             _mockolatesByTarget = new Dictionary();
-//            _mockolateFactory = new FloxyMockolateFactory(this, _applicationDomain);
-			_mockolateFactory = new BytecodeProxyMockolateFactory(this, _applicationDomain);
+            _mockolateFactory = new FloxyMockolateFactory(this, _applicationDomain);
+			_preparedClassRecipes = new ClassRecipes();
         }
 		
 		public function get applicationDomain():ApplicationDomain
 		{
 			return _applicationDomain;
 		}
-
-		// TODO implement Mockolatier#hasPrepared(Class)        
-//        /**
-//         * Indicates if the given Class has been prepared by this Mockolatier instance.
-//         */
-//        public function hasPrepared(classReference:Class):Boolean
-//        {
-//            return false;
-//        }
-        
+		
+		public function set applicationDomain(value:ApplicationDomain):void 
+		{
+			_applicationDomain = value;
+		}
+		
+		public function get mockolateFactory():IMockolateFactory 
+		{
+			return _mockolateFactory;
+		}
+		
+		public function set mockolateFactory(value:IMockolateFactory):void
+		{
+			_mockolateFactory = value;
+		}
+		
         /**
          * Prepares the given Class references for creating proxy instances. 
          *  
@@ -76,64 +84,115 @@ package mockolate.ingredients
          */
         public function prepare(... rest):IEventDispatcher
         {
-            // deal with nested arrays of Classes
-            var classes:Array = flatten(rest);
-            
-            // nothing to do, have a whinge. 
-            check(classes, not(emptyArray()), "Mockolatier requires some ingredients to prepare, received none.");
-            
-            // built-in types cannot be proxied.
-            // TODO include only the types in the error message that could not be proxied. 
-            // check(rest, everyItem(not(builtInType())), "Mockolatier can not prepare with built-in Classes, received " + rest.join(', '));
-            
-            // TODO we could get the types of the instances, and attempt to proxy them
-            check(classes, everyItem(isA(Class)), "Mockolatier can only prepare Classes, received " + classes.join(', '));
-            
-            // pass the classes to the MockolateFactory to do the hard work 
-            var preparing:IEventDispatcher = _mockolateFactory.prepare.apply(null, classes);
-            preparing.addEventListener(Event.COMPLETE, prepareCompleted, false, 0, true);
-            
-            return this;
+			var classes:Array;
+			classes = flatten(rest);
+			classes = filter(classes, isA(Class)); 
+			classes = unique(classes);
+			
+			if (classes.length == 0)
+			{
+				throw new ArgumentError("No Classes to prepare");
+			}
+			
+			var classRecipes:ClassRecipes = new ClassRecipes();
+			
+			for each (var classToPrepare:Class in classes)
+			{
+				classRecipes.add(aClassRecipe().withClassToPrepare(classToPrepare).build());
+			}
+			
+			return prepareClassRecipes(classRecipes);
         }
-        
-        /**
-         * @private
-         */
-        protected function prepareCompleted(event:Event):void
-        {
-            // TODO also pass in the classes that were prepared?
-            
-            // at the moment the Floxy ProxyRepository immediately fires the completed event
-            // when there are no classes to prepare. as such without making it asynchronous 
-            // then any listeners added to the Mockolatier for Event.COMPLETE will not be triggered. 
-            
-            setTimeout(dispatchEvent, 10, event);
-        }
-        
+		
+		/**
+		 * 
+		 */
+		public function prepareClassRecipes(classRecipes:ClassRecipes):IEventDispatcher
+		{
+			var preparer:IEventDispatcher = _mockolateFactory.prepareClasses(classRecipes);
+			preparer.addEventListener(Event.COMPLETE, addToPreparedClassRecipes(classRecipes), false, 100, true);
+			return preparer;
+		}
+		
+		private function addToPreparedClassRecipes(classRecipes:ClassRecipes):Function 
+		{
+			return function(event:Event):void 
+			{
+				forEach(classRecipes.toArray(), _preparedClassRecipes.add);
+			}
+		}
+
         /**
          * @see mockolate#nice()
          */
         public function nice(classReference:Class, name:String=null, constructorArgs:Array=null):*
         {
-            return createTarget(MockType.NICE, classReference, constructorArgs, name);
+			var instanceRecipe:InstanceRecipe = anInstanceRecipe()
+				.withClassRecipe(_preparedClassRecipes.getRecipeFor(classReference))
+				.withName(name)
+				.withConstructorArgs(constructorArgs)
+				.withMockType(MockType.NICE)
+				.build();
+			
+			return prepareInstance(instanceRecipe);
         }
-        
+		
         /**
          * @see mockolate#strict()
          */
         public function strict(classReference:Class, name:String=null, constructorArgs:Array=null):*
         {
-            return createTarget(MockType.STRICT, classReference, constructorArgs, name);
+			var instanceRecipe:InstanceRecipe = anInstanceRecipe()
+				.withClassRecipe(_preparedClassRecipes.getRecipeFor(classReference))
+				.withName(name)
+				.withConstructorArgs(constructorArgs)
+				.withMockType(MockType.STRICT)
+				.build();
+			
+			return prepareInstance(instanceRecipe);
         }
 		
 		/**
-		 * @see mockolate#strict()
+		 * @see mockolate#partial()
 		 */
 		public function partial(classReference:Class, name:String=null, constructorArgs:Array=null):*
 		{
-			return createTarget(MockType.PARTIAL, classReference, constructorArgs, name);
+			var instanceRecipe:InstanceRecipe = anInstanceRecipe()
+				.withClassRecipe(_preparedClassRecipes.getRecipeFor(classReference))
+				.withName(name)
+				.withConstructorArgs(constructorArgs)
+				.withMockType(MockType.PARTIAL)
+				.build();
+			
+			return prepareInstance(instanceRecipe);
 		}
-
+		
+		public function prepareInstances(instanceRecipes:InstanceRecipes):IEventDispatcher
+		{
+			var preparer:IEventDispatcher = _mockolateFactory.prepareInstances(instanceRecipes);
+			preparer.addEventListener(Event.COMPLETE, addToRegisteredMockolaters(instanceRecipes), false, 100, true);
+			return preparer;
+		}
+		
+		private function addToRegisteredMockolaters(instanceRecipes:InstanceRecipes):Function
+		{
+			return function(event:Event):void 
+			{
+				forEach(instanceRecipes.toArray(), function(instanceRecipe:InstanceRecipe):void {
+					registerTargetMockolate(instanceRecipe.instance, instanceRecipe.mockolate);
+				});
+			}
+		}
+		
+		public function prepareInstance(instanceRecipe:InstanceRecipe):*
+		{
+			_mockolateFactory.prepareInstance(instanceRecipe);
+			
+			registerTargetMockolate(instanceRecipe.instance, instanceRecipe.mockolate);
+			
+			return instanceRecipe.instance;
+		}
+		
         /**
          * @see mockolate#mock()
          */
@@ -222,27 +281,48 @@ package mockolate.ingredients
                 throw new ArgumentError(errorMessage);
             }
         }
-        
-        /**
-         * Creates a proxied instance of the given Class and an associated 
-         * Mockolate instance.
-         * 
-         * @param classReference
-         * @param constructorArgs
-         * @param asStrict
-         * @param name  
-         * 
-         * @private
-         */
-        protected function createTarget(mockType:MockType, classReference:Class, constructorArgs:Array=null, name:String=null):*
-        {
-            var mockolate:Mockolate = _mockolateFactory.create(mockType, classReference, constructorArgs, name);
-            var target:* = mockolate.target;
-            
-            registerTargetMockolate(target, mockolate);
-            
-            return target;
-        }
+		
+//        /**
+//         * Creates a proxied instance of the given Class and an associated 
+//         * Mockolate instance.
+//         * 
+//         * @param classReference
+//         * @param constructorArgs
+//         * @param asStrict
+//         * @param name  
+//         * 
+//         * @private
+//         */
+//		mockolate_ingredient function createTarget(mockType:MockType, classReference:Class, constructorArgs:Array=null, name:String=null):*
+//        {
+//            var instance:Mockolate = _mockolateFactory.create(mockType, classReference, constructorArgs, name);
+//            var target:* = instance.target;
+//            
+//            registerTargetMockolate(target, instance);
+//            
+//            return target;
+//        }
+//		
+//		/**
+//		 * Creates a proxied instance of the given Class and an associated 
+//		 * Mockolate instance.
+//		 * 
+//		 * @param classReference
+//		 * @param constructorArgs
+//		 * @param asStrict
+//		 * @param name  
+//		 * 
+//		 * @private
+//		 */
+//		mockolate_ingredient function createTargetWithProxyClass(mockType:MockType, classReference:Class, proxyClass:Class, constructorArgs:Array=null, name:String=null):*
+//		{
+//			var instance:Mockolate = _mockolateFactory.createWithProxyClass(mockType, classReference, proxyClass, constructorArgs, name);
+//			var target:* = instance.target;
+//			
+//			registerTargetMockolate(target, instance);
+//			
+//			return target;
+//		}
 		
 		/**
 		 * Registers the target and mockolate to allow a Mockolate instance to 
@@ -252,12 +332,12 @@ package mockolate.ingredients
 		 * 
 		 * @private
 		 */
-		mockolate_ingredient function registerTargetMockolate(target:Object, mockolate:Mockolate):Mockolate 
+		mockolate_ingredient function registerTargetMockolate(target:Object, instance:Mockolate):Mockolate 
 		{
-			_mockolates.push(mockolate);
-			_mockolatesByTarget[target] = mockolate;
+			_mockolates.push(instance);
+			_mockolatesByTarget[target] = instance;
 			
-			return mockolate;
+			return instance;
 		}
         
         /**

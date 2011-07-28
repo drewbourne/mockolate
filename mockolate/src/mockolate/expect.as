@@ -37,6 +37,6 @@ package mockolate
 	 */
     public function expect(target:*):ExpectingCouverture
     {
-        return MockolatierMaster.expect(target);
+        return MockolatierMaster.mockolatier.expect(target);
     }
 }

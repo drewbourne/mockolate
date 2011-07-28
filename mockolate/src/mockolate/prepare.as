@@ -31,6 +31,6 @@ package mockolate
      */
     public function prepare(... rest):IEventDispatcher
     {
-        return MockolatierMaster.prepare(rest);
+        return MockolatierMaster.mockolatier.prepare(rest);
     }
 }

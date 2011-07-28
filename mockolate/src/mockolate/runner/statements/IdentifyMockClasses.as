@@ -8,12 +8,14 @@ package mockolate.runner.statements
 	import flex.lang.reflect.Field;
 	import flex.lang.reflect.Klass;
 	
+	import mockolate.ingredients.ClassRecipes;
+	import mockolate.ingredients.InstanceRecipes;
 	import mockolate.runner.MockMetadata;
+	import mockolate.runner.MockMetadataFactory;
 	import mockolate.runner.MockolateRunnerConstants;
 	import mockolate.runner.MockolateRunnerData;
 	import mockolate.runner.MockolateRunnerStatement;
 	
-	import org.flexunit.internals.runners.InitializationError;
 	import org.flexunit.internals.runners.statements.IAsyncStatement;
 	import org.flexunit.token.AsyncTestToken;
 	
@@ -43,34 +45,18 @@ package mockolate.runner.statements
 		 */
 		public function evaluate(parentToken:AsyncTestToken):void 
 		{
-			var error:Error = null;
-			
 			// TODO ApplicationDomain should be injected in constructor
 			var testClass:Class = Class(ApplicationDomain.currentDomain.getDefinition(getQualifiedClassName(data.test)));
 			var klass:Klass = new Klass(testClass);
+			var recipeIdentifier:MockolateRecipeIdentifier = new MockolateRecipeIdentifier();
 			
-			data.mockMetadatas = [];
+			data.classRecipes = new ClassRecipes();
+			recipeIdentifier.identifyClassRecipes(klass, data.classRecipes);
 			
-			for each (var field:Field in klass.fields)
-			{
-				if (field.hasMetaData(MockolateRunnerConstants.MOCK))
-				{
-					try
-					{
-						var metadata:MockMetadata = new MockMetadata(field.name, field.type, field.getMetaData(MockolateRunnerConstants.MOCK));
-						data.mockMetadatas.push(metadata);
-					}
-					catch (e:Error)
-					{
-						error = e;
-					}
-				}
-			}
+			data.instanceRecipes = new InstanceRecipes();
+			recipeIdentifier.identifyInstanceRecipes(klass, data.classRecipes, data.instanceRecipes);
 			
-			// TODO if there are no [Mock] fields, throw an InitializationError
-			// possible causes: no fields marked [Mock] or -keep-as3-metadata doesnt include Mock
-			
-			parentToken.sendResult(error);
+			parentToken.sendResult();
 		}
 		
 		/**
@@ -80,5 +66,132 @@ package mockolate.runner.statements
 		{
 			return formatToString(this, "IdentifyMockClasses");
 		}
+	}
+}
+
+import asx.array.compact;
+import asx.array.filter;
+import asx.array.map;
+import asx.string.substitute;
+import asx.string.trim;
+
+import flash.system.ApplicationDomain;
+
+import flex.lang.reflect.Field;
+import flex.lang.reflect.Klass;
+import flex.lang.reflect.metadata.MetaDataAnnotation;
+import flex.lang.reflect.metadata.MetaDataArgument;
+
+import mockolate.ingredients.ClassRecipe;
+import mockolate.ingredients.ClassRecipes;
+import mockolate.ingredients.InstanceRecipe;
+import mockolate.ingredients.InstanceRecipes;
+import mockolate.ingredients.MockType;
+import mockolate.ingredients.aClassRecipe;
+import mockolate.ingredients.anInstanceRecipe;
+
+internal class MockolateRecipeIdentifier 
+{
+	private const MOCK_METADATA:String = "Mock";
+	private const NAMESPACES_ATTRIBUTE:String = "namespaces";
+	private const INJECT_ATTRIBUTE:String = "inject";
+	private const MOCK_TYPE_ATTRIBUTE:String = "type";
+	private const TRUE:String = "true";
+	private const FALSE:String = "false";
+	
+	public function identifyClassRecipes(fromKlass:Klass, intoClassRecipes:ClassRecipes):void 
+	{
+		var mockFields:Array = filter(fromKlass.fields, isMockField);
+		
+		for each (var field:Field in mockFields)
+		{
+			var metadata:MetaDataAnnotation = field.getMetaData(MOCK_METADATA);
+			
+			var classRecipe:ClassRecipe = aClassRecipe()
+				.withClassToPrepare(field.type)
+				.withNamespacesToProxy(parseNamespacesToProxy(field, metadata))
+				.build();
+			
+			intoClassRecipes.add(classRecipe);
+		}
+	}
+	
+	public function identifyInstanceRecipes(fromKlass:Klass, withClassRecipes:ClassRecipes, intoInstanceRecipes:InstanceRecipes):void
+	{
+		var mockFields:Array = filter(fromKlass.fields, isMockField);
+		
+		for each (var field:Field in mockFields)
+		{
+			var metadata:MetaDataAnnotation = field.getMetaData(MOCK_METADATA);
+			var namespaces:Array = parseNamespacesToProxy(field, metadata);
+			var classRecipe:ClassRecipe = withClassRecipes.getRecipeFor(field.type, namespaces);
+			
+			var instanceRecipe:InstanceRecipe = anInstanceRecipe()
+				.withClassRecipe(classRecipe)
+				.withMockType(parseMockType(field, metadata))
+				.withName(field.name)
+				.withInject(parseInject(field, metadata))
+				.build();
+				
+			intoInstanceRecipes.add(instanceRecipe);
+		}
+	}
+	
+	private function isMockField(field:Field):Boolean 
+	{
+		return field.hasMetaData(MOCK_METADATA);
+	}
+	
+	private function parseNamespacesToProxy(field:Field, metadata:MetaDataAnnotation):Array 
+	{
+		var attribute:MetaDataArgument = metadata.getArgument(NAMESPACES_ATTRIBUTE);
+		var attributeValue:String = (attribute ? attribute.value : "");
+		var fqns:Array = map(attributeValue.split(","), trim);
+		var namespacesToProxy:Array = compact(map(fqns, function(fqn:String):Namespace {
+			var ns:Namespace;
+			if (fqn) {
+				ns = ApplicationDomain.currentDomain.getDefinition(fqn) as Namespace;
+			}
+			return ns;
+		}));
+		return namespacesToProxy;
+	}
+	
+	private function parseMockType(field:Field, metadata:MetaDataAnnotation):MockType
+	{
+		var attribute:MetaDataArgument = metadata.getArgument(MOCK_TYPE_ATTRIBUTE);
+		var mockTypeValue:String = attribute ? attribute.value : null; 
+		var mockType:MockType = MockType.NICE;
+		
+		try 
+		{
+			mockType = attribute ? MockType.enumFor(attribute.value) : MockType.NICE;
+		}
+		catch (error:Error)
+		{
+			var message:String = substitute("Property '{}' must declare a 'type' of 'nice', 'strict' or 'partial', '{}' is NOT a valid type.", field.name, mockTypeValue);
+			throw new Error(message);
+		}
+		
+		return mockType;
+	}
+	
+	private function parseInject(field:Field, metadata:MetaDataAnnotation):Boolean
+	{
+		var attribute:MetaDataArgument = metadata.getArgument(INJECT_ATTRIBUTE);
+		var injectableValue:String = attribute ? (attribute.value).toLowerCase() : TRUE;
+		var injectable:Boolean;
+		
+		if ([ TRUE, FALSE ].indexOf(injectableValue) == -1)
+		{
+			throw new Error(substitute(
+				"Property '{}' must declare the attribute 'inject' as either "
+				+ "'true' or 'false'; '{}' is NOT valid.",
+				field.name, injectable));
+		}
+		
+		injectable = injectableValue == TRUE;
+		
+		return injectable;
 	}
 }

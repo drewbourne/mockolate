@@ -41,6 +41,6 @@ package mockolate
      */
     public function mock(target:*):MockingCouverture
     {
-        return MockolatierMaster.mock(target);
+        return MockolatierMaster.mockolatier.mock(target);
     }
 }

@@ -3,10 +3,13 @@ package mockolate.runner
 	import flash.events.IEventDispatcher;
 	
 	import mockolate.ingredients.ExpectingCouverture;
+	import mockolate.ingredients.InstanceRecipe;
+	import mockolate.ingredients.MockType;
 	import mockolate.ingredients.MockingCouverture;
 	import mockolate.ingredients.Mockolatier;
 	import mockolate.ingredients.MockolatierMaster;
 	import mockolate.ingredients.VerifyingCouverture;
+	import mockolate.ingredients.anInstanceRecipe;
 	import mockolate.ingredients.mockolate_ingredient;
 	import mockolate.runner.statements.IdentifyMockClasses;
 	import mockolate.runner.statements.InjectMockInstances;
@@ -104,10 +107,14 @@ package mockolate.runner
 		 */
 		public function nice(classReference:Class, name:String=null, constructorArgs:Array=null):*
 		{
-			var instance:* = mockolatier.nice(classReference, name, constructorArgs);
-			if (instance)
-				this.data.mockInstances.push(instance);
-			return instance;
+			var instanceRecipe:InstanceRecipe = anInstanceRecipe()
+				.withClassRecipe(data.classRecipes.getRecipeFor(classReference))
+				.withName(name)
+				.withConstructorArgs(constructorArgs)
+				.withMockType(MockType.NICE)
+				.build();
+			
+			return prepareInstance(instanceRecipe);
 		}
 		
 		/**
@@ -133,10 +140,14 @@ package mockolate.runner
 		 */
 		public function strict(classReference:Class, name:String=null, constructorArgs:Array=null):* 
 		{
-			var instance:* = mockolatier.strict(classReference, name, constructorArgs);
-			if (instance)
-				this.data.mockInstances.push(instance);
-			return instance;
+			var instanceRecipe:InstanceRecipe = anInstanceRecipe()
+				.withClassRecipe(data.classRecipes.getRecipeFor(classReference))
+				.withName(name)
+				.withConstructorArgs(constructorArgs)
+				.withMockType(MockType.STRICT)
+				.build();
+			
+			return prepareInstance(instanceRecipe);
 		}
 		
 		/**
@@ -144,10 +155,21 @@ package mockolate.runner
 		 */
 		public function partial(classReference:Class, name:String=null, constructorArgs:Array=null):*
 		{
-			var instance:* = mockolatier.partial(classReference, name, constructorArgs);
-			if (instance)
-				this.data.mockInstances.push(instance);
-			return instance;
+			var instanceRecipe:InstanceRecipe = anInstanceRecipe()
+				.withClassRecipe(data.classRecipes.getRecipeFor(classReference))
+				.withName(name)
+				.withConstructorArgs(constructorArgs)
+				.withMockType(MockType.PARTIAL)
+				.build();
+			
+			return prepareInstance(instanceRecipe);
+		}
+		
+		private function prepareInstance(instanceRecipe:InstanceRecipe):*
+		{
+			data.instanceRecipes.add(instanceRecipe);
+			
+			return mockolatier.prepareInstance(instanceRecipe);
 		}
 		
 		/**

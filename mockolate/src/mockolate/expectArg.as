@@ -24,6 +24,6 @@ package mockolate
 	 */
     public function expectArg(value:*):*
     {
-        return MockolatierMaster.expectArg(value);
+        return MockolatierMaster.mockolatier.expectArg(value);
     }
 }

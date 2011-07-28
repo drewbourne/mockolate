@@ -8,8 +8,8 @@
           <libraryPathEntry kind="3" linkType="1" path="${PROJECT_FRAMEWORKS}/libs/core.swc" useDefaultLinkType="false"/>
         </excludedEntries>
       </libraryPathEntry>
-      <libraryPathEntry kind="1" linkType="1" path="libs"/>
       <libraryPathEntry kind="3" linkType="1" path="/mockolate/bin/mockolate.swc" useDefaultLinkType="false"/>
+      <libraryPathEntry kind="1" linkType="1" path="libs"/>
       <libraryPathEntry kind="1" linkType="1" path="${FLEXUNIT_LIB_LOCATION}/version3libs/Common"/>
       <libraryPathEntry kind="1" linkType="1" path="${FLEXUNIT_LIB_LOCATION}/version3libs/FlexProject"/>
       <libraryPathEntry kind="1" linkType="1" path="${FLEXUNIT_LIB_LOCATION}/version3libs/FlexProject_Extended"/>
@@ -18,7 +18,6 @@
     <sourceAttachmentPath/>
   </compiler>
   <applications>
-    <application path="FlexUnitCompilerApplication.mxml"/>
     <application path="FlexUnitApplication.mxml"/>
   </applications>
   <modules/>

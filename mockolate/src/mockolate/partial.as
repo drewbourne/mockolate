@@ -24,6 +24,6 @@ package mockolate
      */
     public function partial(classReference:Class, name:String=null, constructorArgs:Array=null):*
     {
-        return MockolatierMaster.partial(classReference, name, constructorArgs);
+        return MockolatierMaster.mockolatier.partial(classReference, name, constructorArgs);
     }
 }

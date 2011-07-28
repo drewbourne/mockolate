@@ -38,6 +38,11 @@ package mockolate.ingredients.bytecode
 			return _member.localName;
 		}
 		
+		public function get uri():String 
+		{
+			return _member.uri;
+		}
+		
 		public function get invocationType():InvocationType
 		{
 			return _invocationType;

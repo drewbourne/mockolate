@@ -22,6 +22,6 @@ package mockolate
      */
     public function record(target:*, script:Function=null):*
     {
-        return MockolatierMaster.record(target, script);
+        return MockolatierMaster.mockolatier.record(target, script);
     }
 }

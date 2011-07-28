@@ -84,7 +84,7 @@ package mockolate.ingredients.proxy
 			_mockolate = new ProxyMockolateFactory().create(mockType, Class(getDefinitionByName(getQualifiedClassName(target))), null, name);
 			_mockolate.target = _target = target;
 			
-			MockolatierMaster.registerTargetMockolate(_target, _mockolate);
+			MockolatierMaster.mockolatier.registerTargetMockolate(_target, _mockolate);
 		}
 		
 		/**

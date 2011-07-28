@@ -21,6 +21,6 @@ package mockolate
 	 */
     public function replay(target:*):*
     {
-        return MockolatierMaster.replay(target);
+        return MockolatierMaster.mockolatier.replay(target);
     }
 }

@@ -3,8 +3,6 @@ package mockolate
     import mockolate.ingredients.MockolatierMaster;
     import mockolate.ingredients.VerifyingCouverture;
     
-    // TODO verify() with no targets verifies all the mockolates
-    
     /**
      * Verify Expectations and Invocations.
      * 
@@ -28,6 +26,6 @@ package mockolate
      */
     public function verify(target:*):VerifyingCouverture
     {
-        return MockolatierMaster.verify(target);
+        return MockolatierMaster.mockolatier.verify(target);
     }
 }

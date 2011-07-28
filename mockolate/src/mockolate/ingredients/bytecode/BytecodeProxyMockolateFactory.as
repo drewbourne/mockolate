@@ -2,23 +2,20 @@ package mockolate.ingredients.bytecode
 {
 	import asx.array.filter;
 	import asx.array.forEach;
-	import asx.array.map;
 	
 	import flash.events.Event;
 	import flash.events.EventDispatcher;
 	import flash.events.IEventDispatcher;
 	import flash.system.ApplicationDomain;
 	import flash.utils.Dictionary;
+	import flash.utils.getDefinitionByName;
 	import flash.utils.setTimeout;
 	
 	import mockolate.ingredients.AbstractMockolateFactory;
-	import mockolate.ingredients.IMockolateFactory;
 	import mockolate.ingredients.MockType;
 	import mockolate.ingredients.Mockolate;
 	import mockolate.ingredients.Mockolatier;
 	import mockolate.ingredients.mockolate_ingredient;
-	
-	import mx.core.FlexGlobals;
 	
 	import org.as3commons.bytecode.interception.IMethodInvocationInterceptor;
 	import org.as3commons.bytecode.proxy.IClassProxyInfo;
@@ -29,13 +26,43 @@ package mockolate.ingredients.bytecode
 	
 	use namespace mockolate_ingredient;
 
-	public class BytecodeProxyMockolateFactory extends AbstractMockolateFactory implements IMockolateFactory
+	public class BytecodeProxyMockolateFactory extends AbstractMockolateFactory // implements IMockolateFactory
 	{
-		// this is gross. -drew
-		public static const loaded:Boolean = (function():Boolean 
+		private static function getDefinitionByNameSafely(name:String):Object 
 		{
-			ByteCodeType.fromLoader(FlexGlobals.topLevelApplication.loaderInfo);
-			return true;
+			try
+			{
+				return getDefinitionByName(name);	
+			}
+			catch (e:Error)
+			{
+				// ignored.
+			}
+			
+			return null;
+		} 
+
+		// this is gross. -drew
+		// this is really gross -drew, 20110512
+		private static const loaded:Boolean = (function():Boolean 
+		{
+			// Try to get FlexGlobals
+			var FlexGlobals:Object = getDefinitionByNameSafely("mx.core.FlexGlobals");
+			if (FlexGlobals)
+			{
+				ByteCodeType.fromLoader(FlexGlobals.topLevelApplication.loaderInfo);
+				return true;
+			}
+			
+			// Otherwise try to get Application
+			var Application:Object = getDefinitionByNameSafely("mx.core.Application");
+			if (Application)
+			{
+				ByteCodeType.fromLoader(Application.application.loaderInfo);
+				return true;
+			}
+			
+			return false;
 		})();
 		
 		private var _proxyFactory:IProxyFactory;
@@ -84,6 +111,21 @@ package mockolate.ingredients.bytecode
 			}
 		}
 		
+		public function prepareClasses(toPrepare:Array):IEventDispatcher
+		{
+			throw new Error("prepareClasses not implemented");	
+		}
+		
+		public function prepareClassWithNamespaces(classReference:Class, namespacesToProxy:Array):IEventDispatcher
+		{
+			throw new Error("prepareClassWithNamespaces not implemented");	
+		}
+		
+		public function preparedClassFor(classReference:Class, proxiedNamespaces:Array = null):Class
+		{
+			throw new Error("prepareClassWithNamespaces not implemented");	
+		}
+		
 		/**
 		 * @inheritDoc
 		 */
@@ -102,6 +144,14 @@ package mockolate.ingredients.bytecode
 			mockolateInstance.target = _proxyFactory.createProxy(classReference, constructorArgs || []);
 			_proxyFactory.removeEventListener(ProxyFactoryEvent.GET_METHOD_INVOCATION_INTERCEPTOR, injectInterceptor);
 			return mockolateInstance;
+		}
+		
+		/**
+		 * @private 
+		 */
+		public function createWithProxyClass(mockType:MockType, classReference:Class, proxyClass:Class, constructorArgs:Array=null, name:String=null):Mockolate
+		{
+			throw new Error("Not implemented");
 		}
 		
 		/**

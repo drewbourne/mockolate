@@ -34,7 +34,7 @@ package mockolate.issues
 		[Rule]
 		public var mocks:MockolateRule = new MockolateRule();
 		
-		[Mock]
+		[Mock(namespaces="mockolate.issues.test_namespace")]
 		public var instance:Issue21_NamespaceSupport_ClassWithNamespace;
 		
 		[Test]
