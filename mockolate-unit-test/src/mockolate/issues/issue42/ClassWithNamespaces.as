@@ -1,6 +1,8 @@
 package mockolate.issues.issue42
 {
-	use namespace issue_namespace;
+	use namespace issue_namespace_1;
+	use namespace issue_namespace_2;
+	use namespace issue_namespace_3;
 	
 	public class ClassWithNamespaces
 	{
@@ -13,7 +15,7 @@ package mockolate.issues.issue42
 			return false;
 		}
 		
-		issue_namespace function isNamespacedMethodProxied():Boolean 
+		issue_namespace_1 function isNamespacedMethodProxied():Boolean 
 		{
 			return false;
 		}
@@ -23,14 +25,21 @@ package mockolate.issues.issue42
 			return false;
 		}
 		
-		issue_namespace function get isNamespacedGetterProxied():Boolean 
+		issue_namespace_1 function get isNamespacedGetterProxied():Boolean 
 		{
 			return false;
 		}
 		
-		issue_namespace function set isNamespacedSetterProxied(value:Boolean):void 
+		issue_namespace_1 function set isNamespacedSetterProxied(value:Boolean):void 
 		{
-			
+		}
+		
+		issue_namespace_2 function set usesIssueNamespace2(value:Boolean):void 
+		{
+		}
+		
+		issue_namespace_3 function set usesIssueNamespace3(value:Boolean):void 
+		{
 		}
 	}
 }

@@ -47,6 +47,11 @@ package mockolate.ingredients.proxy
 		{
 			proxy.invokeMethod("callWithRest", rest);
 		}
+		
+		public function returnsVector():Vector.<Example>
+		{
+			return proxy.returnsVector();
+		}
 	}
 	
 

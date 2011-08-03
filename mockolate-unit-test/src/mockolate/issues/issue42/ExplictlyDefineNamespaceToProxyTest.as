@@ -5,7 +5,7 @@ package mockolate.issues.issue42
 	
 	import org.hamcrest.assertThat;
 	
-	use namespace issue_namespace;
+	use namespace issue_namespace_1;
 
 	public class ExplictlyDefineNamespaceToProxyTest
 	{
@@ -15,21 +15,21 @@ package mockolate.issues.issue42
 		[Mock]
 		public var proxied:ClassWithNamespaces;
 		
-		[Mock(namespaces="flash.utils.flash_proxy,mockolate.issues.issue42.issue_namespace")]
+		[Mock(namespaces="flash.utils.flash_proxy,mockolate.issues.issue42.issue_namespace_1")]
 		public var proxiedWithNamespaces:ClassWithNamespaces;
 		
 		[Test]
 		public function proxied_shouldNotInterceptProxiedNamespaces():void 
 		{
 			proxied.isNamespacedMethodProxied();
-			assertThat(proxied, received().nsMethod(issue_namespace, "isNamespacedMethodProxied").never());			
+			assertThat(proxied, received().nsMethod(issue_namespace_1, "isNamespacedMethodProxied").never());			
 		}
 		
 		[Test]
 		public function proxiedWithNamespaces_shouldInterceptProxiedNamespaces():void 
 		{
 			proxiedWithNamespaces.isNamespacedMethodProxied();
-			assertThat(proxiedWithNamespaces, received().nsMethod(issue_namespace, "isNamespacedMethodProxied").once());
+			assertThat(proxiedWithNamespaces, received().nsMethod(issue_namespace_1, "isNamespacedMethodProxied").once());
 		}
 	}
 }

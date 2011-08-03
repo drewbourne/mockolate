@@ -11,5 +11,7 @@ package mockolate.sample
 		function justCall():void;
 		function dispatchMyEvent():void;
 		function callWithRest(...rest):void;
+		
+		function returnsVector():Vector.<Example>;
 	}
 }

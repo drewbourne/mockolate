@@ -29,22 +29,14 @@ package mockolate.runner
 		 */		
 		public var method:FrameworkMethod;
 		
-		[Deprecated]
-		[ArrayElementType("mockolate.runner.MockMetadata")]
 		/**
-		 * Array of MockMetadata 
-		 */
-		public var mockMetadatas:Array;
-		
-		[Deprecated]
-		[ArrayElementType("Object")]
-		/**
-		 * Array of Mockolate targets
-		 */
-		public var mockInstances:Array;
-		
+		 * ClassRecipe for Class to prepare for the test. 
+		 */		
 		public var classRecipes:ClassRecipes;
 		
+		/**
+		 * InstanceRecipes for instances to prepare for the test. 
+		 */
 		public var instanceRecipes:InstanceRecipes;
 	}
 }

@@ -51,10 +51,10 @@ package mockolate.runner.statements
 			var recipeIdentifier:MockolateRecipeIdentifier = new MockolateRecipeIdentifier();
 			
 			data.classRecipes = new ClassRecipes();
-			recipeIdentifier.identifyClassRecipes(klass, data.classRecipes);
+			recipeIdentifier.identifyClassRecipes(data.test, klass, data.classRecipes);
 			
 			data.instanceRecipes = new InstanceRecipes();
-			recipeIdentifier.identifyInstanceRecipes(klass, data.classRecipes, data.instanceRecipes);
+			recipeIdentifier.identifyInstanceRecipes(data.test, klass, data.classRecipes, data.instanceRecipes);
 			
 			parentToken.sendResult();
 		}
@@ -79,6 +79,7 @@ import flash.system.ApplicationDomain;
 
 import flex.lang.reflect.Field;
 import flex.lang.reflect.Klass;
+import flex.lang.reflect.Method;
 import flex.lang.reflect.metadata.MetaDataAnnotation;
 import flex.lang.reflect.metadata.MetaDataArgument;
 
@@ -99,7 +100,7 @@ internal class MockolateRecipeIdentifier
 	private const TRUE:String = "true";
 	private const FALSE:String = "false";
 	
-	public function identifyClassRecipes(fromKlass:Klass, intoClassRecipes:ClassRecipes):void 
+	public function identifyClassRecipes(test:*, fromKlass:Klass, intoClassRecipes:ClassRecipes):void 
 	{
 		var mockFields:Array = filter(fromKlass.fields, isMockField);
 		
@@ -109,21 +110,21 @@ internal class MockolateRecipeIdentifier
 			
 			var classRecipe:ClassRecipe = aClassRecipe()
 				.withClassToPrepare(field.type)
-				.withNamespacesToProxy(parseNamespacesToProxy(field, metadata))
+				.withNamespacesToProxy(parseNamespacesToProxy(test, fromKlass, field, metadata))
 				.build();
 			
 			intoClassRecipes.add(classRecipe);
 		}
 	}
 	
-	public function identifyInstanceRecipes(fromKlass:Klass, withClassRecipes:ClassRecipes, intoInstanceRecipes:InstanceRecipes):void
+	public function identifyInstanceRecipes(test:*, fromKlass:Klass, withClassRecipes:ClassRecipes, intoInstanceRecipes:InstanceRecipes):void
 	{
 		var mockFields:Array = filter(fromKlass.fields, isMockField);
 		
 		for each (var field:Field in mockFields)
 		{
 			var metadata:MetaDataAnnotation = field.getMetaData(MOCK_METADATA);
-			var namespaces:Array = parseNamespacesToProxy(field, metadata);
+			var namespaces:Array = parseNamespacesToProxy(test, fromKlass, field, metadata);
 			var classRecipe:ClassRecipe = withClassRecipes.getRecipeFor(field.type, namespaces);
 			
 			var instanceRecipe:InstanceRecipe = anInstanceRecipe()
@@ -142,10 +143,45 @@ internal class MockolateRecipeIdentifier
 		return field.hasMetaData(MOCK_METADATA);
 	}
 	
-	private function parseNamespacesToProxy(field:Field, metadata:MetaDataAnnotation):Array 
+	private function parseNamespacesToProxy(test:*, klass:Klass, field:Field, metadata:MetaDataAnnotation):Array 
 	{
 		var attribute:MetaDataArgument = metadata.getArgument(NAMESPACES_ATTRIBUTE);
 		var attributeValue:String = (attribute ? attribute.value : "");
+		
+		// namespaces are one of:
+		// - a public var name that should contain an Array of Namespace
+		// - a function name reference that should return an Array of Namespace
+		// - a comma-separated list of fully qualified names for the Namespace
+		
+		var namespaceField:Field = klass.getField(attributeValue);
+		if (namespaceField)
+		{
+			return parseNamespacesFromTestField(test, namespaceField);
+		}
+		
+		var namespaceMethod:Method = klass.getMethod(attributeValue);
+		if (namespaceMethod) 
+		{
+			return parseNamespacesFromTestMethod(test, namespaceMethod);
+		}
+		
+		return parseNamespacesFromCSV(attributeValue);
+	}
+	
+	private function parseNamespacesFromTestField(test:*, field:Field):Array 
+	{
+		var result:* = test[field.name]; 
+		return result as Array;
+	}
+	
+	private function parseNamespacesFromTestMethod(test:*, method:Method):Array 
+	{
+		var result:* = test[method.name]();
+		return result as Array;
+	}
+	
+	private function parseNamespacesFromCSV(attributeValue:String):Array 
+	{
 		var fqns:Array = map(attributeValue.split(","), trim);
 		var namespacesToProxy:Array = compact(map(fqns, function(fqn:String):Namespace {
 			var ns:Namespace;
