@@ -196,20 +196,20 @@ package mockolate.runner
 			return mockolatier.verify(target);
 		}
 		
+		[Deprecated]
 		/**
 		 * @copy mockolate#record()
 		 */
 		public function record(target:*):*
 		{
-			return mockolatier.record(target);
 		}
 		
+		[Deprecated]
 		/**
 		 * @copy mockolate#replay()
 		 */
 		public function replay(target:*):*
 		{
-			return mockolatier.replay(target);
 		}
 		
 		/**

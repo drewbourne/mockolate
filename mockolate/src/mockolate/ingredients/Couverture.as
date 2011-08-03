@@ -39,10 +39,13 @@ package mockolate.ingredients
          * Called by the Mockolate when an Invocation is received.
          *
          * Subclasses should override invoked and perform whatever logic they require.
+		 * 
+		 * @returns <code>true</code> if the Couverture handled the invocation. 
+		 * 			<code>false</code> if the Couverture should allow another Couverture to handle it. 
          */
-        mockolate_ingredient function invoked(invocation:Invocation):void
+        mockolate_ingredient function invoked(invocation:Invocation):Boolean
         {
-            // abstract
+			return false;
         }
         
         /**

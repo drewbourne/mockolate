@@ -382,9 +382,6 @@ package mockolate.ingredients
 		/** @private */
 		public function matches(target:Object):Boolean
 		{
-			// mockolateByTarget will throw a MockolateError if there is no Mockolate for the target.  
-			MockolatierMaster.mockolatier.mockolateByTarget(target);
-			
 			var invocations:Array = filterInvocations(target);
 			
 			return arrayWithSize(_invocation.invocationCountMatcher).matches(invocations);
@@ -423,6 +420,7 @@ package mockolate.ingredients
 		/** @private */
 		protected function filterInvocations(target:Object):Array 
 		{
+			// mockolateByTarget will throw a MockolateError if there is no Mockolate for the target.
 			var instance:Mockolate = MockolatierMaster.mockolatier.mockolateByTarget(target);
 			var invocations:Array = instance.recorder.invocations;			
 			var properties:Object = {};

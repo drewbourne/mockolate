@@ -218,24 +218,6 @@ package mockolate.ingredients
         }
 		
 		/**
-		 * @see mockolate#record()
-		 */
-		public function record(instance:*, script:Function=null):* 
-		{
-			mockolateByTarget(instance).record();
-			return instance;
-		}
-		
-		/**
-		 * @see mockolate#replay()
-		 */
-		public function replay(instance:*):* 
-		{
-			mockolateByTarget(instance).replay();
-			return instance;
-		}
-		
-		/**
 		 * @see mockolate#expect()
 		 */
 		public function expect(instance:*):ExpectingCouverture

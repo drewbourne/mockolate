@@ -2,6 +2,7 @@ package mockolate
 {
     import mockolate.ingredients.MockolatierMaster;
 
+	[Deprecated]
     /**
      * @param target Object created with nice() or strict()
 	 * @param closure Function of expectations to record for the target 
@@ -22,6 +23,5 @@ package mockolate
      */
     public function record(target:*, script:Function=null):*
     {
-        return MockolatierMaster.mockolatier.record(target, script);
     }
 }

@@ -48,6 +48,20 @@ package mockolate.ingredients
 		 */
 		mockolate_ingredient function expect(invocation:Invocation, args:Array):ExpectingCouverture 
 		{
+			defineExpectationFrom(invocation, args);
+
+			removeRecordedInvocation(invocation);
+			
+			return this;
+		}
+		
+		protected function removeRecordedInvocation(invocation:Invocation):void
+		{
+			this.mockolateInstance.recorder.removeInvocation(invocation); 
+		}
+		
+		protected function defineExpectationFrom(invocation:Invocation, args:Array):void 
+		{
 			var handler:Function;
 			var invocationType:InvocationType = invocation.invocationType;
 			
@@ -55,11 +69,11 @@ package mockolate.ingredients
 				= (_nsInvocationHandlers[invocationType] != null)
 				? _nsInvocationHandlers[invocationType]
 				: _invocationHandlers[invocationType];
-						
-			if (handler != null)
-				handler(invocation, args);
 			
-			return this;
+			if (handler != null)
+			{
+				handler(invocation, args);
+			}
 		}
 		
 		/**

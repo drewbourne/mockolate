@@ -2,7 +2,6 @@ package mockolate
 {
     import mockolate.ingredients.MockolatierMaster;
 
-	[Deprecated(replacement="arg")]
 	/**
 	 * When using expect(), use expectArg() to use hamcrest-as3 Matchers 
 	 * for arguments. 
@@ -15,14 +14,14 @@ package mockolate
 	 * <listing version="3.0">
 	 * 
 	 * 	record(flavour);
-	 * 	expect(flavour.combine(expectArg(isA(Flavour)).once();
+	 * 	expect(flavour.combine(arg(isA(Flavour)).once();
 	 * 	replay(flavour);
 	 * 
 	 * </listing>
 	 * 
 	 * @author drewbourne
 	 */
-    public function expectArg(value:*):*
+    public function arg(value:*):*
     {
         return MockolatierMaster.mockolatier.expectArg(value);
     }

@@ -23,9 +23,6 @@ package mockolate.ingredients
         private var _verifier:VerifyingCouverture;
 		private var _expecter:ExpectingCouverture;
         
-        // flags
-		private var _isRecording:Boolean;
-        
         // target!
         private var _target:*;
         private var _targetClass:Class;
@@ -169,24 +166,18 @@ package mockolate.ingredients
         mockolate_ingredient function invoked(invocation:Invocation):Mockolate
         {
             // these are specifically this order
-            // so that the recording couvertures are invoked
+			// so that expect may be handled,
+			// before recording the expectation
+			// and before invoking any expected behaviour
             // prior to any exception possibly being thrown by the mocker
                         
-			if (_isRecording)
-			{
-				if (_expecter)
-					_expecter.invoked(invocation);
-			}
-			else
-			{
-				if (_recorder)
-					_recorder.invoked(invocation);
-				
-	            if (_verifier)
-	                _verifier.invoked(invocation);
-	
-	            if (_mocker)
-	                _mocker.invoked(invocation);            
+			var handlers:Array = [ _recorder, _mocker ];
+			
+			for each (var handler:Couverture in handlers) {
+				var handled:Boolean = handler.invoked(invocation);
+				if (handled) {
+					break;
+				}
 			}
 
 			return this;
@@ -205,32 +196,6 @@ package mockolate.ingredients
             	
 			return this;
         }
-		
-		/**
-		 * Indicates if this Mockolate is currently set to record expectations. 
-		 */
-		mockolate_ingredient function isRecording():Boolean
-		{
-			return _isRecording;
-		}
-		
-		/**
-		 * Sets this Mockolate to record expectations from invocations.
-		 */
-		mockolate_ingredient function record():Mockolate
-		{
-			_isRecording = true;
-			return this;
-		}
-		
-		/**
-		 * Sets this Mockolate to stop recording and start replaying expectations.
-		 */
-		mockolate_ingredient function replay():Mockolate
-		{
-			_isRecording = false;
-			return this;
-		}
 		
 		/**
 		 * Describes this Mockolate to the given Description.

@@ -34,9 +34,12 @@ package mockolate.ingredients
         /**
          * Records the given Invocation.
          */
-        override mockolate_ingredient function invoked(invocation:Invocation):void
+        override mockolate_ingredient function invoked(invocation:Invocation):Boolean
         {
             addInvocation(invocation);
+			
+			// recording always continues to the other Couvertures
+			return false;
         }
         
         /**
@@ -46,6 +49,15 @@ package mockolate.ingredients
         {
             _invocations.push(invocation);
         }
+		
+		mockolate_ingredient function removeInvocation(invocation:Invocation):void 
+		{
+			var index:int = _invocations.indexOf(invocation);
+			if (index != -1)
+			{
+				_invocations.splice(index, 1);
+			}
+		}
         
         /**
          * @private

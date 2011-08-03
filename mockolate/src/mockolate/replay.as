@@ -2,6 +2,7 @@ package mockolate
 {
     import mockolate.ingredients.MockolatierMaster;
 
+	[Deprecated]
 	/**
 	 * @param target Object created with nice() or strict()
 	 * 
@@ -21,6 +22,5 @@ package mockolate
 	 */
     public function replay(target:*):*
     {
-        return MockolatierMaster.mockolatier.replay(target);
     }
 }

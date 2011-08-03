@@ -1,29 +1,19 @@
 package mockolate.issues
 {
-	import flash.utils.describeType;
 	import flash.utils.flash_proxy;
 	
 	import mockolate.expect;
-	import mockolate.mock;
 	import mockolate.received;
 	import mockolate.record;
 	import mockolate.replay;
 	import mockolate.runner.MockolateRule;
 	
-	import mx.collections.ListCollectionView;
-	
-	import org.flemit.reflection.Type;
 	import org.flexunit.asserts.assertEquals;
 	import org.flexunit.asserts.assertFalse;
-	import org.flexunit.asserts.fail;
 	import org.hamcrest.Description;
 	import org.hamcrest.Matcher;
 	import org.hamcrest.StringDescription;
 	import org.hamcrest.assertThat;
-	import org.hamcrest.collection.array;
-	import org.hamcrest.object.equalTo;
-	import org.hamcrest.object.hasProperties;
-	import org.hamcrest.object.isFalse;
 	import org.hamcrest.object.isTrue;
 	
 	use namespace flash_proxy;

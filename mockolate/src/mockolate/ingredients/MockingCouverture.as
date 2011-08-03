@@ -916,11 +916,13 @@ package mockolate.ingredients
 		 *
 		 * @private
 		 */
-		override mockolate_ingredient function invoked(invocation:Invocation):void
+		override mockolate_ingredient function invoked(invocation:Invocation):Boolean
 		{
 			invokeDecorators(invocation);
 
 			invokeExpectation(invocation);
+			
+			return true;
 		}
 
 		/**

@@ -12,7 +12,7 @@ package mockolate.ingredients
 	 * 
 	 * @author drewbourne
 	 */
-	public class VerifyingCouverture extends RecordingCouverture
+	public class VerifyingCouverture extends Couverture
 	{
 		private var _invocationsMatcher:InvocationsMatcher;
 		private var _defaultExpectedInvocationCount:int = 1;
@@ -224,16 +224,7 @@ package mockolate.ingredients
 			return this;
 		}
 		
-		// TODO sequenced(sequence:Sequence):VerifyingCouverture
-		// TODO ordererd(group:String):VerifyingCouverture
-		
-		/**
-		 * @private
-		 */
-		override mockolate_ingredient function verify():void
-		{
-			
-		}
+		// TODO isSequence(sequence:Sequence):VerifyingCouverture
 		
 		/**
 		 * Verifies that the expected Invocations have been recorded. 

@@ -111,16 +111,12 @@ package mockolate
 		}
 		
 		[Test]
-		public function record_expect_expectArg_replay_shouldBeForwardedToMockolatier():void
+		public function expect_expectArg_shouldBeForwardedToMockolatier():void
 		{
-			mocks.record(flavour);
 			mocks.expect(flavour.combine(mocks.expectArg(Flavour)));
-			mocks.replay(flavour);
 			
-			assertThat(mockolatier, received().method("record").args(Flavour).once());
 			assertThat(mockolatier, received().method("expectArg").args(Flavour).once());
 			assertThat(mockolatier, received().method("expect").args(null).once());
-			assertThat(mockolatier, received().method("replay").args(Flavour).once());
 		}
 	}
 }
