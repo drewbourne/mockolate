@@ -94,6 +94,7 @@ import mockolate.ingredients.anInstanceRecipe;
 internal class MockolateRecipeIdentifier 
 {
 	private const MOCK_METADATA:String = "Mock";
+	private const ARGUMENTS_ATTRIBUTE:String = "args";
 	private const NAMESPACES_ATTRIBUTE:String = "namespaces";
 	private const INJECT_ATTRIBUTE:String = "inject";
 	private const MOCK_TYPE_ATTRIBUTE:String = "type";
@@ -129,6 +130,7 @@ internal class MockolateRecipeIdentifier
 			
 			var instanceRecipe:InstanceRecipe = anInstanceRecipe()
 				.withClassRecipe(classRecipe)
+				.withConstructorArgsFunction(parseConstructorArgs(test, fromKlass, field, metadata))
 				.withMockType(parseMockType(field, metadata))
 				.withName(field.name)
 				.withInject(parseInject(field, metadata))
@@ -136,6 +138,32 @@ internal class MockolateRecipeIdentifier
 				
 			intoInstanceRecipes.add(instanceRecipe);
 		}
+	}
+	
+	private function parseConstructorArgs(test:*, klass:Klass, field:Field, metadata:MetaDataAnnotation):Function
+	{
+		var attribute:MetaDataArgument = metadata.getArgument(ARGUMENTS_ATTRIBUTE);
+		var attributeValue:String = (attribute ? attribute.value : "");
+		
+		var argumentsField:Field = klass.getField(attributeValue);
+		if (argumentsField) 
+		{
+			return function():Array {
+				var result:* = test[argumentsField.name];
+				return result as Array;
+			}
+		}
+		
+		var argumentsMethod:Method = klass.getMethod(attributeValue);
+		if (argumentsMethod)
+		{
+			return function():Array {
+				var result:* = test[argumentsMethod.name]();
+				return result as Array;
+			}
+		}
+		
+		return null;
 	}
 	
 	private function isMockField(field:Field):Boolean 

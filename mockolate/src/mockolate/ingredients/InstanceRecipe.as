@@ -6,6 +6,7 @@ package mockolate.ingredients
 	{
 		public var classRecipe:ClassRecipe;
 		public var constructorArgs:Array;
+		public var constructorArgsFunction:Function;
 		public var mockType:MockType;
 		public var name:String;
 		public var inject:Boolean = true;

@@ -13,6 +13,7 @@ package mockolate
 	import mockolate.issues.Issue31_EventDispatchesTwice;
 	import mockolate.issues.Issue33_DefaultInvocationCount;
 	import mockolate.issues.MockingClassWithConstructorGetter;
+	import mockolate.issues.issue35.AllowConstructorArgsForMocksCreatedUsingMockolateRule;
 	import mockolate.issues.issue42.ExplictlyDefineNamespaceToProxyTest;
 	import mockolate.issues.issue42.PrepareClassWithNamespaceUsingRuleTest;
 	import mockolate.runner.MockolateRuleExample;
@@ -84,6 +85,7 @@ package mockolate
 		public var issue29_IncorrectCountInTestSpy:Issue29_IncorrectCountInTestSpy;
 		public var issue31_EventDispatchesTwice:Issue31_EventDispatchesTwice;
 		public var issue33_DefaultInvocationCount:Issue33_DefaultInvocationCount;
+		public var issue35_AllowConstructorArgsForMocksCreatedUsingMockolateRule:AllowConstructorArgsForMocksCreatedUsingMockolateRule;
 		public var issue42_ExplicityDefineNamespaceToProxy:ExplictlyDefineNamespaceToProxyTest;
 		public var issue42_PrepareClassWithNamespaceUsingRule:PrepareClassWithNamespaceUsingRuleTest;
 	}

@@ -116,21 +116,30 @@ package mockolate.ingredients.floxy
 		
 		private function createInstance(instanceRecipe:InstanceRecipe):*
 		{
-			var constructorArgs:Array = createConstructorArgs(instanceRecipe);
-			
 			return _proxyRepository.createWithProxyClass(
 				instanceRecipe.classRecipe.proxyClass, 
-				constructorArgs, 
+				constructorArgumentsFor(instanceRecipe), 
 				(instanceRecipe.mockolate as FloxyMockolate).interceptor);
 		}
 		
-		private function createConstructorArgs(instanceRecipe:InstanceRecipe):Array 
+		private function constructorArgumentsFor(instanceRecipe:InstanceRecipe):Array 
 		{
-			var constructorArgs:Array = instanceRecipe.constructorArgs;
+			var constructorArgs:Array;
+			
+			if (instanceRecipe.constructorArgsFunction is Function)
+			{
+				constructorArgs = instanceRecipe.constructorArgsFunction() as Array;
+			}
+			else if (instanceRecipe.constructorArgs is Array)
+			{
+				constructorArgs = instanceRecipe.constructorArgs;
+			}
+			
 			if (!constructorArgs)
 			{
 				constructorArgs = repeat(null, Type.getType(instanceRecipe.classRecipe.classToPrepare).constructor.parameters.length);
 			}
+			
 			return constructorArgs;
 		}
     }

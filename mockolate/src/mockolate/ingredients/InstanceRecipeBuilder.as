@@ -32,6 +32,14 @@ package mockolate.ingredients
 			return this;
 		}
 		
+		private var _constructorArgsFunction:Function;
+		
+		public function withConstructorArgsFunction(constructorArgs:Function):InstanceRecipeBuilder
+		{
+			_constructorArgsFunction = constructorArgs;
+			return this;
+		}
+		
 		private var _inject:Boolean;
 		
 		public function withInject(inject:Boolean):InstanceRecipeBuilder
@@ -63,6 +71,7 @@ package mockolate.ingredients
 			var instanceRecipe:InstanceRecipe = new InstanceRecipe();
 			instanceRecipe.classRecipe = _classRecipe;
 			instanceRecipe.constructorArgs = _constructorArgs;
+			instanceRecipe.constructorArgsFunction = _constructorArgsFunction;
 			instanceRecipe.inject = _inject;
 			instanceRecipe.mockType = _mockType;
 			instanceRecipe.name = _name;
