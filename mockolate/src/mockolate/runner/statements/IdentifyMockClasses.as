@@ -48,7 +48,7 @@ package mockolate.runner.statements
 			// TODO ApplicationDomain should be injected in constructor
 			var testClass:Class = Class(ApplicationDomain.currentDomain.getDefinition(getQualifiedClassName(data.test)));
 			var klass:Klass = new Klass(testClass);
-			var recipeIdentifier:MockolateRecipeIdentifier = new MockolateRecipeIdentifier();
+			var recipeIdentifier:MockolateRecipeIdentifier = new MockolateRecipeIdentifier(data.mockolatier);
 			
 			data.classRecipes = new ClassRecipes();
 			recipeIdentifier.identifyClassRecipes(data.test, klass, data.classRecipes);
@@ -88,6 +88,7 @@ import mockolate.ingredients.ClassRecipes;
 import mockolate.ingredients.InstanceRecipe;
 import mockolate.ingredients.InstanceRecipes;
 import mockolate.ingredients.MockType;
+import mockolate.ingredients.Mockolatier;
 import mockolate.ingredients.aClassRecipe;
 import mockolate.ingredients.anInstanceRecipe;
 
@@ -101,6 +102,13 @@ internal class MockolateRecipeIdentifier
 	private const TRUE:String = "true";
 	private const FALSE:String = "false";
 	
+	private var _mockolatier:Mockolatier;
+	
+	public function MockolateRecipeIdentifier(mockolatier:Mockolatier) 
+	{
+		_mockolatier = mockolatier;
+	}
+	
 	public function identifyClassRecipes(test:*, fromKlass:Klass, intoClassRecipes:ClassRecipes):void 
 	{
 		var mockFields:Array = filter(fromKlass.fields, isMockField);
@@ -108,11 +116,17 @@ internal class MockolateRecipeIdentifier
 		for each (var field:Field in mockFields)
 		{
 			var metadata:MetaDataAnnotation = field.getMetaData(MOCK_METADATA);
+			var classToPrepare:Class = field.type;
+			var namespacesToProxy:Array = parseNamespacesToProxy(test, fromKlass, field, metadata);
+			var classRecipe:ClassRecipe = _mockolatier.preparedClassRecipeFor(classToPrepare, namespacesToProxy);
 			
-			var classRecipe:ClassRecipe = aClassRecipe()
-				.withClassToPrepare(field.type)
-				.withNamespacesToProxy(parseNamespacesToProxy(test, fromKlass, field, metadata))
-				.build();
+			if (!classRecipe)
+			{
+				classRecipe = aClassRecipe()
+					.withClassToPrepare(classToPrepare)
+					.withNamespacesToProxy(namespacesToProxy)
+					.build();
+			}
 			
 			intoClassRecipes.add(classRecipe);
 		}
@@ -175,6 +189,7 @@ internal class MockolateRecipeIdentifier
 	{
 		var attribute:MetaDataArgument = metadata.getArgument(NAMESPACES_ATTRIBUTE);
 		var attributeValue:String = (attribute ? attribute.value : "");
+		var namespacesToProxy:Array;
 		
 		// namespaces are one of:
 		// - a public var name that should contain an Array of Namespace
@@ -184,16 +199,21 @@ internal class MockolateRecipeIdentifier
 		var namespaceField:Field = klass.getField(attributeValue);
 		if (namespaceField)
 		{
-			return parseNamespacesFromTestField(test, namespaceField);
+			namespacesToProxy = parseNamespacesFromTestField(test, namespaceField);
 		}
 		
 		var namespaceMethod:Method = klass.getMethod(attributeValue);
 		if (namespaceMethod) 
 		{
-			return parseNamespacesFromTestMethod(test, namespaceMethod);
+			namespacesToProxy = parseNamespacesFromTestMethod(test, namespaceMethod);
 		}
 		
-		return parseNamespacesFromCSV(attributeValue);
+		if (!namespacesToProxy)
+		{
+			namespacesToProxy = parseNamespacesFromCSV(attributeValue);
+		}
+		
+		return namespacesToProxy;
 	}
 	
 	private function parseNamespacesFromTestField(test:*, field:Field):Array 
@@ -211,14 +231,17 @@ internal class MockolateRecipeIdentifier
 	private function parseNamespacesFromCSV(attributeValue:String):Array 
 	{
 		var fqns:Array = map(attributeValue.split(","), trim);
-		var namespacesToProxy:Array = compact(map(fqns, function(fqn:String):Namespace {
-			var ns:Namespace;
-			if (fqn) {
-				ns = ApplicationDomain.currentDomain.getDefinition(fqn) as Namespace;
-			}
-			return ns;
-		}));
+		var namespacesToProxy:Array = compact(map(fqns, parseNamespaceFromFQN));
 		return namespacesToProxy;
+	}
+	
+	private function parseNamespaceFromFQN(fqn:String):Namespace {
+		var ns:Namespace;
+		if (fqn) 
+		{
+			ns = ApplicationDomain.currentDomain.getDefinition(fqn) as Namespace;
+		}
+		return ns;
 	}
 	
 	private function parseMockType(field:Field, metadata:MetaDataAnnotation):MockType

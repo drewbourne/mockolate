@@ -49,7 +49,7 @@ package mockolate.ingredients.floxy
 		{
 			var toPrepare:Array = map(classRecipes.toArray(), function(classRecipe:ClassRecipe):Array {
 				return [ classRecipe.classToPrepare, classRecipe.namespacesToProxy ];
-			}); 
+			});
 			
 			trace("FloxyMockolateFactory prepareClassRecipes", toPrepare);
 			var bridge:IEventDispatcher = new EventDispatcher();
