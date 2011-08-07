@@ -105,9 +105,9 @@ package mockolate
 		[Test]
 		public function verify_shouldBeForwardedToMockolatier():void
 		{
-			mocks.verify(Flavour);
+			mocks.verify(flavour);
 			
-			assertThat(mockolatier, received().method("verify").args(Flavour).once());
+			assertThat(mockolatier, received().method("verify").args(flavour).once());
 		}
 		
 		[Test]
