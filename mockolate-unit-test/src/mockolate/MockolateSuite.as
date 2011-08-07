@@ -90,5 +90,6 @@ package mockolate
 		public var issue35_AllowConstructorArgsForMocksCreatedUsingMockolateRule:AllowConstructorArgsForMocksCreatedUsingMockolateRule;
 		public var issue42_ExplicityDefineNamespaceToProxy:ExplictlyDefineNamespaceToProxyTest;
 		public var issue42_PrepareClassWithNamespaceUsingRule:PrepareClassWithNamespaceUsingRuleTest;
+		public var usingVectors:UsingVectors;
 	}
 }
