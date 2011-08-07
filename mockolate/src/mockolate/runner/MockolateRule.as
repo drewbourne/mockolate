@@ -213,13 +213,30 @@ package mockolate.runner
 		}
 		
 		/**
+		 * @copy mockolate#allow()
+		 */
+		public function allow(target:*):ExpectingCouverture
+		{
+			return mockolatier.allow(target);
+		}		
+		
+		/**
 		 * @copy mockolate#expect()
 		 */
 		public function expect(target:*):ExpectingCouverture
 		{
 			return mockolatier.expect(target);
 		}
+
+		/**
+		 * @copy mockolate#arg()
+		 */
+		public function arg(value:*):*
+		{
+			return mockolatier.expectArg(value);
+		}
 		
+		[Deprecated(replacement="#arg")]
 		/**
 		 * @copy mockolate#expectArg()
 		 */
