@@ -239,6 +239,24 @@ package mockolate.ingredients
         }
 		
 		/**
+		 * @see mockolate#allow()
+		 */
+		public function allow(instance:*):ExpectingCouverture
+		{
+			// calls to expect must happen after an invocation 
+			// as the invocation type, and arguments are used
+			// when adding the expectation.
+			
+			if (!_lastInvocation)
+				throw new MockolateError(["Unable to allow(), no Mockolate invocation has been recorded yet."], null, null);
+			
+			var args:Array = _expectArgs || _lastInvocation.arguments;
+			_expectArgs = null;
+			
+			return mockolateByTarget(_lastInvocation.target).expecter.allow(_lastInvocation, args);
+		}
+		
+		/**
 		 * @see mockolate#expect()
 		 */
 		public function expect(instance:*):ExpectingCouverture

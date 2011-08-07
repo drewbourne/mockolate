@@ -39,8 +39,22 @@ package mockolate.ingredients
 		}
 		
 		/**
-		 * Converts an Invocation into an Expectation by calling the appropriate 
-		 * MockingCouverture methods.
+		 * Adds an Expectation that will not be verified.
+		 * 
+		 * @param invocation Invocation to convert
+		 * @param args Array of arguments to set on the Expectation.
+		 * @return ExpectingCouverture 
+		 */
+		mockolate_ingredient function allow(invocation:Invocation, args:Array):ExpectingCouverture 
+		{
+			mocker.stub();
+			defineExpectationFrom(invocation, args);
+			removeRecordedInvocation(invocation);
+			return this;
+		}
+		
+		/**
+		 * Adds an Expectation that will be verified.
 		 * 
 		 * @param invocation Invocation to convert
 		 * @param args Array of arguments to set on the Expectation.
@@ -48,13 +62,20 @@ package mockolate.ingredients
 		 */
 		mockolate_ingredient function expect(invocation:Invocation, args:Array):ExpectingCouverture 
 		{
+			mocker.mock();
 			defineExpectationFrom(invocation, args);
-
 			removeRecordedInvocation(invocation);
-			
 			return this;
 		}
 		
+		/**
+		 * Converts an Invocation into an Expectation by calling the appropriate 
+		 * MockingCouverture methods.
+		 * 
+		 * @param invocation Invocation to convert
+		 * @param args Array of arguments to set on the Expectation.
+		 * @return ExpectingCouverture 
+		 */
 		protected function removeRecordedInvocation(invocation:Invocation):void
 		{
 			this.mockolateInstance.recorder.removeInvocation(invocation); 

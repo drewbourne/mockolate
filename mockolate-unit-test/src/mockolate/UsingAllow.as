@@ -7,7 +7,7 @@ package mockolate
 	import org.hamcrest.core.anything;
 	import org.hamcrest.object.equalTo;
 
-	public class UsingExpect
+	public class UsingAllow
 	{
 		[Rule]
 		public var mocks:MockolateRule = new MockolateRule();
@@ -19,35 +19,35 @@ package mockolate
 		public var otherFlavour:Flavour;
 		
 		[Test]
-		public function expectSyntaxForGetters_shouldBeSuccinct():void 
+		public function allowSyntaxForGetters_shouldBeSuccinct():void 
 		{
-			expect(flavour.name).returns("DarkChocolate");
+			allow(flavour.name).returns("DarkChocolate");
 			
 			assertThat(flavour.name, equalTo("DarkChocolate"));
 		}
 		
 		[Test]
-		public function expectSyntaxForMethods_shouldBeSuccinct():void 
+		public function allowSyntaxForMethods_shouldBeSuccinct():void 
 		{
-			expect(flavour.toString()).returns("DarkChocolate");
+			allow(flavour.toString()).returns("DarkChocolate");
 			
 			assertThat(flavour.toString(), equalTo("DarkChocolate"));
 		}
 		
 		[Test]
-		public function expectSyntaxForMethodsWithArgs_shouldBeSuccinct():void 
+		public function allowSyntaxForMethodsWithArgs_shouldBeSuccinct():void 
 		{
-			expect(flavour.combine(arg(otherFlavour))).returns(flavour);
+			allow(flavour.combine(arg(otherFlavour))).returns(flavour);
 			
 			assertThat(flavour.combine(otherFlavour), equalTo(flavour));
 			
 			assertThat(flavour.combine(null), equalTo(null));
 		}
 		
-		[Test(expects="mockolate.errors.ExpectationError")]
-		public function expect_shouldBeVerified():void 
+		[Test]
+		public function allow_shouldNotBeVerified():void 
 		{
-			expect(flavour.combine(arg(otherFlavour))).returns(flavour);
+			allow(flavour.combine(arg(otherFlavour))).returns(flavour);
 			
 			verify(flavour);
 		}

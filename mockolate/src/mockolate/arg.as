@@ -3,7 +3,7 @@ package mockolate
     import mockolate.ingredients.MockolatierMaster;
 
 	/**
-	 * When using expect(), use expectArg() to use hamcrest-as3 Matchers 
+	 * When using expect(), use arg() to use hamcrest Matchers 
 	 * for arguments. 
 	 * 
 	 * @param value Value or Matcher that is expected.   
@@ -12,11 +12,7 @@ package mockolate
 	 * 
 	 * @example
 	 * <listing version="3.0">
-	 * 
-	 * 	record(flavour);
 	 * 	expect(flavour.combine(arg(isA(Flavour)).once();
-	 * 	replay(flavour);
-	 * 
 	 * </listing>
 	 * 
 	 * @author drewbourne

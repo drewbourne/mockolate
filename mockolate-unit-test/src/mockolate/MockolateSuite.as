@@ -61,6 +61,8 @@ package mockolate
 		public var usingRecordReplayExpect:UsingRecordReplayExpect;
 		public var usingMockolateThroughMockolateRule:UsingMockolateThroughMockolateRule;
 		public var usingPartialMocks:UsingPartialMocks;
+		public var usingAllow:UsingAllow;
+		public var usingExpect:UsingExpect;
 		
 		// 
 		//	decorators

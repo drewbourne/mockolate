@@ -4,7 +4,7 @@ package mockolate
     import mockolate.ingredients.MockolatierMaster;
 
 	/**
-	 * Adds an Expectation that will be verified.
+	 * Adds an Expectation that will not be verified.
 	 * 
 	 * @see mockolate.ingredients.Expectation
 	 * @see mockolate#arg()
@@ -15,20 +15,20 @@ package mockolate
 	 *  var other:Flavour = nice(Flavour);
 	 * 
 	 *  // set a `setter` expectation 
-	 *  expect(flavour.liked = true);
+	 *  allow(flavour.liked = true);
 	 * 
 	 *  // set a `getter` expectation
-	 * 	expect(flavour.name).returns("butterscotch");
+	 * 	allow(flavour.name).returns("butterscotch");
 	 * 
 	 * 	// set a `method` expectation
-	 * 	expect(flavour.combine(other)).returns(flavour);
+	 * 	allow(flavour.combine(other)).returns(flavour);
 	 * 
 	 * </listing>
 	 * 
 	 * @author drewbourne
 	 */
-    public function expect(target:*):ExpectingCouverture
+    public function allow(target:*):ExpectingCouverture
     {
-        return MockolatierMaster.mockolatier.expect(target);
+        return MockolatierMaster.mockolatier.allow(target);
     }
 }
