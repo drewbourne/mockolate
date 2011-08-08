@@ -4,7 +4,7 @@ package mockolate
 	import mockolate.ingredients.*;
 	import mockolate.ingredients.floxy.InterceptingCouvertureTest;
 	import mockolate.ingredients.proxy.ProxyMockolateTest;
-	import mockolate.issues.ClassInDefaultPackageCannotBeMockedTest;
+	import mockolate.issues.ClassInDefaultPackageCanBeMockedTest;
 	import mockolate.issues.FunctionApplyTest;
 	import mockolate.issues.Issue21_NamespaceSupportTest;
 	import mockolate.issues.Issue21_NamespaceSupport_RemoteObjectTest;
@@ -79,7 +79,7 @@ package mockolate
 		//	issues
 		//
 		public var mockingClassWithConstructorGetter:MockingClassWithConstructorGetter;
-		public var classInDefaultPackageCannotBeMocked:ClassInDefaultPackageCannotBeMockedTest;
+		public var classInDefaultPackageCanBeMocked:ClassInDefaultPackageCanBeMockedTest;
 		public var functionApply:FunctionApplyTest;
 		public var issue21_NamespaceSupport:Issue21_NamespaceSupportTest;
 		public var issue21_NamespaceSupport_RemoteObject:Issue21_NamespaceSupport_RemoteObjectTest;

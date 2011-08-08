@@ -1,10 +1,10 @@
 package
 {
-	public class ClassInDefaultPackageCannotBeMocked
+	public class ClassInDefaultPackageCanBeMocked
 	{
 		public var calledSuper:Boolean = false;
 		
-		public function ClassInDefaultPackageCannotBeMocked()
+		public function ClassInDefaultPackageCanBeMocked()
 		{
 			super();
 		}
