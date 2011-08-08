@@ -1,11 +1,12 @@
 package mockolate.issues
 {
-	import mockolate.mock;
+	import mockolate.expect;
+	import mockolate.nice;
 	import mockolate.runner.MockolateRule;
 	import mockolate.strict;
 	
 	import org.hamcrest.assertThat;
-	import org.hamcrest.object.isFalse;
+	import org.hamcrest.object.isTrue;
 
 	public class ClassInDefaultPackageCanBeMockedTest
 	{
@@ -16,15 +17,21 @@ package mockolate.issues
 		public var instance:ClassInDefaultPackageCanBeMocked;
 		
 		[Test]
-		public function ohYesItCanNow():void 
+		public function methods_shouldBeMocked():void 
 		{
-			instance = strict(ClassInDefaultPackageCanBeMocked);
+			instance = nice(ClassInDefaultPackageCanBeMocked);
+			expect(instance.attemptToMockMethod()).returns(true).once();
 			
-			assertThat(instance.calledSuper, isFalse());
+			assertThat(instance.attemptToMockMethod(), isTrue());
+		}
+		
+		[Test]
+		public function getters_shouldBeMocked():void 
+		{
+			instance = nice(ClassInDefaultPackageCanBeMocked);
+			expect(instance.attemptToMockGetter).returns(true).once();
 			
-			mock(instance).method("attemptToMockMethod").once();
-			instance.attemptToMockMethod();
-			assertThat(instance.calledSuper, isFalse());
+			assertThat(instance.attemptToMockGetter, isTrue());
 		}
 	}
 }

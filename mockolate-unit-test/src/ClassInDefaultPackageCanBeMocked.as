@@ -2,16 +2,19 @@ package
 {
 	public class ClassInDefaultPackageCanBeMocked
 	{
-		public var calledSuper:Boolean = false;
-		
 		public function ClassInDefaultPackageCanBeMocked()
 		{
 			super();
 		}
 		
-		public function attemptToMockMethod():void 
+		public function attemptToMockMethod():Boolean 
 		{
-			calledSuper = true;
+			return false;
+		}
+		
+		public function get attemptToMockGetter():Boolean 
+		{
+			return false;
 		}
 	}
 }
