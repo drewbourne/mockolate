@@ -2,11 +2,9 @@ package mockolate
 {
     import flash.events.Event;
     import flash.events.IEventDispatcher;
-    import flash.utils.describeType;
     
     import mockolate.errors.ExpectationError;
     import mockolate.errors.VerificationError;
-    import mockolate.ingredients.Mockolate;
     import mockolate.sample.DarkChocolate;
     import mockolate.sample.Flavour;
     
@@ -14,10 +12,8 @@ package mockolate
     import org.flexunit.asserts.fail;
     import org.flexunit.async.Async;
     import org.hamcrest.collection.arrayWithSize;
-    import org.hamcrest.core.not;
     import org.hamcrest.object.equalTo;
     import org.hamcrest.object.nullValue;
-    import org.hamcrest.object.strictlyEqualTo;
     
     public class VerifyingMockolates
     {

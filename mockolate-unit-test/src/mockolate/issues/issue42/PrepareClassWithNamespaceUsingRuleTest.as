@@ -1,20 +1,10 @@
 package mockolate.issues.issue42
 {
-	import flash.events.Event;
-	import flash.events.EventDispatcher;
-	import flash.events.IEventDispatcher;
-	
 	import mockolate.mock;
-	import mockolate.nice;
-	import mockolate.prepare;
-	import mockolate.prepareClassWithNamespaces;
-	import mockolate.preparedClassFor;
 	import mockolate.received;
 	import mockolate.runner.MockolateRule;
 	
 	import org.flexunit.assertThat;
-	import org.flexunit.asserts.fail;
-	import org.flexunit.async.Async;
 	import org.hamcrest.object.isFalse;
 	import org.hamcrest.object.isTrue;
 	

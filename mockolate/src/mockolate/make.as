@@ -2,6 +2,7 @@ package mockolate
 {
     import mockolate.ingredients.MockolatierMaster;
     
+	[Deprecated]
     /**
      * Alias of <code>strict()</code>
      *  

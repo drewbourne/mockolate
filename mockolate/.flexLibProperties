@@ -85,8 +85,6 @@
     <classEntry path="mockolate.nice"/>
     <classEntry path="mockolate.partial"/>
     <classEntry path="mockolate.prepare"/>
-    <classEntry path="mockolate.prepareClassWithNamespaces"/>
-    <classEntry path="mockolate.preparedClassFor"/>
     <classEntry path="mockolate.received"/>
     <classEntry path="mockolate.record"/>
     <classEntry path="mockolate.replay"/>
