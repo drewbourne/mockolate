@@ -7,6 +7,7 @@
     <groupId>org.mockolate</groupId>
     <artifactId>mockolate</artifactId>
     <version>0.11.0</version>
+    <packaging>swc</packaging>
     <name>Mockolate</name>
     <description>fake chocolate, mock objects and test spies for AS3</description>
     <url>http://mockolate.org</url>
