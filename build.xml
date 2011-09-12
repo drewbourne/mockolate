@@ -115,12 +115,12 @@
           <jvmarg value="-Xmx512m" />
           <arg line="+flexlib '${FLEX_HOME}/frameworks'" />
           <arg line="-target-player=10.0" />
+          <arg line="-external-library-path+='${libs.loc}'" />
           <arg line="-external-library-path+='${FLEX_HOME}/frameworks/libs'" />
           <arg line="-external-library-path+='${libs.loc}/flexunit-${flexunit.version}.swc'" />
           <arg line="-external-library-path+='${libs.loc}/hamcrest-as3-${hamcrest.version}.swc'" />
           <arg line="-include-libraries+='${libs.loc}/FLoxy.swc'" />
           <arg line="-include-file=metadata.xml,'${src.loc}'/metadata.xml" />
-          <arg line="-library-path+='${libs.loc}'" />
           <arg line="-output=${bin.loc}/${library.flex.swc}" />
           <arg line="-include-sources=${src.loc}" />
           <arg line="-source-path+=${src.loc}" />
@@ -135,12 +135,12 @@
           <jvmarg value="-Xmx512m" />
           <arg line="+flexlib '${FLEX_HOME}/frameworks'" />
           <arg line="-target-player=10.0" />
+          <arg line="-external-library-path+='${libs.loc}'" />
           <arg line="-external-library-path+='${FLEX_HOME}/frameworks/libs'" />
           <arg line="-external-library-path+='${libs.loc}/flexunit-${flexunit.version}.swc'" />
           <arg line="-external-library-path+='${libs.loc}/hamcrest-as3-${hamcrest.version}.swc'" />
           <arg line="-include-libraries+='${libs.loc}/FLoxy.swc'" />
           <arg line="-include-file=metadata.xml,'${src.loc}'/metadata.xml" />
-          <arg line="-library-path+='${libs.loc}'" />
           <arg line="-output=${bin.loc}/${library.as3.swc}" />
           <arg line="-include-sources=${src.loc}" />
           <arg line="-source-path+=${src.loc}" />
