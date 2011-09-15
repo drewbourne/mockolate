@@ -8,12 +8,12 @@ package mockolate
 	 * 
 	 * @example
 	 * <listing version="3.0">
-	 * 	var flavour1:Flavour = nice(Flavour);
-	 * 	var flavour2:Flavour = nice(Flavour);
+	 *	var flavour1:Flavour = nice(Flavour);
+	 *	var flavour2:Flavour = nice(Flavour);
 	 * 
-	 * 	flavour1.combine(flavour2);
+	 *	flavour1.combine(flavour2);
 	 * 
-	 * 	assertThat(flavour1, received().method('combine').args(flavour2).once());
+	 *	assertThat(flavour1, received().method('combine').args(flavour2).once());
 	 * </listing>
 	 * 
 	 * @author drewbourne

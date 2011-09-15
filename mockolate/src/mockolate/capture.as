@@ -16,15 +16,15 @@ package mockolate
 	 * 
 	 * @example
 	 * <listing version="3.0">
-	 * 	var captured:Capture = new Capture();
-	 * 	var flavourA:Flavour = nice(Flavour);
-	 *  var flavourB:Flavour = nice(Flavour);
-	 * 	
-	 *  mock(flavourA).method("combine").args(capture(captured));
+	 *	var captured:Capture = new Capture();
+	 *	var flavourA:Flavour = nice(Flavour);
+	 *	var flavourB:Flavour = nice(Flavour);
+	 *	
+	 *	mock(flavourA).method("combine").args(capture(captured));
 	 * 
-	 *  flavourA.combine(flavourB);
+	 *	flavourA.combine(flavourB);
 	 * 
-	 * 	assertThat(captured.value, strictlyEqualTo(flavourB));
+	 *	assertThat(captured.value, strictlyEqualTo(flavourB));
 	 * </listing>
 	 * 
 	 * @author drewbourne

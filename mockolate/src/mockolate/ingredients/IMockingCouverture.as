@@ -236,6 +236,6 @@ package mockolate.ingredients
 		 *	mock(instance).method("addEventListener").anyArgs().callsSuper();
 		 * </listing>
 		 */
-		function callsSuper():IMockingCouverture;		
+		function callsSuper():IMockingCouverture;
 	}
 }

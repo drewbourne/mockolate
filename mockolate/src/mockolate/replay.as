@@ -1,6 +1,6 @@
 package mockolate
 {
-    import mockolate.ingredients.MockolatierMaster;
+	import mockolate.ingredients.MockolatierMaster;
 
 	[Deprecated]
 	/**
@@ -11,16 +11,16 @@ package mockolate
 	 * 
 	 * @example
 	 * <listing version="3.0">
-	 *  var flavour:Flavour = nice(Flavour);
-	 *  var other:Flavour = nice(Flavour);
-	 *  record(flavour);
-	 *  expect(flavour.combine(other)).returns(flavour);
-	 *  replay(flavour);
+	 *	var flavour:Flavour = nice(Flavour);
+	 *	var other:Flavour = nice(Flavour);
+	 *	record(flavour);
+	 *	expect(flavour.combine(other)).returns(flavour);
+	 *	replay(flavour);
 	 * </listing>
 	 * 
 	 * @author drewbourne
 	 */
-    public function replay(target:*):*
-    {
-    }
+	public function replay(target:*):*
+	{
+	}
 }
