@@ -46,7 +46,7 @@ package mockolate.runner.statements
 			
 			if (verifyMethod())
 			{
-				for each (var instanceRecipe:InstanceRecipe in data.instanceRecipes)
+				for each (var instanceRecipe:InstanceRecipe in data.instanceRecipes.toArray())
 				{
 					try
 					{
