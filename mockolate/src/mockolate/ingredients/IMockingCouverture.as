@@ -247,13 +247,7 @@ package mockolate.ingredients
 		/**
 		 * Constrains the current Expectation to be eligible when the State is active.
 		 * 
-		 * @example
-		 * <listing version="3.0">
-		 * 	var power:States = states("power").startsAs("off"); 
-		 * 	expect( coffeeMachine.switchOn() ).then( power.is("on") );
-		 * 	expect( coffeeMachine.makeCoffee() ).returns( new Espresso() ).when( power.is("on") );
-		 * 	expect( coffeeMachine.switchOff() ).then( power.is("off") );
-		 * </listing>
+		 * @see mockolate#states();
 		 */
 		function when(state:State):IMockingCouverture;
 
@@ -261,6 +255,7 @@ package mockolate.ingredients
 		 * Adds a side effect to the Expectation to make the State active.
 		 * 
 		 * @see #when()
+		 * @see mockolate#states();
 		 */
 		function then(state:State):IMockingCouverture;
 	}
