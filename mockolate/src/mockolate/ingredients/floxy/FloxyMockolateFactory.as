@@ -51,23 +51,24 @@ package mockolate.ingredients.floxy
 				return [ classRecipe.classToPrepare, classRecipe.namespacesToProxy ];
 			});
 			
-			trace("FloxyMockolateFactory prepareClassRecipes", toPrepare);
+//			trace("FloxyMockolateFactory prepareClassRecipes", toPrepare);
 			var bridge:IEventDispatcher = new EventDispatcher();
 			
 			var preparing:IEventDispatcher = _proxyRepository.prepareClasses(toPrepare, _applicationDomain);
 			
 			preparing.addEventListener(ProxyClassEvent.PROXY_CLASS_PREPARED, function(event:ProxyClassEvent):void {
-				trace("FloxyMockolateFactory prepareClassRecipes prepared", event.proxyClassInfo.proxiedClass, event.proxyClassInfo.proxyClass);
+//				trace("FloxyMockolateFactory prepareClassRecipes prepared", event.proxyClassInfo.proxiedClass, event.proxyClassInfo.proxyClass);
 				var classRecipe:ClassRecipe = classRecipes.getRecipeFor(
 					event.proxyClassInfo.proxiedClass, 
 					event.proxyClassInfo.proxiedNamespaces);
-				trace("FloxyMockolateFactory prepareClassRecipes classRecipe", classRecipe);
+				
+//				trace("FloxyMockolateFactory prepareClassRecipes classRecipe", classRecipe);
 				if (classRecipe) 
 					classRecipe.proxyClass = event.proxyClassInfo.proxyClass;	
 			});
 			
 			preparing.addEventListener(Event.COMPLETE, function(event:Event):void {
-				trace("FloxyMockolateFactory prepareClassRecipes complete", toPrepare);
+//				trace("FloxyMockolateFactory prepareClassRecipes complete", toPrepare);
 				setTimeout(bridge.dispatchEvent, 0, new Event(Event.COMPLETE));
 			});
 			return bridge;
