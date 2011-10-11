@@ -216,17 +216,23 @@ package mockolate.ingredients
 		 */
 		function atMost(n:int):IMockingCouverture;
 
+		[Deprecated(replacement="#inSequence()")]
+		/**
+		 * @copy #inSequence()
+		 */
+		function ordered(sequence:Sequence):IMockingCouverture;
+		
 		/**
 		 * Sets the current Expectation to expect to be called in order.
 		 * 
 		 * @example
 		 * <listing version="3.0">
 		 *  var seq:Sequence = sequence("execution order sensitive");
-		 *	mock(instance1).method("sort").ordered(seq);
-		 *	mock(instance2).method("sort").ordered(seq);
+		 *	mock(instance1).method("sort").inSequence(seq);
+		 *	mock(instance2).method("sort").inSequence(seq);
 		 * </listing>
 		 */
-		function ordered(sequence:Sequence):IMockingCouverture;
+		function inSequence(sequence:Sequence):IMockingCouverture;
 
 		/**
 		 * Sets the current Expectation to invoke the super method or property.
@@ -237,5 +243,25 @@ package mockolate.ingredients
 		 * </listing>
 		 */
 		function callsSuper():IMockingCouverture;
+		
+		/**
+		 * Constrains the current Expectation to be eligible when the State is active.
+		 * 
+		 * @example
+		 * <listing version="3.0">
+		 * 	var power:States = states("power").startsAs("off"); 
+		 * 	expect( coffeeMachine.switchOn() ).then( power.is("on") );
+		 * 	expect( coffeeMachine.makeCoffee() ).returns( new Espresso() ).when( power.is("on") );
+		 * 	expect( coffeeMachine.switchOff() ).then( power.is("off") );
+		 * </listing>
+		 */
+		function when(state:State):IMockingCouverture;
+
+		/**
+		 * Adds a side effect to the Expectation to make the State active.
+		 * 
+		 * @see #when()
+		 */
+		function then(state:State):IMockingCouverture;
 	}
 }

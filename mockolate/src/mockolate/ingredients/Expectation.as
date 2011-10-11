@@ -337,7 +337,9 @@ package mockolate.ingredients
 		 */		
 		protected function eligibleByConstraints():Boolean 
 		{
-			return every(_constraints, callProperty('isInvocationAllowed'));
+			return every(_constraints, function(constraint:Constraint):Boolean {
+				return constraint.isInvocationAllowed();
+			});
 		}
 		
 		/**

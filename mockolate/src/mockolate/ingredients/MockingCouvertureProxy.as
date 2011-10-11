@@ -76,12 +76,41 @@ package mockolate.ingredients
 			return this;
 		}
 		
+		[Deprecated(replacement="#inSequence()")]
 		/**
-		 * @copy MockingCouverture#ordered()
+		 * @copy IMockingCouverture#inSequence()
 		 */
 		public function ordered(sequence:Sequence):IMockingCouverture
 		{
-			mocker.ordered(sequence);
+			mocker.inSequence(sequence);
+			return this;
+		}
+		
+		/**
+		 * @copy IMockingCouverture#inSequence()
+		 */
+		public function inSequence(sequence:Sequence):IMockingCouverture
+		{
+			mocker.inSequence(sequence);
+			return this;
+		}
+		
+		/**
+		 * @copy IMockingCouverture#when()
+		 */
+		public function when(state:State):IMockingCouverture
+		{
+			mocker.when(state);
+			return this;
+		}
+		
+		
+		/**
+		 * @copy IMockingCouverture#then()
+		 */
+		public function then(state:State):IMockingCouverture
+		{
+			mocker.then(state);
 			return this;
 		}
 		

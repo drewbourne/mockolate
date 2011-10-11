@@ -57,6 +57,8 @@ package mockolate.ingredients
 	import org.hamcrest.object.instanceOf;
 	import org.hamcrest.object.nullValue;
 	import org.hamcrest.text.re;
+	import mockolate.ingredients.constraints.InStateOrderingConstraint;
+	import mockolate.ingredients.answers.ChangeStateAnswer;
 
 	use namespace mockolate_ingredient;
 
@@ -760,18 +762,46 @@ package mockolate.ingredients
 			return this;
 		}
 
+		[Deprecated(replacement="#inSequence()")]
 		/**
-		 * Sets the current Expectation to expect to be called in order.
-		 *
-		 * @example
-		 * <listing version="3.0">
-		 *	mock(instance1).method("sort").ordered("execution order sensitive");
-		 *	mock(instance2).method("sort").ordered("execution order sensitive");
-		 * </listing>
+		 * @copy #inSequence()
 		 */
 		public function ordered(sequence:Sequence):IMockingCouverture
 		{
-			addOrdered(sequence);
+			return inSequence(sequence);
+		}
+		
+		/**
+		 * Sets the current Expectation to expect to be called in sequence.
+		 *
+		 * @example
+		 * <listing version="3.0">
+		 * 	var orderSensitive:Sequence = sequence("orderSensitive");
+		 *	mock(instance1).method("sort").inSequence(orderSensitive);
+		 *	mock(instance2).method("sort").inSequence(orderSensitive);
+		 * </listing>
+		 */
+		public function inSequence(sequence:Sequence):IMockingCouverture
+		{
+			sequence.constrainAsNextInSequence(_currentExpectation);
+			return this;
+		}
+		
+		/**
+		 * @copy IMockingCouverture#when()
+		 */
+		public function when(state:State):IMockingCouverture
+		{
+			_currentExpectation.addConstraint(new InStateOrderingConstraint(state));
+			return this;	
+		}
+		
+		/**
+		 * @copy IMockingCouverture#then()
+		 */
+		public function then(state:State):IMockingCouverture
+		{
+			addAnswer(new ChangeStateAnswer(state));
 			return this;
 		}
 
