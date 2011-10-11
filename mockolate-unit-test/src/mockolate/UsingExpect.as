@@ -1,10 +1,12 @@
 package mockolate
 {
+	import mockolate.errors.ExpectationError;
 	import mockolate.runner.MockolateRule;
 	import mockolate.sample.Flavour;
 	
 	import org.flexunit.assertThat;
 	import org.hamcrest.core.anything;
+	import org.hamcrest.core.throws;
 	import org.hamcrest.object.equalTo;
 
 	public class UsingExpect
@@ -44,12 +46,14 @@ package mockolate
 			assertThat(flavour.combine(null), equalTo(null));
 		}
 		
-		[Test(expects="mockolate.errors.ExpectationError")]
+		[Test(verify="false")]
 		public function expect_shouldBeVerified():void 
 		{
 			expect(flavour.combine(arg(otherFlavour))).returns(flavour);
 			
-			verify(flavour);
+			assertThat(function():void {
+				verify(flavour);
+			}, throws(ExpectationError));
 		}
 	}
 }
