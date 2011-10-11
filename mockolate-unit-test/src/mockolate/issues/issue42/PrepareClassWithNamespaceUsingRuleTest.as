@@ -38,7 +38,6 @@ package mockolate.issues.issue42
 		public function target_shouldNotHaveProxiedNamespacedMethods():void 
 		{
 			mock(target).method("isMethodProxied").returns(true);
-			mock(target).nsMethod(issue_namespace_1, "isNamespacedMethodProxied").returns(true);
 			
 			assertThat("isMethodProxied", 
 				target.isMethodProxied(), isTrue());
