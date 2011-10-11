@@ -32,7 +32,7 @@ package mockolate
 		[Test]
 		public function expectMethodWithMatchers():void 
 		{
-			expect(flavour.combine(expectArg(isA(Flavour)))).returns(result);
+			expect(flavour.combine(arg(isA(Flavour)))).returns(result);
 			
 			assertThat(flavour.combine(other), equalTo(result));
 		}
@@ -56,7 +56,7 @@ package mockolate
 		[Test]
 		public function expectSetterWithMatcher():void 
 		{
-			expect(flavour.liked = expectArg(isA(Boolean)));
+			expect(flavour.liked = arg(isA(Boolean)));
 			
 			flavour.liked = true;
 		}
@@ -65,7 +65,7 @@ package mockolate
 		public function expectAllInOne():void 
 		{
 			expect(flavour.name).returns("butterscotch");
-			expect(flavour.liked = expectArg(isA(Boolean)));
+			expect(flavour.liked = arg(isA(Boolean)));
 			expect(flavour.combine(other)).returns(result);
 			
 			flavour.liked = true;

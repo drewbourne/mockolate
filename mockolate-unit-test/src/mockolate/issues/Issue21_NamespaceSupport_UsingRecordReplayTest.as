@@ -4,8 +4,6 @@ package mockolate.issues
 	
 	import mockolate.expect;
 	import mockolate.received;
-	import mockolate.record;
-	import mockolate.replay;
 	import mockolate.runner.MockolateRule;
 	
 	import org.flexunit.asserts.assertEquals;
@@ -30,9 +28,7 @@ package mockolate.issues
 		[Test]
 		public function recordReplay_shouldInterceptNamespacedMethod():void 
 		{
-			record(instance);
 			expect(instance.test_namespace::methodInNamespace()).returns(true);
-			replay(instance);
 			
 			assertThat(instance.test_namespace::methodInNamespace(), isTrue());
 			assertThat(instance, received().nsMethod(test_namespace, "methodInNamespace"));
@@ -41,9 +37,7 @@ package mockolate.issues
 		[Test]
 		public function recordReplay_shouldInterceptNamespacedGetter():void 
 		{
-			record(instance);
 			expect(instance.test_namespace::testGetter).returns(true);
-			replay(instance);
 			
 			assertThat(instance.test_namespace::testGetter, isTrue());
 			assertThat(instance, received().nsGetter(test_namespace, "testGetter"));
@@ -52,9 +46,7 @@ package mockolate.issues
 		[Test]
 		public function recordReplay_shouldInterceptNamespacedSetter():void 
 		{
-			record(instance);
 			expect(instance.test_namespace::testSetter = true);
-			replay(instance);
 			
 			instance.test_namespace::testSetter = true;
 			
@@ -64,9 +56,7 @@ package mockolate.issues
 		[Test(verify="false")]
 		public function recordReplay_nsMethod_withoutInvocation_shouldHaveNiceErrorMessage():void 
 		{
-			record(instance);
 			expect(instance.test_namespace::methodInNamespace()).returns(true);
-			replay(instance);
 			
 			assertMismatch("Issue21_NamespaceSupport_ClassWithNamespace(instance).methodInNamespace() invoked 0/1 (-1) times", 
 				received().nsMethod(test_namespace, "methodInNamespace"), 
@@ -79,9 +69,7 @@ package mockolate.issues
 		[Test(verify="false")]
 		public function recordReplay_nsGetter_withoutInvocation_shouldHaveNiceErrorMessage():void 
 		{
-			record(instance);
 			expect(instance.test_namespace::testGetter).returns(true);
-			replay(instance);
 			
 			assertMismatch("Issue21_NamespaceSupport_ClassWithNamespace(instance).testGetter; invoked 0/1 (-1) times", 
 				received().nsGetter(test_namespace, "testGetter"),
@@ -93,9 +81,7 @@ package mockolate.issues
 		[Test(verify="false")]
 		public function recordReplay_nsSetter_withoutInvocation_shouldHaveNiceErrorMessage():void 
 		{
-			record(instance);
 			expect(instance.test_namespace::testSetter = true);
-			replay(instance);
 	
 			assertMismatch("Issue21_NamespaceSupport_ClassWithNamespace(instance).testSetter = ?; invoked 0/1 (-1) times", 
 				received().nsSetter(test_namespace, "testSetter"),
