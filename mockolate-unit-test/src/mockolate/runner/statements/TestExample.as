@@ -24,10 +24,21 @@ package mockolate.runner.statements
 		
 		[Mock(args="exampleConstructorArgs")]
 		public var exampleConstructor:ExampleClass;
-		public function get exampleConstructorArgs():Array {
+		public function get exampleConstructorArgs():Array 
+		{
 			return [1, 2, 3];
 		}
 		
 		public var nonMockField:Boolean;
+		
+		[Test]
+		public function exampleTest():void 
+		{
+		}
+		
+		[Test(verify="false")]
+		public function exampleTestWithVerifyFalse():void 
+		{
+		}
 	}
 }

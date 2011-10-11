@@ -18,6 +18,8 @@ package mockolate
 	import mockolate.issues.issue42.PrepareClassWithNamespaceUsingRuleTest;
 	import mockolate.runner.MockolateRuleExample;
 	import mockolate.runner.MockolateRunnerExample;
+	import mockolate.runner.statements.IdentifyMockClassesTest;
+	import mockolate.runner.statements.VerifyMockInstancesTest;
 
 	[Suite]
 	[RunWith("org.flexunit.runners.Suite")]
@@ -74,6 +76,8 @@ package mockolate
 		//
         public var runnerExample:MockolateRunnerExample;
 		public var ruleExample:MockolateRuleExample;
+		public var identifyMockClasses:IdentifyMockClassesTest;
+		public var verifyMockInstances:VerifyMockInstancesTest;
 		
 		//
 		//	issues
