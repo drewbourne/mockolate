@@ -41,6 +41,7 @@ package mockolate.ingredients
         private var _mockolatesByTarget:Dictionary;
         private var _mockolateFactory:IMockolateFactory;
 		private var _lastInvocation:Invocation;
+		private var _preparingClassRecipes:ClassRecipes;
 		private var _preparedClassRecipes:ClassRecipes;
         
         /**
@@ -49,11 +50,15 @@ package mockolate.ingredients
         public function Mockolatier()
         {
             super();
+			
+			trace("Mockolatier");
             
 			_applicationDomain = ApplicationDomain.currentDomain;
             _mockolates = [];
             _mockolatesByTarget = new Dictionary();
             _mockolateFactory = new FloxyMockolateFactory(this, _applicationDomain);
+			
+			_preparingClassRecipes = new ClassRecipes();
 			_preparedClassRecipes = new ClassRecipes();
         }
 		
@@ -109,13 +114,38 @@ package mockolate.ingredients
 		 */
 		public function prepareClassRecipes(classRecipes:ClassRecipes):IEventDispatcher
 		{
-			var classRecipesToPrepare:ClassRecipes = rejectAlreadyPreparedClassRecipes(classRecipes);
+			var classRecipesToPrepare:ClassRecipes = classRecipes;
+			
+			classRecipesToPrepare = rejectPreparedClassRecipes(classRecipesToPrepare);
+			trace("prepareClassRecipes 1", classRecipesToPrepare.numRecipes, classRecipesToPrepare.toArray());
+			
+			classRecipesToPrepare = rejectPreparingClassRecipes(classRecipesToPrepare);
+			trace("prepareClassRecipes 2", classRecipesToPrepare.numRecipes, classRecipesToPrepare.toArray());
+			
 			var preparer:IEventDispatcher = _mockolateFactory.prepareClasses(classRecipesToPrepare);
 			preparer.addEventListener(Event.COMPLETE, addToPreparedClassRecipes(classRecipesToPrepare), false, 100, true);
+			
+			addToPreparingClassRecipes(classRecipesToPrepare);
+			
 			return preparer;
 		}
 		
-		private function rejectAlreadyPreparedClassRecipes(classRecipes:ClassRecipes):ClassRecipes 
+		private function rejectPreparingClassRecipes(classRecipes:ClassRecipes):ClassRecipes 
+		{
+			var classRecipesToPrepare:ClassRecipes = new ClassRecipes();
+			
+			for each (var classRecipe:ClassRecipe in classRecipes.toArray()) 
+			{
+				if (!_preparingClassRecipes.hasRecipeFor(classRecipe.classToPrepare, classRecipe.namespacesToProxy))
+				{
+					classRecipesToPrepare.add(classRecipe);	
+				}
+			}
+			
+			return classRecipesToPrepare;
+		}
+		
+		private function rejectPreparedClassRecipes(classRecipes:ClassRecipes):ClassRecipes 
 		{
 			var classRecipesToPrepare:ClassRecipes = new ClassRecipes();
 			
@@ -128,6 +158,11 @@ package mockolate.ingredients
 			}
 			
 			return classRecipesToPrepare;
+		}
+		
+		private function addToPreparingClassRecipes(classRecipes:ClassRecipes):void 
+		{
+			forEach(classRecipes.toArray(), _preparingClassRecipes.add);
 		}
 		
 		private function addToPreparedClassRecipes(classRecipes:ClassRecipes):Function 
