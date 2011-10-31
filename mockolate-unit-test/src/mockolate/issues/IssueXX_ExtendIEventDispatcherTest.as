@@ -31,7 +31,7 @@ package mockolate.issues
 		
 		private function testHandler(event:Event):void
 		{
-			trace("testHandler()");
+//			trace("testHandler()");
 		}
 	}
 }

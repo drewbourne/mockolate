@@ -83,7 +83,7 @@ package mockolate.runner
 			}
 			catch (e:Error)
 			{
-				trace(e.getStackTrace());
+//				trace(e.getStackTrace());
 				return new Fail(e);
 			}
 			

@@ -71,6 +71,7 @@ package mockolate.ingredients.floxy
 //				trace("FloxyMockolateFactory prepareClassRecipes complete", toPrepare);
 				setTimeout(bridge.dispatchEvent, 0, new Event(Event.COMPLETE));
 			});
+			
 			return bridge;
 		}
 		

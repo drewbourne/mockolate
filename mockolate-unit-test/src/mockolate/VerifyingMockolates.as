@@ -72,7 +72,7 @@ package mockolate
             }
             catch (error:ExpectationError)
             {
-                trace(error.message);
+//                trace(error.message);
                 assertThat(error.expectations, arrayWithSize(3));
             }
         }
