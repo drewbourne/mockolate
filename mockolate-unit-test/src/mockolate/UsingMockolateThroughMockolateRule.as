@@ -111,9 +111,9 @@ package mockolate
 		}
 		
 		[Test]
-		public function expect_expectArg_shouldBeForwardedToMockolatier():void
+		public function expect_arg_shouldBeForwardedToMockolatier():void
 		{
-			mocks.expect(flavour.combine(mocks.expectArg(Flavour)));
+			mocks.expect(flavour.combine(mocks.arg(Flavour)));
 			
 			assertThat(mockolatier, received().method("expectArg").args(Flavour).once());
 			assertThat(mockolatier, received().method("expect").args(null).once());
