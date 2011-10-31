@@ -22,6 +22,11 @@ package mockolate.ingredients
 			}
 		}
 		
+		public function hasRecipe(classRecipe:ClassRecipe):Boolean 
+		{
+			return !!getRecipeFor(classRecipe.classToPrepare, classRecipe.namespacesToProxy);
+		}
+		
 		public function hasRecipeFor(classReference:Class, namespaces:Array = null):Boolean
 		{
 			return !!getRecipeFor(classReference, namespaces);
@@ -38,6 +43,21 @@ package mockolate.ingredients
 			}
 			
 			return null;
+		}
+		
+		public function without(otherClassRecipes:ClassRecipes):ClassRecipes 
+		{
+			var classRecipes:ClassRecipes = new ClassRecipes();
+			
+			for each (var classRecipe:ClassRecipe in toArray()) 
+			{
+				if (!otherClassRecipes.hasRecipe(classRecipe))
+				{
+					classRecipes.add(classRecipe);
+				}
+			}
+			
+			return classRecipes;
 		}
 		
 		public function toArray():Object

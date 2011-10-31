@@ -43,7 +43,7 @@ package mockolate.ingredients
 		private var _lastInvocation:Invocation;
 		private var _preparingClassRecipes:ClassRecipes;
 		private var _preparedClassRecipes:ClassRecipes;
-        
+		
         /**
          * Constructor.
          */
@@ -51,8 +51,6 @@ package mockolate.ingredients
         {
             super();
 			
-			trace("Mockolatier");
-            
 			_applicationDomain = ApplicationDomain.currentDomain;
             _mockolates = [];
             _mockolatesByTarget = new Dictionary();
@@ -110,54 +108,26 @@ package mockolate.ingredients
         }
 		
 		/**
-		 * 
+		 * @see mockolate#prepare()
 		 */
 		public function prepareClassRecipes(classRecipes:ClassRecipes):IEventDispatcher
 		{
-			var classRecipesToPrepare:ClassRecipes = classRecipes;
+			var dispatcher:IEventDispatcher;
+			var classRecipesToPrepare:ClassRecipes = classRecipes.without(_preparingClassRecipes).without(_preparedClassRecipes);
 			
-			classRecipesToPrepare = rejectPreparedClassRecipes(classRecipesToPrepare);
-			trace("prepareClassRecipes 1", classRecipesToPrepare.numRecipes, classRecipesToPrepare.toArray());
-			
-			classRecipesToPrepare = rejectPreparingClassRecipes(classRecipesToPrepare);
-			trace("prepareClassRecipes 2", classRecipesToPrepare.numRecipes, classRecipesToPrepare.toArray());
-			
-			var preparer:IEventDispatcher = _mockolateFactory.prepareClasses(classRecipesToPrepare);
-			preparer.addEventListener(Event.COMPLETE, addToPreparedClassRecipes(classRecipesToPrepare), false, 100, true);
-			
-			addToPreparingClassRecipes(classRecipesToPrepare);
-			
-			return preparer;
-		}
-		
-		private function rejectPreparingClassRecipes(classRecipes:ClassRecipes):ClassRecipes 
-		{
-			var classRecipesToPrepare:ClassRecipes = new ClassRecipes();
-			
-			for each (var classRecipe:ClassRecipe in classRecipes.toArray()) 
+			if (classRecipesToPrepare.numRecipes == 0)
 			{
-				if (!_preparingClassRecipes.hasRecipeFor(classRecipe.classToPrepare, classRecipe.namespacesToProxy))
-				{
-					classRecipesToPrepare.add(classRecipe);	
-				}
+				dispatcher = new EventDispatcher();
+				setTimeout(dispatcher.dispatchEvent, 0, new Event(Event.COMPLETE));
+				return dispatcher;
 			}
-			
-			return classRecipesToPrepare;
-		}
-		
-		private function rejectPreparedClassRecipes(classRecipes:ClassRecipes):ClassRecipes 
-		{
-			var classRecipesToPrepare:ClassRecipes = new ClassRecipes();
-			
-			for each (var classRecipe:ClassRecipe in classRecipes.toArray()) 
+			else
 			{
-				if (!classRecipe.proxyClass) 
-				{
-					classRecipesToPrepare.add(classRecipe);
-				}
+				addToPreparingClassRecipes(classRecipesToPrepare);
+				dispatcher = _mockolateFactory.prepareClasses(classRecipesToPrepare);
+				dispatcher.addEventListener(Event.COMPLETE, addToPreparedClassRecipes(classRecipesToPrepare), false, 100, true);
+				return dispatcher;
 			}
-			
-			return classRecipesToPrepare;
 		}
 		
 		private function addToPreparingClassRecipes(classRecipes:ClassRecipes):void 
