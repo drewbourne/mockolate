@@ -27,6 +27,7 @@
           output="@{output}"
           target-player="${flashplayer.version}">
           <source-path path-element="${src.loc}" />
+          <include-file name="metadata.xml" path="${src.loc}/metadata.xml" />
           <include-sources dir="${src.loc}">
             <include name="**/*.as" />
             <exclude name="**/Bytecode*.as" />
