@@ -18,7 +18,7 @@ package mockolate.ingredients
 			}
 			else
 			{
-				throw new MockolateError("", null, null);
+				throw new MockolateError("InstanceRecipeBuilder.withClassRecipe() did not receive ClassRecipe or ClassRecipeBuilder", null, null);
 			}
 			
 			return this;
