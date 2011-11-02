@@ -64,7 +64,7 @@ package mockolate.ingredients
         public function prepareWithManyClassesDispatchesCompleteEvent():void
         {
             Async.proceedOnEvent(this, 
-				mockolatier.prepare(Flavour), 
+				mockolatier.prepare(Flavour, DarkChocolate), 
 				Event.COMPLETE);
         }
         
@@ -79,8 +79,6 @@ package mockolate.ingredients
 		//
 		// 	prepareClassRecipes()
 		//
-		
-		
         
         //
         //  Nice
@@ -92,14 +90,16 @@ package mockolate.ingredients
             Async.handleEvent(this, 
 				mockolatier.prepare(Flavour), 
 				Event.COMPLETE, 
-				niceWithInterface_shouldCreateInstance, 5000);
-            ;
+				niceWithInterface_shouldCreateInstance(mockolatier), 5000);
         }
         
-        private function niceWithInterface_shouldCreateInstance(event:Event, data:Object=null):void
-        {
-            var flavour:Flavour = mockolatier.nice(Flavour);
-            assertThat(flavour, isA(Flavour));
+        private function niceWithInterface_shouldCreateInstance(mockolate:Mockolatier):Function
+		{
+			return function (event:Event, data:Object=null):void 
+			{
+				var flavour:Flavour = mockolatier.nice(Flavour);
+            	assertThat(flavour, isA(Flavour));
+			}
         }
         
         [Test(async, timeout=5000)]
@@ -108,13 +108,16 @@ package mockolate.ingredients
             Async.handleEvent(this, 
 				mockolatier.prepare(DarkChocolate), 
 				Event.COMPLETE, 
-				niceWithClass_shouldCreateInstance, 5000);
+				niceWithClass_shouldCreateInstance(mockolatier), 5000);
         }
         
-        public function niceWithClass_shouldCreateInstance(event:Event, data:Object=null):void
-        {
-            var flavour:Flavour = mockolatier.nice(DarkChocolate);
-            assertThat(flavour, isA(DarkChocolate));
+        public function niceWithClass_shouldCreateInstance(mockolate:Mockolatier):Function
+		{
+			return function (event:Event, data:Object=null):void 
+			{
+				var flavour:Flavour = mockolatier.nice(DarkChocolate);
+            	assertThat(flavour, isA(DarkChocolate));
+			}
         }
         
         //
@@ -127,13 +130,16 @@ package mockolate.ingredients
             Async.handleEvent(this, 
 				mockolatier.prepare(Flavour), 
 				Event.COMPLETE, 
-				strictWithInterface_shouldCreateInstance, 5000);
+				strictWithInterface_shouldCreateInstance(mockolatier), 5000);
         }
         
-        private function strictWithInterface_shouldCreateInstance(event:Event, data:Object=null):void
-        {
-            var flavour:Flavour = mockolatier.strict(Flavour);
-            assertThat(flavour, isA(Flavour));
+        private function strictWithInterface_shouldCreateInstance(mockolate:Mockolatier):Function
+		{
+			return function (event:Event, data:Object=null):void 
+			{
+				var flavour:Flavour = mockolatier.strict(Flavour);
+            	assertThat(flavour, isA(Flavour));
+			}
         }
         
         [Test(async, timeout=5000)]
@@ -142,13 +148,16 @@ package mockolate.ingredients
             Async.handleEvent(this, 
 				mockolatier.prepare(DarkChocolate), 
 				Event.COMPLETE, 
-				strictWithClass_shouldCreateInstance, 5000);
+				strictWithClass_shouldCreateInstance(mockolatier), 5000);
         }
         
-        private function strictWithClass_shouldCreateInstance(event:Event, data:Object=null):void
-        {
-            var flavour:Flavour = mockolatier.strict(DarkChocolate);
-            assertThat(flavour, isA(DarkChocolate));
+        private function strictWithClass_shouldCreateInstance(mockolate:Mockolatier):Function
+		{
+			return function (event:Event, data:Object=null):void 
+			{
+				var flavour:Flavour = mockolatier.strict(DarkChocolate);
+            	assertThat(flavour, isA(DarkChocolate));
+			}
         }
         
         //
@@ -161,13 +170,16 @@ package mockolate.ingredients
             Async.handleEvent(this, 
 				mockolatier.prepare(DarkChocolate), 
 				Event.COMPLETE, 
-				stubWithNice_shouldCreateStubbingCouverture, 5000);
+				stubWithNice_shouldCreateStubbingCouverture(mockolatier), 5000);
         }
         
-        private function stubWithNice_shouldCreateStubbingCouverture(event:Event, data:Object=null):void
+        private function stubWithNice_shouldCreateStubbingCouverture(mockolate:Mockolatier):Function
         {
-            var flavour:Flavour = mockolatier.nice(DarkChocolate);
-            mockolatier.stub(flavour).method("name").returns("VeryDarkChocolate");
+			return function (event:Event, data:Object=null):void 
+			{
+            	var flavour:Flavour = mockolatier.nice(DarkChocolate);
+            	mockolatier.stub(flavour).method("name").returns("VeryDarkChocolate");
+			}
         }
     }
 }
