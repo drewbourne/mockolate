@@ -1,20 +1,25 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <annotations version="1.0">
-    <metadata name="Mock" description="Annotates a field for which a Mock Object will be prepared and injected.">
+    <metadata name="Mock" description="Annotates a field for which a Mock Object will be prepared and injected">
         <context name="variable" />
         <attribute  name="type"
                     type="String" 
                     required="false" 
-                    values="nice,strict"
+                    values="nice,strict,partial"
                     defaultValue="nice"
-                    description="Type of Mock Object to inject, either 'nice' or 'strict'."
+                    description="Type of Mock Object to inject, either 'nice' or 'strict' or 'partial'"
                     />
         <attribute  name="inject"
                     type="Boolean" 
                     hint="boolean"
                     required="false"
                     defaultValue="true" 
-                    description="Indicates if a Mock instance should be injected to the field."
+                    description="Indicates if a Mock instance should be injected to the field"
+                    />
+        <attribute  name="args"
+                    type="String"
+                    required="false"
+                    description="Name of the getter or method to call for constructor arguments for the Mock Object"
                     />
     </metadata>
 </annotations>
