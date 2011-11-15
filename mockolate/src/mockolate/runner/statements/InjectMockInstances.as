@@ -7,16 +7,10 @@ package mockolate.runner.statements
 	import flash.events.IEventDispatcher;
 	
 	import mockolate.ingredients.InstanceRecipe;
-	import mockolate.ingredients.MockType;
-	import mockolate.ingredients.Mockolatier;
 	import mockolate.ingredients.mockolate_ingredient;
-	import mockolate.nice;
-	import mockolate.runner.MockMetadata;
 	import mockolate.runner.MockolateRunnerData;
 	import mockolate.runner.MockolateRunnerStatement;
-	import mockolate.strict;
 	
-	import org.flexunit.internals.runners.InitializationError;
 	import org.flexunit.internals.runners.statements.IAsyncStatement;
 	import org.flexunit.token.AsyncTestToken;
 
@@ -47,13 +41,11 @@ package mockolate.runner.statements
 		public function evaluate(parentToken:AsyncTestToken):void 
 		{
 			var preparer:IEventDispatcher = data.mockolatier.prepareInstances(data.instanceRecipes);
-
+			
 			preparer.addEventListener(Event.COMPLETE, function(event:Event):void {
 				
 				forEach(data.instanceRecipes.toArray(), function(instanceRecipe:InstanceRecipe):void {
-					if (instanceRecipe.inject) {
-						data.test[instanceRecipe.name] = instanceRecipe.instance;
-					}
+					data.test[instanceRecipe.name] = instanceRecipe.instance;
 				});
 				
 				parentToken.sendResult();

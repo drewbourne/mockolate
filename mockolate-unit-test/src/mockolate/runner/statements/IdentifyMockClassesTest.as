@@ -79,8 +79,8 @@ package mockolate.runner.statements
 			assertThat("instanceRecipes is not null",
 				runnerData.instanceRecipes, notNullValue());
 			
-			assertThat("instanceRecipes has 7 InstanceRecipes", 
-				runnerData.instanceRecipes.numRecipes, equalTo(7));
+			assertThat('instanceRecipes has 6 InstanceRecipes, one for each [Mock] field that is not [Mock(inject="false")]', 
+				runnerData.instanceRecipes.numRecipes, equalTo(6));
 		}
 	}
 }

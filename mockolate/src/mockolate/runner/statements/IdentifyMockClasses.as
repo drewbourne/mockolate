@@ -10,9 +10,6 @@ package mockolate.runner.statements
 	
 	import mockolate.ingredients.ClassRecipes;
 	import mockolate.ingredients.InstanceRecipes;
-	import mockolate.runner.MockMetadata;
-	import mockolate.runner.MockMetadataFactory;
-	import mockolate.runner.MockolateRunnerConstants;
 	import mockolate.runner.MockolateRunnerData;
 	import mockolate.runner.MockolateRunnerStatement;
 	
@@ -141,16 +138,19 @@ internal class MockolateRecipeIdentifier
 			var metadata:MetaDataAnnotation = field.getMetaData(MOCK_METADATA);
 			var namespaces:Array = parseNamespacesToProxy(test, fromKlass, field, metadata);
 			var classRecipe:ClassRecipe = withClassRecipes.getRecipeFor(field.type, namespaces);
+			var injectable:Boolean = parseInject(field, metadata);
 			
-			var instanceRecipe:InstanceRecipe = anInstanceRecipe()
-				.withClassRecipe(classRecipe)
-				.withConstructorArgsFunction(parseConstructorArgs(test, fromKlass, field, metadata))
-				.withMockType(parseMockType(field, metadata))
-				.withName(field.name)
-				.withInject(parseInject(field, metadata))
-				.build();
-				
-			intoInstanceRecipes.add(instanceRecipe);
+			if (injectable)
+			{
+				var instanceRecipe:InstanceRecipe = anInstanceRecipe()
+					.withClassRecipe(classRecipe)
+					.withConstructorArgsFunction(parseConstructorArgs(test, fromKlass, field, metadata))
+					.withMockType(parseMockType(field, metadata))
+					.withName(field.name)
+					.build();
+					
+				intoInstanceRecipes.add(instanceRecipe);
+			}
 		}
 	}
 	
