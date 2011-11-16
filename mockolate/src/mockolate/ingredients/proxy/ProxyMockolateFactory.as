@@ -1,18 +1,8 @@
 package mockolate.ingredients.proxy
 {
-	import flash.errors.IllegalOperationError;
-	import flash.events.IEventDispatcher;
-	
 	import mockolate.ingredients.AbstractMockolateFactory;
-	import mockolate.ingredients.ClassRecipes;
-	import mockolate.ingredients.ExpectingCouverture;
-	import mockolate.ingredients.IMockolateFactory;
-	import mockolate.ingredients.InstanceRecipes;
 	import mockolate.ingredients.MockType;
-	import mockolate.ingredients.MockingCouverture;
 	import mockolate.ingredients.Mockolate;
-	import mockolate.ingredients.RecordingCouverture;
-	import mockolate.ingredients.VerifyingCouverture;
 	import mockolate.ingredients.mockolate_ingredient;
 	
 	use namespace mockolate_ingredient;

@@ -8,7 +8,6 @@ package mockolate.runner.statements
 	import mockolate.runner.MockolateRunnerConstants;
 	import mockolate.runner.MockolateRunnerData;
 	import mockolate.runner.MockolateRunnerStatement;
-	import mockolate.verify;
 	
 	import org.flexunit.constants.AnnotationConstants;
 	import org.flexunit.internals.runners.statements.IAsyncStatement;

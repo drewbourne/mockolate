@@ -3,13 +3,10 @@ package mockolate.runner.statements
 	import flash.events.Event;
 	
 	import flex.lang.reflect.Klass;
-	import flex.lang.reflect.Method;
 	
-	import mockolate.ingredients.ClassRecipes;
 	import mockolate.ingredients.InstanceRecipe;
 	import mockolate.ingredients.InstanceRecipes;
 	import mockolate.ingredients.Mockolatier;
-	import mockolate.ingredients.anInstanceRecipe;
 	import mockolate.nice;
 	import mockolate.prepare;
 	import mockolate.received;
