@@ -908,7 +908,9 @@ package mockolate.ingredients
 			
 			if (!expectation)
 			{
-				if (mockolateInstance.mockType == MockType.STRICT)
+				var isExpecting:Boolean = MockolatierMaster.mockolatier.isExpecting;
+				
+				if (!isExpecting && mockolateInstance.mockType == MockType.STRICT)
 				{
 					var description:Description = new StringDescription();
 

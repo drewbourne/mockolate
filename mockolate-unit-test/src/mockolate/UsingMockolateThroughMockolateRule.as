@@ -31,7 +31,6 @@ package mockolate
 			mocks.mockolatier = mockolatier;
 		}
 		
-		[Ignore]
 		[Test]
 		public function prepare_shouldBeForwardedToMockolatier():void 
 		{
@@ -40,22 +39,25 @@ package mockolate
 			assertThat(mockolatier, received().method("prepare").args(EventDispatcher, Sprite).once());
 		}
 		
-		[Ignore]
+		[Ignore("TODO update for prepareInstance")]
 		[Test]
 		public function nice_shouldBeForwardedToMockolatier():void 
 		{
 			mocks.nice(Flavour);
-			assertThat(mockolatier, received().method("nice").args(Flavour, null, null).once());
+			assertThat('mocks.nice<[Flavour]>', 
+				mockolatier, received().method("nice").args(Flavour, null, null).once());
 			
 			mocks.nice(Flavour, "niceFlavour");
-			assertThat(mockolatier, received().method("nice").args(Flavour, "niceFlavour", null).once());
+			assertThat('mocks.nice<[Flavour, "niceFlavour"]>', 
+				mockolatier, received().method("nice").args(Flavour, "niceFlavour", null).once());
 			
 			var constructorArgs:Array = [];
 			mocks.nice(Flavour, "niceFlavour", constructorArgs);
-			assertThat(mockolatier, received().method("nice").args(Flavour, "niceFlavour", constructorArgs).once());
+			assertThat('mocks.nice<[Flavour, "niceFlavour", constructorArgs]>', 
+				mockolatier, received().method("nice").args(Flavour, "niceFlavour", constructorArgs).once());
 		}
 		
-		[Ignore]
+		[Ignore("TODO update for prepareInstance")]
 		[Test]
 		public function strict_shouldBeForwardedToMockolatier():void 
 		{
@@ -70,22 +72,25 @@ package mockolate
 			assertThat(mockolatier, received().method("strict").args(Flavour, "strictFlavour", constructorArgs).once());
 		}
 		
-		[Ignore]
+		[Ignore("TODO update for prepareInstance")]
 		[Test]
 		public function partial_shouldBeForwardedToMockolatier():void 
 		{
 			mocks.partial(Flavour);
-			assertThat(mockolatier, received().method("partial").args(Flavour, null, null).once());
+			assertThat("mocks.partial<[Flavour]>", 
+				mockolatier, received().method("partial").args(Flavour, null, null).once());
 			
 			mocks.partial(Flavour, "partialFlavour");
-			assertThat(mockolatier, received().method("partial").args(Flavour, "partialFlavour", null).once());
+			assertThat('mocks.partial<[Flavour, "partialFlavour"]>', 
+				mockolatier, received().method("partial").args(Flavour, "partialFlavour", null).once());
 			
 			var constructorArgs:Array = [];
 			mocks.partial(Flavour, "partialFlavour", constructorArgs);
-			assertThat(mockolatier, received().method("partial").args(Flavour, "partialFlavour", constructorArgs).once());
+			assertThat('mocks.partial<[Flavour, "partialFlavour", constructorArgs]>', 
+				mockolatier, received().method("partial").args(Flavour, "partialFlavour", constructorArgs).once());
 		}
 		
-		[Ignore]
+//		[Ignore]
 		[Test]
 		public function mock_shouldBeForwardedToMockolatier():void
 		{
@@ -117,6 +122,18 @@ package mockolate
 			
 			assertThat(mockolatier, received().method("expectArg").args(Flavour).once());
 			assertThat(mockolatier, received().method("expect").args(null).once());
+		}
+		
+		[Test]
+		public function expecting_shouldBeForwardedToMockolatier():void
+		{
+			var context:Function = function():void {
+				mocks.expect(flavour.combine(mocks.arg(Flavour)));
+			};
+			
+			mocks.expecting(context);
+			
+			assertThat(mockolatier, received().method("expecting").args(context).once());
 		}
 	}
 }

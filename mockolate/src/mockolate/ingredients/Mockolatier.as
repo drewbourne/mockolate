@@ -244,6 +244,25 @@ package mockolate.ingredients
         }
 		
 		/**
+		 * @see mockolate#expecting()
+		 */
+		public function expecting(context:Function):void 
+		{
+			_isExpecting = true;
+			
+			context();
+			
+			_isExpecting = false;
+		}
+		
+		private var _isExpecting:Boolean;
+		
+		mockolate_ingredient function get isExpecting():Boolean 
+		{
+			return _isExpecting;
+		}
+		
+		/**
 		 * @see mockolate#allow()
 		 */
 		public function allow(instance:*):ExpectingCouverture

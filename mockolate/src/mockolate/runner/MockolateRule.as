@@ -245,6 +245,14 @@ package mockolate.runner
 			return mockolatier.expectArg(value);
 		}
 		
+		/**
+		 * @copy mockolate#expecting()
+		 */
+		public function expecting(context:Function):void
+		{
+			return mockolatier.expecting(context);
+		}
+		
 		//
 		//	IMethodRule
 		//

@@ -65,6 +65,7 @@ package mockolate
 		public var usingPartialMocks:UsingPartialMocks;
 		public var usingAllow:UsingAllow;
 		public var usingExpect:UsingExpect;
+		public var usingExpecting:UsingExpecting;
 		
 		// 
 		//	decorators
