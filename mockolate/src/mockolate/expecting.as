@@ -4,7 +4,11 @@ package mockolate
 	import mockolate.ingredients.MockolatierMaster;
 
 	/**
-	 * Executes a context within which Expectations are defined.  
+	 * Executes a context within which Expectations are defined. 
+	 * 
+	 * When using strict instances expectations must be defined within an 
+	 * expecting context to allow Mockolate to determine whether the invocation
+	 * is to define an expectation or is for usage by the system under test.   
 	 * 
 	 * @see mockolate.ingredients.Expectation
 	 * @see mockolate#expect()
