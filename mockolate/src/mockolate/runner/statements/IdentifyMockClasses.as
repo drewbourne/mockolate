@@ -88,6 +88,9 @@ import mockolate.ingredients.MockType;
 import mockolate.ingredients.Mockolatier;
 import mockolate.ingredients.aClassRecipe;
 import mockolate.ingredients.anInstanceRecipe;
+import mockolate.ingredients.mockolate_ingredient;
+
+use namespace mockolate_ingredient;
 
 internal class MockolateRecipeIdentifier 
 {

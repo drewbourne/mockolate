@@ -5,6 +5,7 @@ package mockolate.runner.statements
 	import mockolate.arg;
 	import mockolate.expect;
 	import mockolate.ingredients.Mockolatier;
+	import mockolate.ingredients.mockolate_ingredient;
 	import mockolate.nice;
 	import mockolate.prepare;
 	import mockolate.runner.MockolateRunnerData;
@@ -18,6 +19,8 @@ package mockolate.runner.statements
 	import org.hamcrest.object.equalTo;
 	import org.hamcrest.object.isTrue;
 	import org.hamcrest.object.notNullValue;
+	
+	use namespace mockolate_ingredient;
 
 	public class IdentifyMockClassesTest
 	{

@@ -107,14 +107,7 @@ package mockolate.runner
 		 */
 		public function nice(classReference:Class, name:String=null, constructorArgs:Array=null):*
 		{
-			var instanceRecipe:InstanceRecipe = anInstanceRecipe()
-				.withClassRecipe(data.classRecipes.getRecipeFor(classReference))
-				.withName(name)
-				.withConstructorArgs(constructorArgs)
-				.withMockType(MockType.NICE)
-				.build();
-			
-			return prepareInstance(instanceRecipe);
+			return prepareInstance(createInstanceRecipeFor(MockType.NICE, classReference, name, constructorArgs));
 		}
 		
 		/**
@@ -140,14 +133,7 @@ package mockolate.runner
 		 */
 		public function strict(classReference:Class, name:String=null, constructorArgs:Array=null):* 
 		{
-			var instanceRecipe:InstanceRecipe = anInstanceRecipe()
-				.withClassRecipe(data.classRecipes.getRecipeFor(classReference))
-				.withName(name)
-				.withConstructorArgs(constructorArgs)
-				.withMockType(MockType.STRICT)
-				.build();
-			
-			return prepareInstance(instanceRecipe);
+			return prepareInstance(createInstanceRecipeFor(MockType.STRICT, classReference, name, constructorArgs));
 		}
 		
 		/**
@@ -155,14 +141,13 @@ package mockolate.runner
 		 */
 		public function partial(classReference:Class, name:String=null, constructorArgs:Array=null):*
 		{
-			var instanceRecipe:InstanceRecipe = anInstanceRecipe()
-				.withClassRecipe(data.classRecipes.getRecipeFor(classReference))
-				.withName(name)
-				.withConstructorArgs(constructorArgs)
-				.withMockType(MockType.PARTIAL)
-				.build();
-			
-			return prepareInstance(instanceRecipe);
+			return prepareInstance(createInstanceRecipeFor(MockType.PARTIAL, classReference, name, constructorArgs));
+		}
+		
+		private function createInstanceRecipeFor(
+			type:MockType, classReference:Class, name:String=null, constructorArgs:Array=null):InstanceRecipe
+		{
+			return mockolatier.createInstanceRecipeFor(type, classReference, name, constructorArgs);	
 		}
 		
 		private function prepareInstance(instanceRecipe:InstanceRecipe):*

@@ -110,7 +110,7 @@ package mockolate.ingredients
 		/**
 		 * @see mockolate#prepare()
 		 */
-		public function prepareClassRecipes(classRecipes:ClassRecipes):IEventDispatcher
+		mockolate_ingredient function prepareClassRecipes(classRecipes:ClassRecipes):IEventDispatcher
 		{
 			var dispatcher:IEventDispatcher;
 			var classRecipesToPrepare:ClassRecipes = classRecipes.without(_preparingClassRecipes).without(_preparedClassRecipes);
@@ -143,7 +143,7 @@ package mockolate.ingredients
 			}
 		}
 		
-		public function preparedClassRecipeFor(classToPrepare:Class, namespacesToProxy:Array):ClassRecipe 
+		mockolate_ingredient function preparedClassRecipeFor(classToPrepare:Class, namespacesToProxy:Array):ClassRecipe 
 		{
 			return _preparedClassRecipes.getRecipeFor(classToPrepare, namespacesToProxy);
 		}
@@ -153,14 +153,8 @@ package mockolate.ingredients
          */
         public function nice(classReference:Class, name:String=null, constructorArgs:Array=null):*
         {
-			var instanceRecipe:InstanceRecipe = anInstanceRecipe()
-				.withClassRecipe(_preparedClassRecipes.getRecipeFor(classReference))
-				.withName(name)
-				.withConstructorArgs(constructorArgs)
-				.withMockType(MockType.NICE)
-				.build();
-			
-			return prepareInstance(instanceRecipe);
+			return prepareInstance(
+				createInstanceRecipeFor(MockType.NICE, classReference, name, constructorArgs));
         }
 		
         /**
@@ -168,14 +162,8 @@ package mockolate.ingredients
          */
         public function strict(classReference:Class, name:String=null, constructorArgs:Array=null):*
         {
-			var instanceRecipe:InstanceRecipe = anInstanceRecipe()
-				.withClassRecipe(_preparedClassRecipes.getRecipeFor(classReference))
-				.withName(name)
-				.withConstructorArgs(constructorArgs)
-				.withMockType(MockType.STRICT)
-				.build();
-			
-			return prepareInstance(instanceRecipe);
+			return prepareInstance(
+				createInstanceRecipeFor(MockType.STRICT, classReference, name, constructorArgs));
         }
 		
 		/**
@@ -183,17 +171,24 @@ package mockolate.ingredients
 		 */
 		public function partial(classReference:Class, name:String=null, constructorArgs:Array=null):*
 		{
+			return prepareInstance(
+				createInstanceRecipeFor(MockType.PARTIAL, classReference, name, constructorArgs));
+		}
+		
+		mockolate_ingredient function createInstanceRecipeFor(
+			type:MockType, classReference:Class, name:String=null, constructorArgs:Array=null):InstanceRecipe
+		{
 			var instanceRecipe:InstanceRecipe = anInstanceRecipe()
 				.withClassRecipe(_preparedClassRecipes.getRecipeFor(classReference))
 				.withName(name)
 				.withConstructorArgs(constructorArgs)
-				.withMockType(MockType.PARTIAL)
+				.withMockType(type)
 				.build();
 			
-			return prepareInstance(instanceRecipe);
+			return instanceRecipe;
 		}
 		
-		public function prepareInstances(instanceRecipes:InstanceRecipes):IEventDispatcher
+		mockolate_ingredient function prepareInstances(instanceRecipes:InstanceRecipes):IEventDispatcher
 		{
 			var preparer:IEventDispatcher = _mockolateFactory.prepareInstances(instanceRecipes);
 			preparer.addEventListener(Event.COMPLETE, addToRegisteredMockolates(instanceRecipes), false, 100, true);
@@ -210,7 +205,7 @@ package mockolate.ingredients
 			}
 		}
 		
-		public function prepareInstance(instanceRecipe:InstanceRecipe):*
+		mockolate_ingredient function prepareInstance(instanceRecipe:InstanceRecipe):*
 		{
 			_mockolateFactory.prepareInstance(instanceRecipe);
 			

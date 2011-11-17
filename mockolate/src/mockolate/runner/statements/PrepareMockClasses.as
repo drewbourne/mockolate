@@ -5,11 +5,14 @@ package mockolate.runner.statements
 	import flash.events.Event;
 	import flash.events.IEventDispatcher;
 	
+	import mockolate.ingredients.mockolate_ingredient;
 	import mockolate.runner.MockolateRunnerData;
 	import mockolate.runner.MockolateRunnerStatement;
 	
 	import org.flexunit.internals.runners.statements.IAsyncStatement;
 	import org.flexunit.token.AsyncTestToken;
+	
+	use namespace mockolate_ingredient;
 	
 	/**
 	 * Prepares the proxy classes for classes identified by IdentifyMockClasses. 

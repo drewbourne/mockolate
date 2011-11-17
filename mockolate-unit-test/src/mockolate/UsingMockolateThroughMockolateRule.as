@@ -22,7 +22,7 @@ package mockolate
 		
 		[Mock]
 		public var flavour:Flavour;
-		
+
 		[Before]
 		public function setup():void 
 		{
