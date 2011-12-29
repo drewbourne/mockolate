@@ -33,7 +33,7 @@ package mockolate
 		[Test]
 		public function invocationsShouldBeRecordedIfNoExpectationDefined():void
 		{
-			flavour.ingredients;
+			var unused:* = flavour.ingredients;
 			
 			assertThat(flavour, received().getter("ingredients").once());
 		}
@@ -43,7 +43,7 @@ package mockolate
 		{
 			stub(flavour).getter("ingredients").returns(["vanilla", "butter", "milk"]);
 			
-			flavour.ingredients;
+			var unused:* = flavour.ingredients;
 			
 			assertThat(flavour, received().getter("ingredients").once());
 		}
