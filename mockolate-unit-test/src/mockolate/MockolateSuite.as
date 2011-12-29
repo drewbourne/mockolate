@@ -66,6 +66,7 @@ package mockolate
 		public var usingAllow:UsingAllow;
 		public var usingExpect:UsingExpect;
 		public var usingExpecting:UsingExpecting;
+		public var usingStates:UsingStates;
 		
 		// 
 		//	decorators
