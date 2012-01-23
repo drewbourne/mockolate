@@ -33,9 +33,12 @@ package mockolate.runner.statements
 		{
 			var preparer:IEventDispatcher = data.mockolatier.prepareClassRecipes(data.classRecipes);
 			
-			preparer.addEventListener(Event.COMPLETE, function(event:Event):void {
+			function sendResultToParent(event:Event):void {
+				preparer.removeEventListener(Event.COMPLETE, arguments.callee);
 				parentToken.sendResult();
-			});
+			}
+			
+			preparer.addEventListener(Event.COMPLETE, sendResultToParent, false, 0, true);
 		}		
 		
 		override public function toString():String 
