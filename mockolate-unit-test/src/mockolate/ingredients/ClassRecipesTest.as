@@ -63,8 +63,8 @@ package mockolate.ingredients
 			classRecipes.add(classRecipe);
 			classRecipes.add(otherRecipe);
 			
-			assertThat(classRecipes.getRecipeFor(Flavour), equalTo(classRecipe));
-			assertThat(classRecipes.getRecipeFor(Flavour, [flash_proxy]), equalTo(otherRecipe));
+			assertThat("returns classRecipe", classRecipes.getRecipeFor(Flavour), equalTo(classRecipe));
+			assertThat("returns otherRecipe", classRecipes.getRecipeFor(Flavour, [flash_proxy]), equalTo(otherRecipe));
 		}
 		
 		[Test]
@@ -78,8 +78,11 @@ package mockolate.ingredients
 		{
 			classRecipes.add(aClassRecipe().withClassToPrepare(Flavour).build());
 			
-			assertThat(classRecipes.hasRecipeFor(Flavour), isTrue());
-			assertThat(classRecipes.hasRecipeFor(Flavour, [ for_sample_only ]), isFalse());
+			assertThat("classRecipes.hasRecipeFor(Flavour) should be true", 
+						classRecipes.hasRecipeFor(Flavour), isTrue());
+			
+			assertThat("classRecipes.hasRecipeFor(Flavour, [ for_sample_only ]) should be false", 
+						classRecipes.hasRecipeFor(Flavour, [ for_sample_only ]), isFalse());
 		}
 		
 		[Test]
@@ -87,8 +90,11 @@ package mockolate.ingredients
 		{
 			classRecipes.add(aClassRecipe().withClassToPrepare(Flavour).withNamespacesToProxy([ for_sample_only ]).build());
 			
-			assertThat(classRecipes.hasRecipeFor(Flavour), isFalse());
-			assertThat(classRecipes.hasRecipeFor(Flavour, [ for_sample_only ]), isTrue());
+			assertThat("classRecipes.hasRecipeFor(Flavour) should be false", 
+						classRecipes.hasRecipeFor(Flavour), isFalse());
+			
+			assertThat("classRecipes.hasRecipeFor(Flavour, [ for_sample_only ]) should be true",
+						classRecipes.hasRecipeFor(Flavour, [ for_sample_only ]), isTrue());
 		}
 	}
 }

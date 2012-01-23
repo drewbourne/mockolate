@@ -1,5 +1,8 @@
 package mockolate.runner.statements
 {
+	import flash.display.Sprite;
+	import flash.events.IEventDispatcher;
+	
 	import mockolate.sample.ExampleClass;
 
 	public class TestExample
@@ -28,6 +31,12 @@ package mockolate.runner.statements
 		{
 			return [1, 2, 3];
 		}
+		
+		[Mock]
+		public var sprite:Sprite;
+		
+		[Mock]
+		public var dispatcher:IEventDispatcher;
 		
 		public var nonMockField:Boolean;
 		

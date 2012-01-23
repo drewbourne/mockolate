@@ -19,19 +19,6 @@ package mockolate.ingredients
 			_instanceRecipes.push(instanceRecipe);
 		}
 		
-		public function getRecipeFor(classReference:Class, namespaces:Array = null):InstanceRecipe
-		{
-			for each (var instanceRecipe:InstanceRecipe in _instanceRecipes)
-			{
-				if (instanceRecipe.classRecipe.matches(classReference, namespaces))
-				{
-					return instanceRecipe;
-				}
-			}
-			
-			return null;
-		}
-		
 		public function toArray():Array
 		{
 			return _instanceRecipes.slice();

@@ -25,26 +25,26 @@ package mockolate.ingredients
 		
 		private function matchesNamespaces(namespaces:Array):Boolean 
 		{
-			if (!namespacesToProxy)
-			{
-				if (namespaces && namespaces.length == 0)
-					return true;
-				else if (!namespaces)
-					return true;
-				else
-					return false;
-			}
-			
-			if (!namespaces)
+			if (!namespacesToProxy && !namespaces)
 			{
 				return true;
+			}
+			
+			if (namespacesToProxy && !namespaces)
+			{
+				return (namespacesToProxy.length == 0);
+			}
+			
+			if (!namespacesToProxy && namespaces)
+			{
+				return (namespaces.length == 0);
 			}
 			
 			if (namespacesToProxy.length != namespaces.length)
 			{
 				return false;
 			}
-			
+				
 			for each (var namespace:Namespace in namespacesToProxy) 
 			{
 				if (namespaces.indexOf(namespace) == -1)
@@ -53,7 +53,7 @@ package mockolate.ingredients
 				}
 			}
 			
-			return true;	
+			return true;
 		}
 		
 		public function toString():String 

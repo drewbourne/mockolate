@@ -61,15 +61,13 @@ package mockolate.ingredients
 		[Test]
 		public function withInject_shouldSetInject():void 
 		{
-			var mockType:MockType = MockType.STRICT;
-			
 			var instanceRecipe:InstanceRecipe
 				= anInstanceRecipe()
 				.withInject(true)
 				.withClassRecipe(aClassRecipe().withClassToPrepare(Flavour))
 				.build();
 			
-			assertThat(instanceRecipe, hasProperties({ mockType: mockType }));
+			assertThat(instanceRecipe, hasProperties({ inject: true }));
 		}
 				
 		[Test]

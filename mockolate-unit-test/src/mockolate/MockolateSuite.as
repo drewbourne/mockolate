@@ -38,6 +38,14 @@ package mockolate
 		public var recording:RecordingCouvertureTest;
 		public var mocking:MockingCouvertureTest;
 		public var verifying:VerifyingCouvertureTest;
+		
+		// ingredients
+		public var classRecipe:ClassRecipeTest;
+		public var classRecipes:ClassRecipesTest;
+		public var classRecipeBuilder:ClassRecipeBuilderTest;
+		public var instanceRecipe:InstanceRecipeTest;
+		public var instancesRecipe:InstanceRecipesTest;
+		public var instanceRecipeBuilder:InstanceRecipeBuilderTest;
 
 		//
         // FLoxy integration

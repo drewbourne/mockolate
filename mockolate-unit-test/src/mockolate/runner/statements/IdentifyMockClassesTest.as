@@ -1,6 +1,8 @@
 package mockolate.runner.statements
 {
+	import flash.display.Sprite;
 	import flash.events.Event;
+	import flash.events.IEventDispatcher;
 	
 	import mockolate.arg;
 	import mockolate.expect;
@@ -8,6 +10,7 @@ package mockolate.runner.statements
 	import mockolate.ingredients.mockolate_ingredient;
 	import mockolate.nice;
 	import mockolate.prepare;
+	import mockolate.runner.MockolateRule;
 	import mockolate.runner.MockolateRunnerData;
 	import mockolate.sample.ExampleClass;
 	import mockolate.sample.for_sample_only;
@@ -24,17 +27,15 @@ package mockolate.runner.statements
 
 	public class IdentifyMockClassesTest
 	{
-		[Before(async)]
-		public function prepareMockolatier():void 
-		{
-			Async.proceedOnEvent(this, prepare(Mockolatier), Event.COMPLETE);
-		}
+		[Rule]
+		public var mocks:MockolateRule = new MockolateRule();
 		
-		private var mockolatier:Mockolatier;
+		[Mock(namespaces="mockolatierNamespaces")]
+		public var mockolatier:Mockolatier;
+		public var mockolatierNamespaces:Array = [ mockolate_ingredient ];
 		
 		private function withMockolatier():void 
 		{
-			mockolatier = nice(Mockolatier);
 			expect(mockolatier.preparedClassRecipeFor(arg(anything()), arg(anything()))).returns(null);
 		}
 		
@@ -55,14 +56,20 @@ package mockolate.runner.statements
 			assertThat("classRecipes is not null",
 				runnerData.classRecipes, notNullValue());
 			
-			assertThat("classRecipes has 2 ClassRecipes", 
-				runnerData.classRecipes.numRecipes, equalTo(2));
+			assertThat("classRecipes has 4 ClassRecipes", 
+				runnerData.classRecipes.numRecipes, equalTo(4));
 			
 			assertThat("hasRecipeFor(ExampleClass)", 
 				runnerData.classRecipes.hasRecipeFor(ExampleClass), isTrue());
 			
 			assertThat("hasRecipeFor(ExampleClass, [for_sample_only])", 
 				runnerData.classRecipes.hasRecipeFor(ExampleClass, [for_sample_only]), isTrue());
+			
+			assertThat("hasRecipeFor(Sprite)", 
+				runnerData.classRecipes.hasRecipeFor(Sprite), isTrue());
+			
+			assertThat("hasRecipeFor(IEventDispatcher)", 
+				runnerData.classRecipes.hasRecipeFor(IEventDispatcher), isTrue());
 		}
 		
 		[Test]
@@ -82,8 +89,8 @@ package mockolate.runner.statements
 			assertThat("instanceRecipes is not null",
 				runnerData.instanceRecipes, notNullValue());
 			
-			assertThat('instanceRecipes has 6 InstanceRecipes, one for each [Mock] field that is not [Mock(inject="false")]', 
-				runnerData.instanceRecipes.numRecipes, equalTo(6));
+			assertThat('instanceRecipes has 8 InstanceRecipes, one for each [Mock] field that is not [Mock(inject="false")]', 
+				runnerData.instanceRecipes.numRecipes, equalTo(8));
 		}
 	}
 }
