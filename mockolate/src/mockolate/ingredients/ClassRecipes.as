@@ -22,6 +22,15 @@ package mockolate.ingredients
 			}
 		}
 		
+		public function remove(classRecipe:ClassRecipe):void 
+		{
+			var index:int = _classRecipes.indexOf(getRecipeFor(classRecipe.classToPrepare, classRecipe.namespacesToProxy));
+			if (index != -1)
+			{
+				_classRecipes.splice(index, 1);
+			}
+		}
+		
 		public function hasRecipe(classRecipe:ClassRecipe):Boolean 
 		{
 			return !!getRecipeFor(classRecipe.classToPrepare, classRecipe.namespacesToProxy);

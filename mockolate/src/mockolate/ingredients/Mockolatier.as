@@ -139,6 +139,7 @@ package mockolate.ingredients
 		{
 			return function(event:Event):void 
 			{
+				forEach(classRecipes.toArray(), _preparingClassRecipes.remove);
 				forEach(classRecipes.toArray(), _preparedClassRecipes.add);
 			}
 		}
