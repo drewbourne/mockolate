@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+                             http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>org.mockolate</groupId>
+    <artifactId>mockolate</artifactId>
+    <version>0.11.0</version>
+    <packaging>swc</packaging>
+    <name>Mockolate</name>
+    <description>fake chocolate, mock objects and test spies for AS3</description>
+    <url>http://mockolate.org</url>
+    <scm>
+        <url>http://github.com/drewbourne/mockolate</url>
+        <connection>scm:git:https://github.com/drewbourne/mockolate.git</connection>
+    </scm>
+    <developers>
+        <developer>
+            <name>Drew Bourne</name>
+            <email>drew@firstbourne.com</email>
+        </developer>
+    </developers>
+</project>
