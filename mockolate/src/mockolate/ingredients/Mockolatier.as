@@ -125,7 +125,7 @@ package mockolate.ingredients
 			{
 				addToPreparingClassRecipes(classRecipesToPrepare);
 				dispatcher = _mockolateFactory.prepareClasses(classRecipesToPrepare);
-				dispatcher.addEventListener(Event.COMPLETE, addToPreparedClassRecipes(classRecipesToPrepare), false, 100, true);
+				dispatcher.addEventListener(Event.COMPLETE, addToPreparedClassRecipes(classRecipesToPrepare), false, 100);
 				return dispatcher;
 			}
 		}
@@ -192,7 +192,7 @@ package mockolate.ingredients
 		mockolate_ingredient function prepareInstances(instanceRecipes:InstanceRecipes):IEventDispatcher
 		{
 			var preparer:IEventDispatcher = _mockolateFactory.prepareInstances(instanceRecipes);
-			preparer.addEventListener(Event.COMPLETE, addToRegisteredMockolates(instanceRecipes), false, 100, true);
+			preparer.addEventListener(Event.COMPLETE, addToRegisteredMockolates(instanceRecipes), false, 100);
 			return preparer;
 		}
 		
