@@ -38,7 +38,7 @@ package mockolate.runner.statements
 				parentToken.sendResult();
 			}
 			
-			preparer.addEventListener(Event.COMPLETE, sendResultToParent, false, 0, true);
+			preparer.addEventListener(Event.COMPLETE, sendResultToParent, false, 0);
 		}		
 		
 		override public function toString():String 
