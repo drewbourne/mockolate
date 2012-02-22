@@ -75,6 +75,7 @@ package mockolate
 		public var usingExpect:UsingExpect;
 		public var usingExpecting:UsingExpecting;
 		public var usingStates:UsingStates;
+		public var mockingRemoteObjects:MockingRemoteObjects;
 		
 		// 
 		//	decorators
