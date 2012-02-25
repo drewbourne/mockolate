@@ -46,6 +46,8 @@ package mockolate.runner.statements
 			var testClass:Class = Class(ApplicationDomain.currentDomain.getDefinition(getQualifiedClassName(data.test)));
 			var klass:Klass = new Klass(testClass);
 			var recipeIdentifier:MockolateRecipeIdentifier = new MockolateRecipeIdentifier(data.mockolatier);
+
+			recipeIdentifier.validateFields(data.test, klass);
 			
 			data.classRecipes = new ClassRecipes();
 			recipeIdentifier.identifyClassRecipes(data.test, klass, data.classRecipes);
@@ -69,6 +71,7 @@ package mockolate.runner.statements
 import asx.array.compact;
 import asx.array.filter;
 import asx.array.map;
+import asx.array.pluck;
 import asx.string.substitute;
 import asx.string.trim;
 
@@ -89,6 +92,7 @@ import mockolate.ingredients.Mockolatier;
 import mockolate.ingredients.aClassRecipe;
 import mockolate.ingredients.anInstanceRecipe;
 import mockolate.ingredients.mockolate_ingredient;
+import mockolate.runner.MockolateRunnerError;
 
 use namespace mockolate_ingredient;
 
@@ -99,6 +103,7 @@ internal class MockolateRecipeIdentifier
 	private const NAMESPACES_ATTRIBUTE:String = "namespaces";
 	private const INJECT_ATTRIBUTE:String = "inject";
 	private const MOCK_TYPE_ATTRIBUTE:String = "type";
+	private const SUPPORTED_ATTRIBUTES:Array = [ ARGUMENTS_ATTRIBUTE, NAMESPACES_ATTRIBUTE, INJECT_ATTRIBUTE, MOCK_TYPE_ATTRIBUTE ];
 	private const TRUE:String = "true";
 	private const FALSE:String = "false";
 	
@@ -107,6 +112,35 @@ internal class MockolateRecipeIdentifier
 	public function MockolateRecipeIdentifier(mockolatier:Mockolatier) 
 	{
 		_mockolatier = mockolatier;
+	}
+
+	public function validateFields(test:*, fromKlass:Klass):void 
+	{
+		var mockFields:Array = filter(fromKlass.fields, isMockField);
+		var invalidFields:Array = [];
+		
+		for each (var field:Field in mockFields)	
+		{
+			var metadata:MetaDataAnnotation = field.getMetaData(MOCK_METADATA);	
+			var invalidAttributes:Array = [];
+			for each (var argument:MetaDataArgument in metadata.arguments)
+			{
+				if (SUPPORTED_ATTRIBUTES.indexOf(argument.key) === -1) 
+				{
+					invalidAttributes.push(argument.key);
+				}
+
+				if (invalidAttributes.length > 0)
+				{
+					invalidFields.push("field: " + field.name + " attribute: " + invalidAttributes.join(', '));
+				}
+			}
+		}
+
+		if (invalidFields.length > 0)
+		{
+			throw new MockolateRunnerError("Unsupported Metadata Attributes:\n\t" + invalidFields.join("\n\t"));
+		}
 	}
 	
 	public function identifyClassRecipes(test:*, fromKlass:Klass, intoClassRecipes:ClassRecipes):void 

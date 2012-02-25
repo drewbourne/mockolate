@@ -12,6 +12,7 @@ package mockolate.runner.statements
 	import mockolate.prepare;
 	import mockolate.runner.MockolateRule;
 	import mockolate.runner.MockolateRunnerData;
+	import mockolate.runner.MockolateRunnerError;
 	import mockolate.sample.ExampleClass;
 	import mockolate.sample.for_sample_only;
 	
@@ -19,9 +20,11 @@ package mockolate.runner.statements
 	import org.flexunit.async.Async;
 	import org.flexunit.token.AsyncTestToken;
 	import org.hamcrest.core.anything;
+	import org.hamcrest.core.not;
 	import org.hamcrest.object.equalTo;
 	import org.hamcrest.object.isTrue;
 	import org.hamcrest.object.notNullValue;
+	import org.hamcrest.text.containsString;
 	
 	use namespace mockolate_ingredient;
 
@@ -91,6 +94,33 @@ package mockolate.runner.statements
 			
 			assertThat('instanceRecipes has 8 InstanceRecipes, one for each [Mock] field that is not [Mock(inject="false")]', 
 				runnerData.instanceRecipes.numRecipes, equalTo(8));
+		}
+
+		[Test]
+		public function evalue_should_throw_error_for_unsupported_metadata_attributes():void 
+		{
+			var runnerData:MockolateRunnerData = new MockolateRunnerData();
+			runnerData.test = new TestExampleWithUnsupportedMetadataAttributes();
+			runnerData.mockolatier = mockolatier;
+			
+			var token:AsyncTestToken = new AsyncTestToken();
+			var statement:IdentifyMockClasses = new IdentifyMockClasses(runnerData);
+
+			statement.evaluate(token);
+
+			/*
+			try 
+			{
+				statement.evaluate(token);
+			}
+			catch (error:MockolateRunnerError)
+			{
+				assertThat(error.message, containsString("Unsupported Metadata Attribute"));
+				assertThat(error.message, containsString("fieldWithUnsupportedAttribute"));
+				assertThat(error.message, containsString("fieldWithMispelling"));
+				assertThat(error.message, not(containsString("validField")));
+			}
+			*/
 		}
 	}
 }
