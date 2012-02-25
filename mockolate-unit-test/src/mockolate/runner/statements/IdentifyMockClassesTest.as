@@ -106,9 +106,6 @@ package mockolate.runner.statements
 			var token:AsyncTestToken = new AsyncTestToken();
 			var statement:IdentifyMockClasses = new IdentifyMockClasses(runnerData);
 
-			statement.evaluate(token);
-
-			/*
 			try 
 			{
 				statement.evaluate(token);
@@ -120,7 +117,6 @@ package mockolate.runner.statements
 				assertThat(error.message, containsString("fieldWithMispelling"));
 				assertThat(error.message, not(containsString("validField")));
 			}
-			*/
 		}
 	}
 }
