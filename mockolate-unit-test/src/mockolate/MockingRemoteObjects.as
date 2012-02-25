@@ -1,5 +1,7 @@
 package mockolate
 {
+	import flash.utils.flash_proxy;
+
 	import mockolate.runner.MockolateRule;
 
 	import mx.rpc.remoting.RemoteObject;
@@ -13,8 +15,9 @@ package mockolate
 		[Rule]
 		public var mocks:MockolateRule = new MockolateRule();
 
-		[Mock]
+		[Mock(namespaces="remoteObjectNSs")]
 		public var remoteObject:RemoteObject;
+		public var remoteObjectNSs:Array = [ flash_proxy ];
 
 		public var service:ArbitraryItemsService;
 
@@ -24,13 +27,17 @@ package mockolate
 			var options:Object = { page: 1, pageSize: 3 };
 			var result:Array = [ 1, 2, 3 ];
 
-			expect(remoteObject.requestArbitraryItems(arg(options)))
-				.dispatches(new ResultEvent(ResultEvent.RESULT, false, false, result));
+			mock(remoteObject).nsMethod(flash_proxy, "callProperty")
+				.args("requestArbitraryItems", options)
+				.dispatches(new ResultEvent(ResultEvent.RESULT, false, false, result))
+				.once();
 
 			service = new ArbitraryItemsService(remoteObject);
 			service.execute(options);
 
 			assertThat(service.lastResult, equalTo(result));
+
+			verify(remoteObject);
 		}
 	}
 }
