@@ -261,37 +261,47 @@ package mockolate.ingredients
 		/**
 		 * @see mockolate#allow()
 		 */
-		public function allow(instance:*):ExpectingCouverture
+		public function allow(target:*):ExpectingCouverture
 		{
 			// calls to expect must happen after an invocation 
 			// as the invocation type, and arguments are used
 			// when adding the expectation.
 			
 			if (!_lastInvocation)
+			{
 				throw new MockolateError(["Unable to allow(), no Mockolate invocation has been recorded yet."], null, null);
+			}
 			
 			var args:Array = _expectArgs || _lastInvocation.arguments;
 			_expectArgs = null;
+
+			var invocation:Invocation = _lastInvocation;
+			_lastInvocation = null;
 			
-			return mockolateByTarget(_lastInvocation.target).expecter.allow(_lastInvocation, args);
+			return mockolateByTarget(invocation.target).expecter.allow(invocation, args);
 		}
 		
 		/**
 		 * @see mockolate#expect()
 		 */
-		public function expect(instance:*):ExpectingCouverture
+		public function expect(target:*):ExpectingCouverture
 		{
 			// calls to expect must happen after an invocation 
 			// as the invocation type, and arguments are used
 			// when adding the expectation.
 			
 			if (!_lastInvocation)
+			{
 				throw new MockolateError(["Unable to expect(), no Mockolate invocation has been recorded yet."], null, null);
+			}
 			
 			var args:Array = _expectArgs || _lastInvocation.arguments;
 			_expectArgs = null;
+
+			var invocation:Invocation = _lastInvocation;
+			_lastInvocation = null;
 			
-			return mockolateByTarget(_lastInvocation.target).expecter.expect(_lastInvocation, args);
+			return mockolateByTarget(invocation.target).expecter.expect(invocation, args);
 		}
 		
 		private var _expectArgs:Array;
@@ -305,6 +315,36 @@ package mockolate.ingredients
 			_expectArgs.push(value);
 			
 			return null;
+		}
+
+		/**
+		 * Spy on a method, getter or setter.
+		 */
+		public function spy(target:*):Spy
+		{
+			// calls to spy must happen after an invocation 
+			// as the invocation type, and arguments are used
+			// when adding the expectation.
+			
+			if (!_lastInvocation)
+			{
+				throw new MockolateError(["Unable to spy(), no Mockolate invocation has been recorded yet."], null, null);
+			}
+			
+			var args:Array = _expectArgs || _lastInvocation.arguments;
+			_expectArgs = null;
+
+			var invocation:Invocation = _lastInvocation;
+			_lastInvocation = null;
+
+			var mockolateInstance:Mockolate = mockolateByTarget(invocation.target);
+			var spy:Spy = new Spy(mockolateInstance, invocation, args);
+
+			mockolateInstance.addSpy(spy);
+
+			trace('Mockolatier.spy', spy);
+			
+			return spy;
 		}
         
         /**

@@ -8,6 +8,7 @@ package mockolate.runner
 	import mockolate.ingredients.MockingCouverture;
 	import mockolate.ingredients.Mockolatier;
 	import mockolate.ingredients.MockolatierMaster;
+	import mockolate.ingredients.Spy;
 	import mockolate.ingredients.VerifyingCouverture;
 	import mockolate.ingredients.anInstanceRecipe;
 	import mockolate.ingredients.mockolate_ingredient;
@@ -236,6 +237,14 @@ package mockolate.runner
 		public function expecting(context:Function):void
 		{
 			return mockolatier.expecting(context);
+		}
+
+		/**
+		 *
+		 */
+		public function spy(target:*):Spy 
+		{
+			return mockolatier.spy(target);
 		}
 		
 		//

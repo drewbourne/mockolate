@@ -22,6 +22,7 @@ package mockolate.ingredients
         private var _mocker:MockingCouverture;
         private var _verifier:VerifyingCouverture;
 		private var _expecter:ExpectingCouverture;
+        private var _spies:Array;
         
         // target!
         private var _target:*;
@@ -39,6 +40,7 @@ package mockolate.ingredients
             
             _name = name;
 			_mockType = MockType.STRICT;
+            _spies = [];
         }
         
         /**
@@ -104,7 +106,7 @@ package mockolate.ingredients
 		{
 			_expecter = value;
 		}
-		
+
 		/**
 		 * Used to indicate the behaviour of a Mockolate instance when an Expectation
 	 	 * is not defined for an Invocation.
@@ -171,14 +173,14 @@ package mockolate.ingredients
 			// and before invoking any expected behaviour
             // prior to any exception possibly being thrown by the mocker
                         
-			var handlers:Array = [ _recorder, _mocker ];
-			
-			for each (var handler:Couverture in handlers) {
-				var handled:Boolean = handler.invoked(invocation);
-				if (handled) {
-					break;
-				}
-			}
+            _recorder.invoked(invocation);
+            
+            _mocker.invoked(invocation);
+
+            for each (var spy:Spy in _spies)
+            {
+                spy.invoked(invocation);
+            }
 
 			return this;
         }
@@ -195,6 +197,18 @@ package mockolate.ingredients
                 _mocker.verify();
             	
 			return this;
+        }
+
+        /**
+         * Adds a Spy to this Mockolate.
+         */
+        mockolate_ingredient function addSpy(spy:Spy):Mockolate 
+        {
+            trace('Mockolate.addSpy', spy);
+
+            _spies.push(spy);
+
+            return this;
         }
 		
 		/**
