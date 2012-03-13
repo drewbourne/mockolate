@@ -116,8 +116,6 @@ package mockolate.ingredients
 		
 		public function threw(errorOrMatcher:Object = null):Boolean
 		{
-			trace('Spy.threw', errors.length, errorOrMatcher);
-
 			return errorOrMatcher
 				? !empty(errors) && arrayMatchesAny(errors, errorOrMatcher)
 				: !empty(errors);
@@ -125,8 +123,6 @@ package mockolate.ingredients
 		
 		public function alwaysThrew(errorOrMatcher:Object = null):Boolean
 		{
-			trace('Spy.alwaysThrew', errors.length, errorOrMatcher);
-
 			return errorOrMatcher
 				? !empty(errors) && arrayMatchesAll(errors, errorOrMatcher)
 				: !empty(errors) && errors.length === invocations.length;

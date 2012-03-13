@@ -151,7 +151,6 @@ package mockolate
 		[Test]
 		public function alwaysThrew_with_mismatched_value():void 
 		{
-			trace('alwaysThrew_with_mismatched_value');
 			assertThat(spy.alwaysThrew(ArgumentError), isFalse());
 		}
 
