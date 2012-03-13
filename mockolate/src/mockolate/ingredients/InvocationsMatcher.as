@@ -577,6 +577,16 @@ internal class InvocationsMatcherInvocation extends AbstractInvocation implement
 		throw new IllegalOperationError("InvocationsMatcherInvocation.returnValue unsupported");
 	}
 
+	public function get error():Error
+	{
+		throw new IllegalOperationError("InvocationsMatcherInvocation.error unsupported");
+	}
+
+	public function set error(value:Error):void
+	{
+		throw new IllegalOperationError("InvocationsMatcherInvocation.error unsupported");
+	}	
+
 	public function get target():Object
 	{
 		throw new IllegalOperationError("InvocationsMatcherInvocation.target unsupported");

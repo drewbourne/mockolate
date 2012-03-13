@@ -151,7 +151,44 @@ package mockolate
 		[Test]
 		public function alwaysThrew_with_mismatched_value():void 
 		{
+			trace('alwaysThrew_with_mismatched_value');
 			assertThat(spy.alwaysThrew(ArgumentError), isFalse());
+		}
+
+		private function throwError():void 
+		{
+			try
+			{
+				dispatcher = mocks.nice(IEventDispatcher);
+				spy = mocks.spy(dispatcher.dispatchEvent(arg(Event)));
+				mocks.expect(dispatcher.dispatchEvent(arg(Event))).throws(new ArgumentError("No Event"));			
+				dispatcher.dispatchEvent(event);
+			}
+			catch (error:Error)
+			{
+				// carry on. 
+			}
+		}
+
+		[Test]
+		public function threw_when_error_has_been_thrown():void 
+		{
+			throwError();
+			assertThat(spy.threw(), isTrue());
+		}
+
+		[Test]
+		public function alwaysThrew_when_error_has_been_thrown():void 
+		{
+			throwError();
+			assertThat(spy.alwaysThrew(), isTrue());
+		}
+
+		[Test]
+		public function alwaysThrew_with_matching_value():void 
+		{
+			throwError();
+			assertThat(spy.alwaysThrew(ArgumentError), isTrue());
 		}
 
 		[Test]

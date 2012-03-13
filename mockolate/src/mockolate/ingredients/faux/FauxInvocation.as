@@ -89,6 +89,18 @@ package mockolate.ingredients.faux
         {
             _options.returnValue = value;
         }
+
+        /** @inheritDoc */
+        public function get error():Error
+        {
+            return _options.error;
+        }
+        
+        /** @inheritDoc */
+        public function set error(value:Error):void
+        {
+            _options.error = value;
+        }
         
 		/** @inheritDoc */
         public function proceed():void

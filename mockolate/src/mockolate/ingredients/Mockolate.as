@@ -174,12 +174,23 @@ package mockolate.ingredients
             // prior to any exception possibly being thrown by the mocker
                         
             _recorder.invoked(invocation);
-            
-            _mocker.invoked(invocation);
 
-            for each (var spy:Spy in _spies)
+            try
             {
-                spy.invoked(invocation);
+                _mocker.invoked(invocation);    
+            }
+            catch (error:Error)
+            {
+                invocation.error = error;
+
+                throw error;
+            }
+            finally
+            {
+                for each (var spy:Spy in _spies)
+                {
+                    spy.invoked(invocation);
+                }
             }
 
 			return this;
@@ -204,8 +215,6 @@ package mockolate.ingredients
          */
         mockolate_ingredient function addSpy(spy:Spy):Mockolate 
         {
-            trace('Mockolate.addSpy', spy);
-
             _spies.push(spy);
 
             return this;

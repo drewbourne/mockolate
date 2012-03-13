@@ -1,46 +1,47 @@
 package mockolate.ingredients.floxy
 {
-    import asx.string.formatToString;
-    
-    import mockolate.ingredients.AbstractInvocation;
-    import mockolate.ingredients.Invocation;
-    import mockolate.ingredients.InvocationType;
-    
-    import org.floxy.IInvocation;
-    import org.hamcrest.Description;
-    
-    /**
-     * Wraps the FLoxy IInvocation type in the Mockolate Invocation interface.
-     * 
-     * @author drewbourne. 
-     */
-    public class FloxyInvocation extends AbstractInvocation implements Invocation
-    {
-        private var _invocation:IInvocation;
-        private var _invocationType:InvocationType;
-        
-        /**
-         * Constructor. 
-         */
-        public function FloxyInvocation(invocation:IInvocation)
-        {
-            _invocation = invocation;
-            _invocationType = invocationTypeFromInvocation(invocation); 
-        }
-        
+	import asx.string.formatToString;
+	
+	import mockolate.ingredients.AbstractInvocation;
+	import mockolate.ingredients.Invocation;
+	import mockolate.ingredients.InvocationType;
+	
+	import org.floxy.IInvocation;
+	import org.hamcrest.Description;
+	
+	/**
+	 * Wraps the FLoxy IInvocation type in the Mockolate Invocation interface.
+	 * 
+	 * @author drewbourne. 
+	 */
+	public class FloxyInvocation extends AbstractInvocation implements Invocation
+	{
+		private var _invocation:IInvocation;
+		private var _invocationType:InvocationType;
+		private var _error:Error;
+		
+		/**
+		 * Constructor. 
+		 */
+		public function FloxyInvocation(invocation:IInvocation)
+		{
+			_invocation = invocation;
+			_invocationType = invocationTypeFromInvocation(invocation); 
+		}
+		
 		/** @inheritDoc */
-        public function get target():Object
-        {
-            return _invocation.invocationTarget;
-        }
-        
+		public function get target():Object
+		{
+			return _invocation.invocationTarget;
+		}
+		
 		/** @inheritDoc */
-        public function get name():String
-        {
-            return isMethod
-                ? _invocation.method.name
-                : _invocation.property.name
-        }
+		public function get name():String
+		{
+			return isMethod
+				? _invocation.method.name
+				: _invocation.property.name
+		}
 		
 		/** @inheritDoc */
 		public function get uri():String 
@@ -49,60 +50,72 @@ package mockolate.ingredients.floxy
 				? _invocation.method.ns
 				: _invocation.property.ns;
 		}
-        
+		
 		/** @inheritDoc */
-        public function get invocationType():InvocationType
-        {
-            return _invocationType;
-        }
-        
+		public function get invocationType():InvocationType
+		{
+			return _invocationType;
+		}
+		
 		/** @inheritDoc */
-        public function get isMethod():Boolean
-        {
-            return _invocationType.isMethod;
-        }
-        
+		public function get isMethod():Boolean
+		{
+			return _invocationType.isMethod;
+		}
+		
 		/** @inheritDoc */
-        public function get isGetter():Boolean
-        {
-            return _invocationType.isGetter;
-        }
-        
+		public function get isGetter():Boolean
+		{
+			return _invocationType.isGetter;
+		}
+		
 		/** @inheritDoc */
-        public function get isSetter():Boolean
-        {
-            return _invocationType.isSetter;
-        }
-        
+		public function get isSetter():Boolean
+		{
+			return _invocationType.isSetter;
+		}
+		
 		/** @inheritDoc */
-        public function get arguments():Array
-        {
-            return _invocation.arguments;
-        }
-        
+		public function get arguments():Array
+		{
+			return _invocation.arguments;
+		}
+		
 		/** @inheritDoc */
-        public function get returnValue():*
-        {
-            return _invocation.returnValue;
-        }
-        
+		public function get returnValue():*
+		{
+			return _invocation.returnValue;
+		}
+		
 		/** @inheritDoc */
-        public function set returnValue(value:*):void
-        {
-            _invocation.returnValue = value;
-        }
-        
+		public function set returnValue(value:*):void
+		{
+			_invocation.returnValue = value;
+		}
+
 		/** @inheritDoc */
-        public function proceed():void
-        {
-            _invocation.proceed();
-        }
-        
+		public function get error():Error
+		{
+			return _error;
+		}
+		
 		/** @inheritDoc */
-        public function toString():String 
-        {
-            return formatToString(this, "FloxyInvocation", ["invocationType", "name", "arguments"]);
-        }
+		public function set error(value:Error):void
+		{
+			_error = value;
+		}
+		
+		/** @inheritDoc */
+		public function proceed():void
+		{
+			_invocation.proceed();
+		}
+		
+		/** @inheritDoc */
+		public function toString():String 
+		{
+			return formatToString(this, "FloxyInvocation", ["invocationType", "name", "arguments"]);
+		}
 		
 		/**
 		 * @private
@@ -129,5 +142,5 @@ package mockolate.ingredients.floxy
 			
 			return invocationType;
 		}
-    }
+	}
 }

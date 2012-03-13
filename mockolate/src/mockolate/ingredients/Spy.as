@@ -7,6 +7,7 @@ package mockolate.ingredients
 	import asx.array.every;
 	import asx.array.empty;
 	import asx.array.map;
+	import asx.array.compact;
 
 	import org.hamcrest.Matcher;
 	import org.hamcrest.collection.*;
@@ -29,16 +30,14 @@ package mockolate.ingredients
 		}
 
 		override mockolate_ingredient function invoked(invocation:Invocation):Boolean
-        {
-        	trace('Spy.invoked', invocation, _invocationMatcher.matches(invocation));
-
-        	if (_invocationMatcher.matches(invocation))
-        	{
-        		_invocations.push(invocation);
-        	}
+		{
+			if (_invocationMatcher.matches(invocation))
+			{
+				_invocations.push(invocation);
+			}
 
 			return false;
-        }
+		}
 
 		public function get invocations():Array
 		{
@@ -67,7 +66,7 @@ package mockolate.ingredients
 		
 		public function get errors():Array
 		{
-			return [];
+			return compact(pluck(_invocations, 'error'));
 		}
 		
 		public function get called():Boolean
@@ -117,13 +116,20 @@ package mockolate.ingredients
 		
 		public function threw(errorOrMatcher:Object = null):Boolean
 		{
-			return arrayMatchesAny(errors, errorOrMatcher);
+			trace('Spy.threw', errors.length, errorOrMatcher);
+
+			return errorOrMatcher
+				? !empty(errors) && arrayMatchesAny(errors, errorOrMatcher)
+				: !empty(errors);
 		}
 		
 		public function alwaysThrew(errorOrMatcher:Object = null):Boolean
 		{
-			// TODO this should check all invocation.error
-			return false;
+			trace('Spy.alwaysThrew', errors.length, errorOrMatcher);
+
+			return errorOrMatcher
+				? !empty(errors) && arrayMatchesAll(errors, errorOrMatcher)
+				: !empty(errors) && errors.length === invocations.length;
 		}
 		
 		public function returned(valueOrMatcher:*):Boolean

@@ -21,12 +21,6 @@ package mockolate.ingredients
 
 		public function matchInvocation(invocation:Invocation):Boolean
 		{
-			trace('InvocationMatcher', 
-				eligibleByInvocationType(invocation),
-				eligibleByNamespaceURI(invocation),
-				eligibleByName(invocation),
-				eligibleByArguments(invocation));
-
 			return eligibleByInvocationType(invocation) 
 				&& eligibleByNamespaceURI(invocation)
 				&& eligibleByName(invocation)

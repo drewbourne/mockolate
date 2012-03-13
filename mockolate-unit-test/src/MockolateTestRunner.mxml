@@ -19,7 +19,7 @@
          public function run () : void
          {
             core = new FlexUnitCore();
-//            core.addListener(new TraceListener());
+            // core.addListener(new TraceListener());
             core.addListener(new CIListener());
             core.run(MockolateSuite);
          }

@@ -23,6 +23,7 @@ package mockolate.ingredients.proxy
 		private var _arguments:Array;
 		private var _returnValue:*;
 		private var _uri:String;
+		private var _error:Error;
 		
 		/**
 		 * Constructor.
@@ -102,6 +103,18 @@ package mockolate.ingredients.proxy
 		public function set returnValue(value:*):void
 		{
 			_returnValue = value;
+		}
+
+		/** @inheritDoc */
+		public function get error():Error
+		{
+			return _error;
+		}
+		
+		/** @inheritDoc */
+		public function set error(value:Error):void
+		{
+			_error = value;
 		}
 		
 		/** @inheritDoc */

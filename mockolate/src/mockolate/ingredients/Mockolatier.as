@@ -341,8 +341,6 @@ package mockolate.ingredients
 			var spy:Spy = new Spy(mockolateInstance, invocation, args);
 
 			mockolateInstance.addSpy(spy);
-
-			trace('Mockolatier.spy', spy);
 			
 			return spy;
 		}
@@ -414,7 +412,7 @@ package mockolate.ingredients
 			}
 			
 			_lastInvocation = invocation;
-			
+
 			mockolateByTarget(invocation.target).invoked(invocation);
 		}
     }

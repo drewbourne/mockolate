@@ -17,6 +17,7 @@ package mockolate.ingredients.bytecode
 		private var _arguments:Array;
 		private var _method:Function;
 		private var _returnValue:*;
+		private var _error:Error;
 		
 		public function BytecodeProxyInvocation(targetInstance:Object, kind:InvocationKind, member:QName, arguments:Array = null, method:Function = null)
 		{
@@ -81,6 +82,16 @@ package mockolate.ingredients.bytecode
 		public function set returnValue(value:*):void
 		{
 			_returnValue = value;
+		}
+
+		public function get error():Error
+		{
+			return _error;
+		}
+		
+		public function set error(value:Error):void
+		{
+			_error = value;
 		}
 		
 		public function proceed():void
