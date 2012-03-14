@@ -53,9 +53,23 @@ package mockolate
 		}
 
 		[Test]
+		public function calledTwice_when_called_two_times():void 
+		{
+			dispatcher.dispatchEvent(event);
+			assertThat(spy.calledTwice, isTrue());
+		}
+
+		[Test]
 		public function calledThrice():void 
 		{
 			assertThat(spy.calledThrice, isFalse());
+		}
+
+		[Test]
+		public function calledThrice_when_called_three_times():void 
+		{
+			dispatcher.dispatchEvent(event);
+			assertThat(spy.calledTwice, isTrue());
 		}
 
 		[Test]
