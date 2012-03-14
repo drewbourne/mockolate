@@ -318,7 +318,7 @@ package mockolate.ingredients
 		}
 
 		/**
-		 * Spy on a method, getter or setter.
+		 * @copy mockolate#spy()
 		 */
 		public function spy(target:*):Spy
 		{
