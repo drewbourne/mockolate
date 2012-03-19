@@ -26,20 +26,14 @@ package mockolate
 	public class MockolateSuite
 	{
 		//
-        // sandbox for testing floxy, flemit, loom, whatever
+        // mockolate ingredients
         //
-//		public var sandbox:MockolateSandbox;
-		
-		//
-        // mockolate unit tests
-        //
+        public var mockolateTest:MockolateTest;
 		public var mockolatier:MockolatierTest;
 		public var couverture:CouvertureTest;
 		public var recording:RecordingCouvertureTest;
 		public var mocking:MockingCouvertureTest;
 		public var verifying:VerifyingCouvertureTest;
-		
-		// ingredients
 		public var classRecipe:ClassRecipeTest;
 		public var classRecipes:ClassRecipesTest;
 		public var classRecipeBuilder:ClassRecipeBuilderTest;

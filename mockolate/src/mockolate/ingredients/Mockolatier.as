@@ -1,64 +1,64 @@
 package mockolate.ingredients
 {
-    import asx.array.filter;
-    import asx.array.flatten;
-    import asx.array.forEach;
-    import asx.array.map;
-    import asx.array.unique;
-    import asx.object.isA;
-    
-    import flash.events.Event;
-    import flash.events.EventDispatcher;
-    import flash.events.IEventDispatcher;
-    import flash.system.ApplicationDomain;
-    import flash.utils.Dictionary;
-    import flash.utils.setTimeout;
-    
-    import mockolate.errors.MockolateError;
-    import mockolate.ingredients.bytecode.BytecodeProxyMockolateFactory;
-    import mockolate.ingredients.floxy.FloxyMockolateFactory;
-    
-    import org.hamcrest.Matcher;
-    import org.hamcrest.collection.emptyArray;
-    import org.hamcrest.collection.everyItem;
-    import org.hamcrest.core.not;
-    
-    use namespace mockolate_ingredient;
-    
-    /**
-     * Maker of the Mockolates.
-     * 
-     * Used by MockolatierMaster and the <code>mockolate.* </code> package-level functions.
-     * 
-     * Do not reference directly.  
-     * 
-     * @author drewbourne
-     */
-    public class Mockolatier extends EventDispatcher
-    {
+	import asx.array.filter;
+	import asx.array.flatten;
+	import asx.array.forEach;
+	import asx.array.map;
+	import asx.array.unique;
+	import asx.object.isA;
+	
+	import flash.events.Event;
+	import flash.events.EventDispatcher;
+	import flash.events.IEventDispatcher;
+	import flash.system.ApplicationDomain;
+	import flash.utils.Dictionary;
+	import flash.utils.setTimeout;
+	
+	import mockolate.errors.MockolateError;
+	import mockolate.ingredients.bytecode.BytecodeProxyMockolateFactory;
+	import mockolate.ingredients.floxy.FloxyMockolateFactory;
+	
+	import org.hamcrest.Matcher;
+	import org.hamcrest.collection.emptyArray;
+	import org.hamcrest.collection.everyItem;
+	import org.hamcrest.core.not;
+	
+	use namespace mockolate_ingredient;
+	
+	/**
+	 * Maker of the Mockolates.
+	 * 
+	 * Used by MockolatierMaster and the <code>mockolate.* </code> package-level functions.
+	 * 
+	 * Do not reference directly.  
+	 * 
+	 * @author drewbourne
+	 */
+	public class Mockolatier extends EventDispatcher
+	{
 		private var _applicationDomain:ApplicationDomain;
-        private var _mockolates:Array;
-        private var _mockolatesByTarget:Dictionary;
-        private var _mockolateFactory:IMockolateFactory;
+		private var _mockolates:Array;
+		private var _mockolatesByTarget:Dictionary;
+		private var _mockolateFactory:IMockolateFactory;
 		private var _lastInvocation:Invocation;
 		private var _preparingClassRecipes:ClassRecipes;
 		private var _preparedClassRecipes:ClassRecipes;
 		
-        /**
-         * Constructor.
-         */
-        public function Mockolatier()
-        {
-            super();
+		/**
+		 * Constructor.
+		 */
+		public function Mockolatier()
+		{
+			super();
 			
 			_applicationDomain = ApplicationDomain.currentDomain;
-            _mockolates = [];
-            _mockolatesByTarget = new Dictionary();
-            _mockolateFactory = new FloxyMockolateFactory(this, _applicationDomain);
+			_mockolates = [];
+			_mockolatesByTarget = new Dictionary();
+			_mockolateFactory = new FloxyMockolateFactory(this, _applicationDomain);
 			
 			_preparingClassRecipes = new ClassRecipes();
 			_preparedClassRecipes = new ClassRecipes();
-        }
+		}
 		
 		public function get applicationDomain():ApplicationDomain
 		{
@@ -80,13 +80,13 @@ package mockolate.ingredients
 			_mockolateFactory = value;
 		}
 		
-        /**
-         * Prepares the given Class references for creating proxy instances. 
-         *  
-         * @see mockolate#prepare()
-         */
-        public function prepare(... rest):IEventDispatcher
-        {
+		/**
+		 * Prepares the given Class references for creating proxy instances. 
+		 *  
+		 * @see mockolate#prepare()
+		 */
+		public function prepare(... rest):IEventDispatcher
+		{
 			var classes:Array;
 			classes = flatten(rest);
 			classes = filter(classes, isA(Class)); 
@@ -105,7 +105,7 @@ package mockolate.ingredients
 			}
 			
 			return prepareClassRecipes(classRecipes);
-        }
+		}
 		
 		/**
 		 * @see mockolate#prepare()
@@ -149,23 +149,23 @@ package mockolate.ingredients
 			return _preparedClassRecipes.getRecipeFor(classToPrepare, namespacesToProxy);
 		}
 
-        /**
-         * @see mockolate#nice()
-         */
-        public function nice(classReference:Class, name:String=null, constructorArgs:Array=null):*
-        {
+		/**
+		 * @see mockolate#nice()
+		 */
+		public function nice(classReference:Class, name:String=null, constructorArgs:Array=null):*
+		{
 			return prepareInstance(
 				createInstanceRecipeFor(MockType.NICE, classReference, name, constructorArgs));
-        }
+		}
 		
-        /**
-         * @see mockolate#strict()
-         */
-        public function strict(classReference:Class, name:String=null, constructorArgs:Array=null):*
-        {
+		/**
+		 * @see mockolate#strict()
+		 */
+		public function strict(classReference:Class, name:String=null, constructorArgs:Array=null):*
+		{
 			return prepareInstance(
 				createInstanceRecipeFor(MockType.STRICT, classReference, name, constructorArgs));
-        }
+		}
 		
 		/**
 		 * @see mockolate#partial()
@@ -215,29 +215,29 @@ package mockolate.ingredients
 			return instanceRecipe.instance;
 		}
 		
-        /**
-         * @see mockolate#mock()
-         */
-        public function mock(instance:*):MockingCouverture
-        {
-            return mockolateByTarget(instance).mocker.mock();
-        }
-        
-        /**
-         * @see mockolate#stub()
-         */
-        public function stub(instance:*):MockingCouverture
-        {
-            return mockolateByTarget(instance).mocker.stub();
-        }
-        
-        /**
-         * @see mockolate#verify()
-         */
-        public function verify(instance:*):VerifyingCouverture
-        {
-        	return mockolateByTarget(instance).verify().verifier;
-        }
+		/**
+		 * @see mockolate#mock()
+		 */
+		public function mock(instance:*):MockingCouverture
+		{
+			return mockolateByTarget(instance).mocker.mock();
+		}
+		
+		/**
+		 * @see mockolate#stub()
+		 */
+		public function stub(instance:*):MockingCouverture
+		{
+			return mockolateByTarget(instance).mocker.stub();
+		}
+		
+		/**
+		 * @see mockolate#verify()
+		 */
+		public function verify(instance:*):VerifyingCouverture
+		{
+			return mockolateByTarget(instance).verify().verifier;
+		}
 		
 		/**
 		 * @see mockolate#expecting()
@@ -257,6 +257,17 @@ package mockolate.ingredients
 		{
 			return _isExpecting;
 		}
+
+		/**
+		 * @see mockolate#arg()
+		 */
+		public function expectArg(value:*):* 
+		{
+			_expectArgs ||= [];
+			_expectArgs.push(value);
+			
+			return null;
+		}		
 		
 		/**
 		 * @see mockolate#allow()
@@ -267,18 +278,12 @@ package mockolate.ingredients
 			// as the invocation type, and arguments are used
 			// when adding the expectation.
 			
-			if (!_lastInvocation)
-			{
-				throw new MockolateError(["Unable to allow(), no Mockolate invocation has been recorded yet."], null, null);
-			}
-			
-			var args:Array = _expectArgs || _lastInvocation.arguments;
-			_expectArgs = null;
+			var lastInvocationAndArgs:Array = getLastInvocationAndArgsFor("allow()"), 
+				mockolateInstance:Mockolate = lastInvocationAndArgs[0],
+				invocation:Invocation 		= lastInvocationAndArgs[1],
+				args:Array 			  		= lastInvocationAndArgs[2];
 
-			var invocation:Invocation = _lastInvocation;
-			_lastInvocation = null;
-			
-			return mockolateByTarget(invocation.target).expecter.allow(invocation, args);
+			return mockolateInstance.allow(invocation, args);
 		}
 		
 		/**
@@ -289,33 +294,16 @@ package mockolate.ingredients
 			// calls to expect must happen after an invocation 
 			// as the invocation type, and arguments are used
 			// when adding the expectation.
-			
-			if (!_lastInvocation)
-			{
-				throw new MockolateError(["Unable to expect(), no Mockolate invocation has been recorded yet."], null, null);
-			}
-			
-			var args:Array = _expectArgs || _lastInvocation.arguments;
-			_expectArgs = null;
 
-			var invocation:Invocation = _lastInvocation;
-			_lastInvocation = null;
-			
-			return mockolateByTarget(invocation.target).expecter.expect(invocation, args);
+			var lastInvocationAndArgs:Array = getLastInvocationAndArgsFor("expect()"), 
+				mockolateInstance:Mockolate = lastInvocationAndArgs[0],
+				invocation:Invocation 		= lastInvocationAndArgs[1],
+				args:Array 			  		= lastInvocationAndArgs[2];
+
+			return mockolateInstance.expect(invocation, args);
 		}
 		
 		private var _expectArgs:Array;
-		
-		/**
-		 * @see mockolate#arg()
-		 */
-		public function expectArg(value:*):* 
-		{
-			_expectArgs ||= [];
-			_expectArgs.push(value);
-			
-			return null;
-		}
 
 		/**
 		 * @copy mockolate#spy()
@@ -325,10 +313,24 @@ package mockolate.ingredients
 			// calls to spy must happen after an invocation 
 			// as the invocation type, and arguments are used
 			// when adding the expectation.
-			
+
+			var lastInvocationAndArgs:Array = getLastInvocationAndArgsFor("spy()"), 
+				mockolateInstance:Mockolate = lastInvocationAndArgs[0],
+				invocation:Invocation 		= lastInvocationAndArgs[1],
+				args:Array 			  		= lastInvocationAndArgs[2];
+
+			return mockolateInstance.spy(invocation, args);
+		}
+
+		/**
+		 * @param apiFunctionName 
+		 * @returns Array of [Mockolate, Invocation, Arguments]
+		 */
+		private function getLastInvocationAndArgsFor(apiFunctionName:String):Array
+		{
 			if (!_lastInvocation)
 			{
-				throw new MockolateError(["Unable to spy(), no Mockolate invocation has been recorded yet."], null, null);
+				throw new MockolateError(["Cannot call " + apiFunctionName + ", no Invocation has been recorded yet."], null, null);
 			}
 			
 			var args:Array = _expectArgs || _lastInvocation.arguments;
@@ -338,28 +340,14 @@ package mockolate.ingredients
 			_lastInvocation = null;
 
 			var mockolateInstance:Mockolate = mockolateByTarget(invocation.target);
-			var spy:Spy = new Spy(mockolateInstance, invocation, args);
 
-			mockolateInstance.addSpy(spy);
-			
-			return spy;
+			// Calls to getLastInvocationAndArgsFor() are used to define expectations or spies
+			// from an Invocation. When an Invocation is used for those purposes it should not
+			// be recorded as that will interfere with verification and the `received()` API.
+			mockolateInstance.recorder.removeInvocation(invocation);
+
+			return [ mockolateInstance, invocation, args ];
 		}
-        
-        /**
-         * Checks the args Array matches the given Matcher, throws an ArgumentError if not.
-         *
-         * @param args
-         * @param matcher
-         * @param errorMessage
-         * @throw ArgumentError
-         */
-        protected function check(args:Array, matcher:Matcher, errorMessage:String):void
-        {
-            if (!matcher.matches(args))
-            {
-                throw new ArgumentError(errorMessage);
-            }
-        }
 		
 		/**
 		 * Registers the target and mockolate to allow a Mockolate instance to 
@@ -376,26 +364,26 @@ package mockolate.ingredients
 			
 			return instance;
 		}
-        
-        /**
-         * Finds a Mockolate instance by its target instance.
-         * 
-         * Throws a MockolateNotFoundError when there is no Mockolate for the given target. 
-         * 
-         * @private
-         */
+		
+		/**
+		 * Finds a Mockolate instance by its target instance.
+		 * 
+		 * Throws a MockolateNotFoundError when there is no Mockolate for the given target. 
+		 * 
+		 * @private
+		 */
 		mockolate_ingredient function mockolateByTarget(target:*):Mockolate
-        {
-            var mockolate:Mockolate = _mockolatesByTarget[target];
-            if (!mockolate)
+		{
+			var mockolate:Mockolate = _mockolatesByTarget[target];
+			if (!mockolate)
 			{
-                throw new MockolateError(
+				throw new MockolateError(
 					["No Mockolate for that target, received:{}", [target]], 
 					null, target);
 			}
-            
-            return mockolate;
-        }
+			
+			return mockolate;
+		}
 		
 		/**
 		 * Invokes a Mockolate.
@@ -415,5 +403,5 @@ package mockolate.ingredients
 
 			mockolateByTarget(invocation.target).invoked(invocation);
 		}
-    }
+	}
 }

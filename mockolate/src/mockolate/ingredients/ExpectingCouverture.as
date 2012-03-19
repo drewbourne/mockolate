@@ -49,7 +49,6 @@ package mockolate.ingredients
 		{
 			mocker.stub();
 			defineExpectationFrom(invocation, args);
-			removeRecordedInvocation(invocation);
 			return this;
 		}
 		
@@ -64,21 +63,7 @@ package mockolate.ingredients
 		{
 			mocker.mock();
 			defineExpectationFrom(invocation, args);
-			removeRecordedInvocation(invocation);
 			return this;
-		}
-		
-		/**
-		 * Converts an Invocation into an Expectation by calling the appropriate 
-		 * MockingCouverture methods.
-		 * 
-		 * @param invocation Invocation to convert
-		 * @param args Array of arguments to set on the Expectation.
-		 * @return ExpectingCouverture 
-		 */
-		protected function removeRecordedInvocation(invocation:Invocation):void
-		{
-			this.mockolateInstance.recorder.removeInvocation(invocation); 
 		}
 		
 		protected function defineExpectationFrom(invocation:Invocation, args:Array):void 
