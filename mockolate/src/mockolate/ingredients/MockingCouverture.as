@@ -1115,9 +1115,7 @@ package mockolate.ingredients
 		 */
 		protected function setArgs(args:Array):void
 		{
-			_currentExpectation.argsMatcher = describedAs(
-				new StringDescription().appendList("", ",", "", args).toString(),
-				new IsArrayMatcher(map(args, valueToMatcher)));
+			_currentExpectation.argsMatcher = new ArgumentsMatcher(args);
 		}
 
 		/**
