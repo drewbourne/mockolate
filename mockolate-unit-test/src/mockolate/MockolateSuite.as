@@ -41,6 +41,7 @@ package mockolate
 		public var instanceRecipe:InstanceRecipeTest;
 		public var instancesRecipe:InstanceRecipesTest;
 		public var instanceRecipeBuilder:InstanceRecipeBuilderTest;
+		public var argumentsMatcher:ArgumentsMatcherTest;
 
 		//
         // FLoxy integration
