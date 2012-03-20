@@ -29,6 +29,7 @@ package mockolate.ingredients
 			if (invocation.uri)
 			{
 				description.appendText(invocation.uri);
+				description.appendText('::');
 			}
 			
 			description.appendText(invocation.name);
