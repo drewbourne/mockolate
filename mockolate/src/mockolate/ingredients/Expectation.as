@@ -252,7 +252,9 @@ package mockolate.ingredients
 		public function get satisfied():Boolean 
 		{
 			if (invokeCountVerificationMatcher) 
-				return invokeCountVerificationMatcher.matches(invokedCount)
+			{
+				return invokeCountVerificationMatcher.matches(invokedCount);
+			}
 			
 			return true;
 		}

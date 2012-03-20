@@ -34,6 +34,7 @@ package mockolate
 		public var recording:RecordingCouvertureTest;
 		public var mocking:MockingCouvertureTest;
 		public var verifying:VerifyingCouvertureTest;
+		public var expectation:ExpectationTest;
 		public var classRecipe:ClassRecipeTest;
 		public var classRecipes:ClassRecipesTest;
 		public var classRecipeBuilder:ClassRecipeBuilderTest;
