@@ -11,6 +11,9 @@ package mockolate.ingredients
     {
         [ArrayElementType("mockolate.ingredients.Invocation")]
         private var _invocations:Array;
+
+        [ArrayElementType("mockolate.ingredients.Invocation")]
+        private var _unexpectedInvocations:Array;
         
         /**
          * Constructor.
@@ -20,6 +23,7 @@ package mockolate.ingredients
             super(mockolate);
             
             _invocations = [];
+            _unexpectedInvocations = [];
         }
         
         [ArrayElementType("mockolate.ingredients.Invocation")]
@@ -29,6 +33,15 @@ package mockolate.ingredients
         mockolate_ingredient function get invocations():Array
         {
             return _invocations.slice(0);
+        }
+
+        [ArrayElementType("mockolate.ingredients.Invocation")]
+        /**
+         * Returns the unexpected Invocations up to the time this property is accessed.
+         */
+        mockolate_ingredient function get unexpectedInvocations():Array
+        {
+            return _unexpectedInvocations.slice(0);
         }
         
         /**
@@ -45,11 +58,14 @@ package mockolate.ingredients
         /**
          * Adds an Invocation to the <code>invocations</code> Array.
          */
-        protected function addInvocation(invocation:Invocation):void
+        mockolate_ingredient function addInvocation(invocation:Invocation):void
         {
             _invocations.push(invocation);
         }
 		
+        /**
+         * Removes an Invocation to the <code>invocations</code> Array.
+         */
 		mockolate_ingredient function removeInvocation(invocation:Invocation):void 
 		{
 			var index:int = _invocations.indexOf(invocation);
@@ -58,6 +74,26 @@ package mockolate.ingredients
 				_invocations.splice(index, 1);
 			}
 		}
+
+        /**
+         * Adds an Invocation to the <code>unexpectedInvocations</code> Array.
+         */
+        mockolate_ingredient function addUnexpectedInvocation(invocation:Invocation):void
+        {
+            _unexpectedInvocations.push(invocation);
+        }
+        
+        /**
+         * Removes an Invocation to the <code>unexpectedInvocations</code> Array.
+         */
+        mockolate_ingredient function removeUnexpectedInvocation(invocation:Invocation):void 
+        {
+            var index:int = _unexpectedInvocations.indexOf(invocation);
+            if (index != -1)
+            {
+                _unexpectedInvocations.splice(index, 1);
+            }
+        }
         
         /**
          * @private

@@ -5,6 +5,7 @@ package mockolate.ingredients
 	import flash.utils.getQualifiedClassName;
 	
 	import org.hamcrest.Description;
+	import org.hamcrest.StringDescription;
 	import org.hamcrest.SelfDescribing;
 	
 	use namespace mockolate_ingredient;
@@ -167,11 +168,16 @@ package mockolate.ingredients
 		 */
 		mockolate_ingredient function invoked(invocation:Invocation):Mockolate
 		{
-			_recorder.invoked(invocation);
+			_recorder.addInvocation(invocation);
 
 			try
 			{
-				_mocker.invoked(invocation);
+				var handled:Boolean = _mocker.invoked(invocation);
+				
+				if (!handled)
+				{
+					_recorder.addUnexpectedInvocation(invocation);
+				}
 			}
 			catch (error:Error)
 			{
