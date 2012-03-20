@@ -303,7 +303,7 @@ package mockolate.ingredients
 		 * 
 		 * @see Invocation
 		 */
-		public function eligibleToVerifyInvocation(invocation:Invocation):Boolean
+		internal function eligibleToVerifyInvocation(invocation:Invocation):Boolean
 		{	
 			return eligibleByInvocationType(invocation.invocationType) 
 				&& eligibleByNamespaceURI(invocation.uri)
@@ -314,7 +314,7 @@ package mockolate.ingredients
 		/**
 		 * Determines if this Expectation is eligible for the given InvocationType.
 		 */		
-		protected function eligibleByInvocationType(invocationType:InvocationType):Boolean 
+		internal function eligibleByInvocationType(invocationType:InvocationType):Boolean 
 		{
 			return this.invocationType == invocationType;	
 		}
@@ -322,7 +322,7 @@ package mockolate.ingredients
 		/**
 		 * Determine if this Expectation is eligible for the given Namespace URI.
 		 */
-		protected function eligibleByNamespaceURI(uri:String):Boolean 
+		internal function eligibleByNamespaceURI(uri:String):Boolean 
 		{
 			if (namespaceURI && namespaceURI == uri)
 				return true;
@@ -336,7 +336,7 @@ package mockolate.ingredients
 		/**
 		 * Determines if this Expectation is eligible for the given method / property name.
 		 */		
-		protected function eligibleByName(name:String):Boolean 
+		internal function eligibleByName(name:String):Boolean 
 		{
 			return nameMatcher.matches(name);	
 		}
@@ -344,7 +344,7 @@ package mockolate.ingredients
 		/**
 		 * Determines if this Expectation is eligible for the given arguments.
 		 */		
-		protected function eligibleByArguments(arguments:Array):Boolean 
+		internal function eligibleByArguments(arguments:Array):Boolean 
 		{
 			return !argsMatcher || argsMatcher.matches(arguments);
 		}
@@ -352,7 +352,7 @@ package mockolate.ingredients
 		/**
 		 * Determines if this Expectation is eligible for by its constraints.
 		 */		
-		protected function eligibleByConstraints():Boolean 
+		internal function eligibleByConstraints():Boolean 
 		{
 			return every(_constraints, function(constraint:Constraint):Boolean {
 				return constraint.isInvocationAllowed();
@@ -362,7 +362,7 @@ package mockolate.ingredients
 		/**
 		 * Determines if this Expectation is eligible by its invocation count. 
 		 */		
-		public function eligibleByInvocationCount():Boolean 
+		internal function eligibleByInvocationCount():Boolean 
 		{
 			return !invokeCountEligiblityMatcher 
 				|| invokeCountEligiblityMatcher.matches(invokedCount + 1);
@@ -390,9 +390,9 @@ package mockolate.ingredients
 		}
 
 		/**
-		 * 
+		 * @private
 		 */
-		public function describeMismatch(value:Object, description:Description):void 
+		internal function describeMismatch(value:Object, description:Description):void 
 		{
 			var invocation:Invocation = value as Invocation;
 			

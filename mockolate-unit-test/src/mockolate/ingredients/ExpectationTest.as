@@ -72,18 +72,6 @@ package mockolate.ingredients
 		}
 
 		[Test]
-		public function argsMatcher_should_get_and_set():void 
-		{
-
-		}
-
-		[Test]
-		public function invokeCountEligiblityMatcher_should_get_and_set():void 
-		{
-
-		}
-
-		[Test]
 		public function should_be_eligibleByInvocationCount_without_invokeCountEligibilityMatcher():void 
 		{
 			expectation.invokeCountEligiblityMatcher = null;
@@ -121,12 +109,6 @@ package mockolate.ingredients
 			expectation.invoke(new FauxInvocation());
 
 			assertThat("after invoked to limit", expectation.eligibleByInvocationCount(), isFalse());
-		}
-
-		[Test]
-		public function invokeCountVerificationMatcher_should_get_and_set():void 
-		{
-
 		}
 
 		[Test]
