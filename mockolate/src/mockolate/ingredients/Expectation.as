@@ -15,6 +15,7 @@ package mockolate.ingredients
 	import mockolate.ingredients.constraints.Constraint;
 	
 	import org.hamcrest.Matcher;
+	import org.hamcrest.Description;
 	import org.hamcrest.StringDescription;
 	
 	use namespace mockolate_ingredient;
@@ -30,49 +31,49 @@ package mockolate.ingredients
 	 */
 	public class Expectation
 	{
-	    /**
-	     * Constructor. 
-	     */
-	    public function Expectation()
-	    {
+		/**
+		 * Constructor. 
+		 */
+		public function Expectation()
+		{
 			_constraints = [];
-	        _answers = [];
-	    }
-	    
-	    //
-	    //	Properties
-	    //
-	    
-	    /**
-	     * Name of the method or property this Expectation is for.
-	     */
-	    public function get name():String 
-	    {
-	    	return _name;
-	    }
-	    
-	    public function set name(value:String):void
-	    {
-	    	_name = value;
-	    }
-	    
-	    private var _name:String;
-	    
+			_answers = [];
+		}
+		
+		//
+		//	Properties
+		//
+		
+		/**
+		 * Name of the method or property this Expectation is for.
+		 */
+		public function get name():String 
+		{
+			return _name;
+		}
+		
+		public function set name(value:String):void
+		{
+			_name = value;
+		}
+		
+		private var _name:String;
+		
 		[Deprecated(since="0.11", replacement="#namespaceURI")]
-	    /**
-	     *  Namespace of the method or property this Expectation is for. 
-	     */
-	    public function get namespace():Namespace 
-	    {
-	    	return _namespace;
-	    }
-	    
-	    public function set namespace(value:Namespace):void
-	    {
-	    	_namespace = value;
-	    }
-	    
-	    private var _namespace:Namespace;
+		/**
+		 *  Namespace of the method or property this Expectation is for. 
+		 */
+		public function get namespace():Namespace 
+		{
+			return _namespace;
+		}
+		
+		public function set namespace(value:Namespace):void
+		{
+			_namespace = value;
+		}
+		
+		private var _namespace:Namespace;
 		
 		/**
 		 * Namespace URI of the method or property this Expectation is for.
@@ -119,14 +120,14 @@ package mockolate.ingredients
 		
 		private var _invocationType:InvocationType;
 		
-	    /**
-	     * Indicates if this Expectation is for a method.
-	     */
-	    public function get isMethod():Boolean
-	    {
-	    	return _invocationType.isMethod;
-	    }
-	    
+		/**
+		 * Indicates if this Expectation is for a method.
+		 */
+		public function get isMethod():Boolean
+		{
+			return _invocationType.isMethod;
+		}
+		
 		/**
 		 * Indicates if this Expectation is for a getter.
 		 */
@@ -142,72 +143,72 @@ package mockolate.ingredients
 		{
 			return _invocationType.isSetter;
 		}
-	    
-	    /**
-	     * Matcher for the invocation arguments.
-	     * 
-	     * @see #eligible()
-	     */
-	    public function get argsMatcher():Matcher
-	    {
-	    	return _argsMatcher;
-	    }
-	    
-	    public function set argsMatcher(value:Matcher):void 
-	    {
-	    	_argsMatcher = value;
-	    }
-	    
-	    private var _argsMatcher:Matcher;
-	    
-	    /**
-	     * Matcher to check if this Expectation is eligible to be invoked. 
-	     * 
-	     * @see #eligible()
-	     */
-	    public function get invokeCountEligiblityMatcher():Matcher 
-	    {
-	        return _invokeCountEligibilityMatcher;
-	    }
-	    
-	    public function set invokeCountEligiblityMatcher(value:Matcher):void 
-	    {
-	        _invokeCountEligibilityMatcher = value;
-	    }
-	    
-	    private var _invokeCountEligibilityMatcher:Matcher;
-	    
-	    /**
-	     * Matcher for the number of times this Expectation should be invoked. 
-	     * 
-	     * @see #verify()
-	     */
-	    public function get invokeCountVerificationMatcher():Matcher
-	    {
-	    	return _invokeCountVerificationMatcher;
-	    }
-	    
-	    public function set invokeCountVerificationMatcher(value:Matcher):void 
-	    {
-	    	_invokeCountVerificationMatcher = value;
-	    }
-	    
-	    private var _invokeCountVerificationMatcher:Matcher;
+		
+		/**
+		 * Matcher for the invocation arguments.
+		 * 
+		 * @see #eligible()
+		 */
+		public function get argsMatcher():Matcher
+		{
+			return _argsMatcher;
+		}
+		
+		public function set argsMatcher(value:Matcher):void 
+		{
+			_argsMatcher = value;
+		}
+		
+		private var _argsMatcher:Matcher;
+		
+		/**
+		 * Matcher to check if this Expectation is eligible to be invoked. 
+		 * 
+		 * @see #eligible()
+		 */
+		public function get invokeCountEligiblityMatcher():Matcher 
+		{
+			return _invokeCountEligibilityMatcher;
+		}
+		
+		public function set invokeCountEligiblityMatcher(value:Matcher):void 
+		{
+			_invokeCountEligibilityMatcher = value;
+		}
+		
+		private var _invokeCountEligibilityMatcher:Matcher;
+		
+		/**
+		 * Matcher for the number of times this Expectation should be invoked. 
+		 * 
+		 * @see #verify()
+		 */
+		public function get invokeCountVerificationMatcher():Matcher
+		{
+			return _invokeCountVerificationMatcher;
+		}
+		
+		public function set invokeCountVerificationMatcher(value:Matcher):void 
+		{
+			_invokeCountVerificationMatcher = value;
+		}
+		
+		private var _invokeCountVerificationMatcher:Matcher;
 
 		/**
-	     * Indicates the number of times this Expectation has been invoked. 
-	     */
-	    public function get invokedCount():int
-	    {
-	    	return _invokedCount;
-	    }
-	    
-	    mockolate_ingredient function set _invokedCount(value:int):void 
-	    {
-	    	_invokedCount = value;
-	    }
-	    
-	    private var _invokedCount:int;	    
+		 * Indicates the number of times this Expectation has been invoked. 
+		 */
+		public function get invokedCount():int
+		{
+			return _invokedCount;
+		}
+		
+		mockolate_ingredient function set _invokedCount(value:int):void 
+		{
+			_invokedCount = value;
+		}
+		
+		private var _invokedCount:int;	    
 		
 		[ArrayElementType("mockolate.ingredients.constraints.Constraint")]
 		/**
@@ -226,25 +227,25 @@ package mockolate.ingredients
 		
 		private var _constraints:Array;
 		
-	    [ArrayElementType("mockolate.ingredients.answers.Answer")]
-	    /**
-	     * Array of Answers, used to determine the returnValue and other 
-	     * behaviour when this Expectation is invoked. 
-	     * 
-	     * @see mockolate.ingredients.answers.Answer
-	     */
-	    public function get answers():Array
-	    {
-	    	return _answers.slice();
-	    }
-	    
-	    mockolate_ingredient function set _answers(value:Array):void 
-	    {
-	    	_answers = value;
-	    }
-	    
-	    private var _answers:Array;
-	    
+		[ArrayElementType("mockolate.ingredients.answers.Answer")]
+		/**
+		 * Array of Answers, used to determine the returnValue and other 
+		 * behaviour when this Expectation is invoked. 
+		 * 
+		 * @see mockolate.ingredients.answers.Answer
+		 */
+		public function get answers():Array
+		{
+			return _answers.slice();
+		}
+		
+		mockolate_ingredient function set _answers(value:Array):void 
+		{
+			_answers = value;
+		}
+		
+		private var _answers:Array;
+		
 		/**
 		 * Indicates if the Expectation has been satisfied. 
 		 */
@@ -255,10 +256,10 @@ package mockolate.ingredients
 			
 			return true;
 		}
-	    
-	    //
-	    //	Methods
-	    //
+		
+		//
+		//	Methods
+		//
 		
 		/**
 		 * Adds a Constraint instance to be used to determine the eligibility of
@@ -268,31 +269,45 @@ package mockolate.ingredients
 		{
 			_constraints.push(constraint);	
 		}
-	    
-	    /**
-	     * Adds an Answer instance to be performed when this Expectation is invoked.
-	     * 
-	     * @see mockolate.ingredients.answers.Answer
-	     */
-	    public function addAnswer(answer:Answer):void
-	    {
-	        _answers.push(answer);
-	    }
-	    
-	   	/**
-	   	 * Determine if this Expectation is eligible to be invoked for the given Invocation.
-	   	 * 
-	   	 * @see Invocation
-	   	 */
-	    public function eligible(invocation:Invocation):Boolean 
-	    {
+		
+		/**
+		 * Adds an Answer instance to be performed when this Expectation is invoked.
+		 * 
+		 * @see mockolate.ingredients.answers.Answer
+		 */
+		public function addAnswer(answer:Answer):void
+		{
+			_answers.push(answer);
+		}
+		
+		/**
+		 * Determine if this Expectation is eligible to be invoked for the given Invocation.
+		 * 
+		 * @see Invocation
+		 */
+		public function eligible(invocation:Invocation):Boolean 
+		{
 			return eligibleByInvocationType(invocation.invocationType) 
 				&& eligibleByNamespaceURI(invocation.uri)
 				&& eligibleByName(invocation.name)
 				&& eligibleByArguments(invocation.arguments)
 				&& eligibleByConstraints()
 				&& eligibleByInvocationCount();
-	    }
+		}
+
+		/**
+		 * Determine if this Expectation is eligible to verify an Invocation. 
+		 * Does not check invocation count or constraints.
+		 * 
+		 * @see Invocation
+		 */
+		public function eligibleToVerifyInvocation(invocation:Invocation):Boolean
+		{	
+			return eligibleByInvocationType(invocation.invocationType) 
+				&& eligibleByNamespaceURI(invocation.uri)
+				&& eligibleByName(invocation.name)
+				&& eligibleByArguments(invocation.arguments)
+		}
 		
 		/**
 		 * Determines if this Expectation is eligible for the given InvocationType.
@@ -345,42 +360,109 @@ package mockolate.ingredients
 		/**
 		 * Determines if this Expectation is eligible by its invocation count. 
 		 */		
-		protected function eligibleByInvocationCount():Boolean 
+		public function eligibleByInvocationCount():Boolean 
 		{
 			return !invokeCountEligiblityMatcher 
 				|| invokeCountEligiblityMatcher.matches(invokedCount + 1);
 		}
 		
-	    /**
-	     * Invokes the Expectation. 
-	     * 
-	     * Does not check if the Expectation is eligible.
-	     *  
-	     * Assumes that the Invocation is appropriate for the expected method
-	     * or property.
-	     */
-	    public function invoke(invocation:Invocation):void 
-	    {
-	    	// increment the number of times this expectation has been invoked
-	    	// as it is used when determining if this expectation is eligible to be invoked.
-	    	_invokedCount = invokedCount + 1;
+		/**
+		 * Invokes the Expectation. 
+		 * 
+		 * Does not check if the Expectation is eligible.
+		 *  
+		 * Assumes that the Invocation is appropriate for the expected method
+		 * or property.
+		 */
+		public function invoke(invocation:Invocation):void 
+		{
+			// increment the number of times this expectation has been invoked
+			// as it is used when determining if this expectation is eligible to be invoked.
+			_invokedCount = invokedCount + 1;
 
 			// invoke all the answers to determine the return value 
-	        var results:Array = asx.array.invoke(answers, 'invoke', invocation);
-	        
-	        // use the first result that is not undefined, else undefined.
-	        invocation.returnValue = detect(results, isDefined);
-	    }
-	    
-	    /**
-	     * Format this Expectation as a String. 
-	     */
-	    public function toString():String 
-	    {
-	       return substitute(
-	        	isMethod ? "#{}({})" : isSetter ? "#{} = {}" : "#{}",
-	        	(namespaceURI ? namespaceURI + "::" : "") + name, 
-	        	argsMatcher ? StringDescription.toString(argsMatcher) : "");
-	    }
+			var results:Array = asx.array.invoke(answers, 'invoke', invocation);
+			
+			// use the first result that is not undefined, else undefined.
+			invocation.returnValue = detect(results, isDefined);
+		}
+
+		/**
+		 * 
+		 */
+		public function describeMismatch(value:Object, description:Description):void 
+		{
+			var invocation:Invocation = value as Invocation;
+			
+			if (!eligibleByInvocationType(invocation.invocationType) )
+			{
+				description
+					.appendText(" incorrect invocation type: ")
+					.appendText(" expected ")
+					.appendValue(_invocationType)
+					.appendText(" received ")
+					.appendValue(invocation.invocationType);
+			}
+
+			if (!eligibleByNamespaceURI(invocation.uri))
+			{
+				description
+					.appendText(" incorrect namespaceURI: ")
+					.appendText(" expected ")
+					.appendValue(_namespaceURI)
+					.appendText(" received ")
+					.appendValue(invocation.uri);
+			}
+
+			if (!eligibleByName(invocation.name))
+			{
+				description
+					.appendText(" incorrect name: ")
+					.appendText(" expected ")
+					.appendValue(_name)
+					.appendText(" received ")
+					.appendValue(invocation.name);
+			}
+
+			if (!eligibleByArguments(invocation.arguments))
+			{
+				description
+					.appendText(" incorrect arguments: ")
+					.appendText(" expected ")
+					.appendDescriptionOf(_argsMatcher)
+					.appendText(" received ")
+					.appendMismatchOf(_argsMatcher, invocation.arguments);
+			}
+
+			// TODO constraints
+
+			if (!eligibleByInvocationCount())
+			{
+				// +1 because this Expectation was not invoked 
+				// and the number should reflect what the invokedCount would be IF it had been invoked. 
+				// 
+				description
+					.appendText(" ineligible by invocation count: ")
+					.appendMismatchOf(_invokeCountEligibilityMatcher, invokedCount + 1);
+			}
+
+			if (!satisfied)
+			{
+				description
+					.appendText(" ineligible by invocation count for verification: ")
+					.appendMismatchOf(_invokeCountVerificationMatcher, invokedCount);
+			}
+		}	
+
+		/**
+		 * Format this Expectation as a String. 
+		 */
+		public function toString():String 
+		{
+		   return substitute(
+				isMethod ? "#{}({})" : isSetter ? "#{} = {}" : "#{}",
+				(namespaceURI ? namespaceURI + "::" : "") + name, 
+				argsMatcher ? StringDescription.toString(argsMatcher) : "");
+		}
 	}
 }

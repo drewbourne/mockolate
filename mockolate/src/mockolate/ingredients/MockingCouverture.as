@@ -923,7 +923,7 @@ package mockolate.ingredients
 						["No Expectation defined for {}", [description.toString()]],
 						invocation, this.mockolateInstance, this.mockolateInstance.target);
 				}
-
+				
 				if (mockolateInstance.mockType == MockType.PARTIAL)
 				{
 					expectation = createExpectation(invocation.name, null, null, invocation.invocationType);
@@ -952,9 +952,7 @@ package mockolate.ingredients
 		{
 			invokeDecorators(invocation);
 
-			invokeExpectation(invocation);
-			
-			return true;
+			return invokeExpectation(invocation);
 		}
 
 		/**
@@ -975,13 +973,17 @@ package mockolate.ingredients
 		 *
 		 * @private
 		 */
-		protected function invokeExpectation(invocation:Invocation):void
+		protected function invokeExpectation(invocation:Invocation):Boolean
 		{
 			var expectation:Expectation = findEligibleExpectation(invocation);
 			if (expectation)
 			{
 				expectation.invoke(invocation);
+
+				return true;
 			}
+
+			return false;
 		}
 
 		/**
@@ -1152,7 +1154,9 @@ package mockolate.ingredients
 		protected function addAnswer(answer:Answer):void
 		{
 			if (answer)
+			{
 				_currentExpectation.addAnswer(answer);
+			}
 		}
 
 		/**
@@ -1260,9 +1264,15 @@ package mockolate.ingredients
 		 */
 		override mockolate_ingredient function verify():void
 		{
+			verifyExpectations();
+			verifyInvocations();
+		}
+
+		private function verifyExpectations():void 
+		{
 			// mock expectations are always verified
 
-			var unmetExpectations:Array = reject(_mockExpectations, verifyExpectation);
+			var unmetExpectations:Array = reject(_mockExpectations, isSatisfiedExpectation);
 			if (!empty(unmetExpectations))
 			{
 				var message:String = unmetExpectations.length.toString();
@@ -1280,7 +1290,7 @@ package mockolate.ingredients
 					if (this.mockolateInstance.name)
 						message += "<\"" + this.mockolateInstance.name + "\">";
 
-					// TOOD include more description from the Expectation
+					// TODO include more description from the Expectation
 					message += expectation.toString();
 				}
 
@@ -1294,12 +1304,93 @@ package mockolate.ingredients
 			// stub expectations are not verified
 		}
 
-		/**
-		 * @private
-		 */
-		protected function verifyExpectation(expectation:Expectation):Boolean
+		private function isSatisfiedExpectation(expectation:Expectation):Boolean
 		{
 			return expectation.satisfied;
+		}
+
+		private function verifyInvocations():void 
+		{
+			// FIXME only occurs in tests. 
+			if (!mockolateInstance || !mockolateInstance.recorder)
+			{
+				return;
+			}
+
+			var unexpectedInvocations:Array = findUnexpectedInvocations();
+			if (!empty(unexpectedInvocations))
+			{
+				var message:String = unexpectedInvocations.length 
+					+ " unexpected " 
+					+ (unexpectedInvocations.length == 1 ? "Invocation" : "Invocations");
+
+				for each (var match:Array in unexpectedInvocations)
+				{
+					var invocation:Invocation = match[0];
+					var expectation:Expectation = match[1];
+
+					var description:Description = new StringDescription();
+
+					description
+						.appendDescriptionOf(mockolateInstance)
+						.appendText("#")
+						.appendDescriptionOf(invocation);
+
+					message += "\n\tinvocation:  " + description.toString();
+
+					if (expectation)
+					{
+						description = new StringDescription();
+
+						description
+							.appendDescriptionOf(mockolateInstance)
+							.appendText(expectation.toString())
+							.appendText("\n\tmismatch: ");
+
+						expectation.describeMismatch(invocation, description);
+
+						message += "\n\texpectation: " + description.toString();
+					}
+					else 
+					{
+						message += "\n\texpectation: no matching expectation";
+					}
+				}
+
+				throw new ExpectationError(
+					message,
+					unexpectedInvocations,
+					this.mockolateInstance,
+					this.mockolateInstance.target);
+			}
+		}
+
+		private function findUnexpectedInvocations():Array
+		{
+			var result:Array = [];
+
+			// search in reverse order to find the last defined expectation as it should be
+			// the expectation that is most relevent to an unexpected invocation.
+			var stubs:Array = _stubExpectations.reverse();
+			var mocks:Array = _mockExpectations.reverse();
+
+			for each (var invocation:Invocation in mockolateInstance.recorder.unexpectedInvocations)
+			{
+				trace('unexpected invocation?', (new StringDescription()).appendDescriptionOf(invocation).toString());
+
+				var expectation:Expectation = detect(mocks, function(expectation:Expectation):Boolean {
+						return (expectation.eligibleToVerifyInvocation(invocation))
+					}) as Expectation;
+
+				if (	expectation 
+					&& 	expectation.satisfied 
+					&& !expectation.eligibleByInvocationCount())
+				{
+					result.push([invocation, expectation]);
+				}
+			}
+
+			return result;
 		}
 	}
 }

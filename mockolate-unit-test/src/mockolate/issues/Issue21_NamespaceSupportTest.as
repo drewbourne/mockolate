@@ -78,12 +78,12 @@ package mockolate.issues
 		[Test]
 		public function nsMethod_shouldInterceptProxyHasProperty():void 
 		{
-			mock(instance).nsMethod(flash_proxy, "hasProperty").args("definedProperty").returns(true).once();
-			mock(instance).nsMethod(flash_proxy, "hasProperty").args("undefinedProperty").returns(false).once();
+			mock(instance).nsMethod(flash_proxy, "hasProperty").args("definedProperty").returns(true).twice();
+			mock(instance).nsMethod(flash_proxy, "hasProperty").args("undefinedProperty").returns(false).twice();
 			
 			assertThat("in definedProperty", "definedProperty" in instance, isTrue());
 			assertThat("in undefinedProperty", "undefinedProperty" in instance, isFalse());
-			assertThat("hasOwnProperty definedProperty", instance.hasOwnProperty("definedProperty"), isFalse());
+			assertThat("hasOwnProperty definedProperty", instance.hasOwnProperty("definedProperty"), isTrue());
 			assertThat("hasOwnProperty undefinedProperty", instance.hasOwnProperty("undefinedProperty"), isFalse());
 		}
 		

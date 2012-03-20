@@ -31,6 +31,7 @@ package mockolate.issues
 			{
 				mocks.mock(entity1).getter("proxyKey").returns("ABCDEFG");
 				mocks.verify(entity1);
+
 				fail("expecting ExpectationError, no error thrown.");
 			}
 			catch (e:ExpectationError)
@@ -49,10 +50,12 @@ package mockolate.issues
 				mocks.mock( entity1 ).setter( "proxyKey" ).arg(anything()).never();
 				
 				entity1.proxyKey = entity2.proxyKey;
+
+				fail("expecting InvocationError, no error thrown");
 			}
 			catch (e:InvocationError)
 			{
-				assertThat(e.message, re(/Unexpected invocation/));
+				assertThat(e.message, re(/unexpected invocation/i));
 			}
 		}
 		
@@ -65,7 +68,17 @@ package mockolate.issues
 			var second:String = entity2.proxyKey;
 			var third:String = entity2.proxyKey;
 			
-			mocks.verify(entity2);
+			try
+			{
+				mocks.verify(entity2);
+					
+				fail("expecting ExpectationError, no error thrown");
+			}
+			catch (e:ExpectationError)
+			{
+				assertThat(e.message, re(/unexpected invocation/i));
+			}
+			
 		}
 	}
 }
