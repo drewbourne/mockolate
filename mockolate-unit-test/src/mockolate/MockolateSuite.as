@@ -63,7 +63,7 @@ package mockolate
 		public var usingFlashClasses:UsingFlashClasses;
 		public var usingProxies:ProxyMockolateTest;
 		public var usingDisplayObjects:UsingDisplayObjects;
-		public var usingOrderedExpectations:UsingOrderedExpectations;
+		public var usingSequencedExpectations:UsingSequencedExpectations;
 		public var usingCapturedArguments:UsingCapturedArguments;
 		public var usingRecordReplayExpect:UsingRecordReplayExpect;
 		public var usingMockolateThroughMockolateRule:UsingMockolateThroughMockolateRule;

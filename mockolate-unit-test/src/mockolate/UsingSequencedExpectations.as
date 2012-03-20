@@ -7,7 +7,7 @@ package mockolate
 	
 	import org.flexunit.async.Async;
 
-	public class UsingOrderedExpectations
+	public class UsingSequencedExpectations
 	{
 		public var flavourA:Flavour;
 		public var flavourB:Flavour;
@@ -19,30 +19,30 @@ package mockolate
 		}
 		
 		[Test]
-		public function usingOrderedExpectionsShouldPassIfInOrder():void 
+		public function mocks_in_sequence_should_pass_if_invoked_in_the_correct_sequence():void 
 		{
 			var seq:Sequence = sequence("should pass");
 			
 			flavourA = nice(Flavour);
 			flavourB = nice(Flavour);
 			
-			mock(flavourA).setter("ingredients").arg(["second", "third"]).once().ordered(seq);
-			mock(flavourB).method("combine").args(flavourA).once().ordered(seq);
+			mock(flavourA).setter("ingredients").arg(["second", "third"]).once().inSequence(seq);
+			mock(flavourB).method("combine").args(flavourA).once().inSequence(seq);
 			
 			flavourA.ingredients = ["second", "third"];
 			flavourB.combine(flavourA);
 		}
 		
 		[Test(expected="mockolate.errors.ExpectationError")]
-		public function usingOrderedExpectationsShouldFailIfCallOutOfOrder():void 
+		public function mocks_in_sequence_should_fail_if_invoked_in_the_incorrect_sequence():void 
 		{
 			var seq:Sequence = sequence("should fail");
 			
 			flavourA = nice(Flavour);
 			flavourB = nice(Flavour);
 			
-			mock(flavourA).setter("ingredients").arg(["second", "third"]).once().ordered(seq);
-			mock(flavourB).method("combine").args(flavourA).once().ordered(seq);
+			mock(flavourA).setter("ingredients").arg(["second", "third"]).once().inSequence(seq);
+			mock(flavourB).method("combine").args(flavourA).once().inSequence(seq);
 			
 			// out-of-order
 			flavourB.combine(flavourA);

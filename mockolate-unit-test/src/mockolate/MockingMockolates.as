@@ -68,8 +68,8 @@ package mockolate
            .thrice()
            .atLeast(n:int) // nice mocks default to atLeast(0)
            .atMost(n:int)
-           // mock: expectation ordering
-           .ordered(group:String="global")
+           // mock: expectation sequencing
+           .inSequence(sequence:Sequence)
          */
         
 		[Test]
@@ -221,7 +221,7 @@ package mockolate
         }   
 		
 		[Test]
-		public function orderedMocksShouldPassIfInvokedInOrder():void
+		public function mocks_in_sequence_should_pass_if_invoked_in_the_correct_sequence():void
 		{
 			var seq:Sequence = sequence("should pass");
 			var flavourA:Flavour = strict(Flavour);
@@ -230,8 +230,8 @@ package mockolate
 			var ingredientsA:Array = ["Cookies", "Cream"];
 			var ingredientsB:Array = ["Crunchie"];
 			
-			mock(flavourA).setter("ingredients").arg(ingredientsA).once().ordered(seq);
-			mock(flavourB).setter("ingredients").arg(ingredientsB).once().ordered(seq);
+			mock(flavourA).setter("ingredients").arg(ingredientsA).once().inSequence(seq);
+			mock(flavourB).setter("ingredients").arg(ingredientsB).once().inSequence(seq);
 			
 			flavourA.ingredients = ingredientsA;
 			flavourB.ingredients = ingredientsB;
@@ -241,7 +241,7 @@ package mockolate
 		}
 		
 		[Test(expected="mockolate.errors.InvocationError")]
-		public function orderedMocksShouldFailIfInvokedOutOfOrder():void
+		public function mocks_in_sequence_should_fail_if_invoked_in_the_incorrect_sequence():void
 		{
 			var seq:Sequence = sequence("should pass");
 			var flavourA:Flavour = strict(Flavour);
@@ -250,8 +250,8 @@ package mockolate
 			var ingredientsA:Array = ["Cookies", "Cream"];
 			var ingredientsB:Array = ["Crunchie"];
 			
-			mock(flavourA).setter("ingredients").arg(ingredientsA).once().ordered(seq);
-			mock(flavourB).setter("ingredients").arg(ingredientsB).once().ordered(seq);
+			mock(flavourA).setter("ingredients").arg(ingredientsA).once().inSequence(seq);
+			mock(flavourB).setter("ingredients").arg(ingredientsB).once().inSequence(seq);
 			
 			// stricts cause an InvocationError
 			flavourB.ingredients = ingredientsB;
