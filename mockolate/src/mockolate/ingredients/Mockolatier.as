@@ -345,6 +345,7 @@ package mockolate.ingredients
 			// from an Invocation. When an Invocation is used for those purposes it should not
 			// be recorded as that will interfere with verification and the `received()` API.
 			mockolateInstance.recorder.removeInvocation(invocation);
+			mockolateInstance.recorder.removeUnexpectedInvocation(invocation);
 
 			return [ mockolateInstance, invocation, args ];
 		}
