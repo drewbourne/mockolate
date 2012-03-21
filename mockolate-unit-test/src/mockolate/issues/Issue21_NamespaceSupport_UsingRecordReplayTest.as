@@ -58,7 +58,7 @@ package mockolate.issues
 		{
 			expect(instance.test_namespace::methodInNamespace()).returns(true);
 			
-			assertMismatch("Issue21_NamespaceSupport_ClassWithNamespace(instance).methodInNamespace() invoked 0/1 (-1) times", 
+			assertMismatch("mockolate.issues::Issue21_NamespaceSupport_ClassWithNamespace(instance).methodInNamespace() invoked 0/1 (-1) times", 
 				received().nsMethod(test_namespace, "methodInNamespace"), 
 				instance); 
 
@@ -71,7 +71,7 @@ package mockolate.issues
 		{
 			expect(instance.test_namespace::testGetter).returns(true);
 			
-			assertMismatch("Issue21_NamespaceSupport_ClassWithNamespace(instance).testGetter; invoked 0/1 (-1) times", 
+			assertMismatch("mockolate.issues::Issue21_NamespaceSupport_ClassWithNamespace(instance).testGetter; invoked 0/1 (-1) times", 
 				received().nsGetter(test_namespace, "testGetter"),
 				instance);
 			
@@ -83,7 +83,7 @@ package mockolate.issues
 		{
 			expect(instance.test_namespace::testSetter = true);
 	
-			assertMismatch("Issue21_NamespaceSupport_ClassWithNamespace(instance).testSetter = ?; invoked 0/1 (-1) times", 
+			assertMismatch("mockolate.issues::Issue21_NamespaceSupport_ClassWithNamespace(instance).testSetter = ?; invoked 0/1 (-1) times", 
 				received().nsSetter(test_namespace, "testSetter"),
 				instance);
 			

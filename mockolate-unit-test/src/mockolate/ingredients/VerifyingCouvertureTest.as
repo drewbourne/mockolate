@@ -127,7 +127,7 @@ package mockolate.ingredients
 		}
 		
 		[Test]
-		public function asLeast_shouldFailWithNiceErrorMessage():void 
+		public function atLeast_shouldFailWithNiceErrorMessage():void 
 		{
 			try
 			{
@@ -135,7 +135,7 @@ package mockolate.ingredients
 			}
 			catch (error:VerificationError)
 			{
-				assertThat(error.message, equalTo("Expected: at least <1> invocations of notCalled()\n\t\tbut: IEventDispatcher(target).notCalled() invoked 0/1 (-1) times"));
+				assertThat(error.message, equalTo("Expected: at least <1> invocations of notCalled()\n\t\tbut: flash.events::IEventDispatcher(target).notCalled() invoked 0/1 (-1) times"));
 			}
 		}
 		
@@ -156,7 +156,7 @@ package mockolate.ingredients
 		}
 		
 		[Test]
-		public function asMost_shouldFailWithNiceErrorMessage():void 
+		public function atMost_shouldFailWithNiceErrorMessage():void 
 		{
 			try
 			{
@@ -164,7 +164,7 @@ package mockolate.ingredients
 			}
 			catch (error:VerificationError)
 			{
-				assertThat(error.message, equalTo("Expected: at most <1> invocations of method()\n\t\tbut: IEventDispatcher(target).method() invoked 2/1 (+1) times"));
+				assertThat(error.message, equalTo("Expected: at most <1> invocations of method()\n\t\tbut: flash.events::IEventDispatcher(target).method() invoked 2/1 (+1) times"));
 			}
 		}
 	}

@@ -271,7 +271,7 @@ package mockolate
 			}
 			catch (error:InvocationError)
 			{
-				assertThat(error.message, equalTo("No Expectation defined for Flavour(flavour).combine(null, <true>, <2>)"));
+				assertThat(error.message, equalTo("No Expectation defined for mockolate.sample::Flavour(flavour).combine(null, <true>, <2>)"));
 			}
 		}
 		
@@ -286,7 +286,7 @@ package mockolate
 			}
 			catch (error:InvocationError)
 			{
-				assertThat(error.message, equalTo("No Expectation defined for Flavour(flavour).name;"));
+				assertThat(error.message, equalTo("No Expectation defined for mockolate.sample::Flavour(flavour).name;"));
 			}
 		}
 		
@@ -301,7 +301,7 @@ package mockolate
 			}
 			catch (error:InvocationError)
 			{
-				assertThat(error.message, equalTo("No Expectation defined for Flavour(flavour).liked = <true>;"));
+				assertThat(error.message, equalTo("No Expectation defined for mockolate.sample::Flavour(flavour).liked = <true>;"));
 			}
 		}
     }

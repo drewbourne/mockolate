@@ -37,7 +37,7 @@ package mockolate
 			}
 			catch (error:AssertionError)
 			{
-				assertThat(error.mismatchDescription, equalTo("Flavour(flavour).combine() invoked 0/1 (-1) times"));
+				assertThat(error.mismatchDescription, equalTo("mockolate.sample::Flavour(flavour).combine() invoked 0/1 (-1) times"));
 			}
 		}
 		
@@ -53,7 +53,7 @@ package mockolate
 			}
 			catch (error:AssertionError)
 			{
-				assertThat(error.mismatchDescription, equalTo("Flavour(flavour).combine() invoked 0/1 (-1) times"));
+				assertThat(error.mismatchDescription, equalTo("mockolate.sample::Flavour(flavour).combine() invoked 0/1 (-1) times"));
 			}			
 		}
 		
@@ -75,7 +75,7 @@ package mockolate
 			}
 			catch (error:AssertionError)
 			{
-				assertThat(error.mismatchDescription, equalTo("Flavour(flavour).combine(<[class Flavour]>) invoked 0/1 (-1) times"));
+				assertThat(error.mismatchDescription, equalTo("mockolate.sample::Flavour(flavour).combine(<[class Flavour]>) invoked 0/1 (-1) times"));
 			}
 		}
 		
@@ -99,7 +99,7 @@ package mockolate
 			}
 			catch (error:AssertionError)
 			{
-				assertThat(error.mismatchDescription, equalTo("Flavour(flavour).combine(<[class Flavour]>) invoked 1/2 (-1) times"));
+				assertThat(error.mismatchDescription, equalTo("mockolate.sample::Flavour(flavour).combine(<[class Flavour]>) invoked 1/2 (-1) times"));
 			}
 		}
 		
@@ -121,7 +121,7 @@ package mockolate
 			}
 			catch (error:AssertionError)
 			{
-				assertThat(error.mismatchDescription, equalTo("Flavour(flavour)./^com/(<[class Flavour]>) invoked 0/1 (-1) times"));
+				assertThat(error.mismatchDescription, equalTo("mockolate.sample::Flavour(flavour)./^com/(<[class Flavour]>) invoked 0/1 (-1) times"));
 			}			
 		}
 			
@@ -143,7 +143,7 @@ package mockolate
 			}
 			catch (error:AssertionError)
 			{
-				assertThat(error.mismatchDescription, equalTo("Flavour(flavour).name; invoked 0/1 (-1) times"));
+				assertThat(error.mismatchDescription, equalTo("mockolate.sample::Flavour(flavour).name; invoked 0/1 (-1) times"));
 			}			
 		}
 		
@@ -159,7 +159,7 @@ package mockolate
 			}
 			catch (error:AssertionError)
 			{
-				assertThat(error.mismatchDescription, equalTo("Flavour(flavour).name; invoked 0/1 (-1) times"));
+				assertThat(error.mismatchDescription, equalTo("mockolate.sample::Flavour(flavour).name; invoked 0/1 (-1) times"));
 			}			
 		}
 		
@@ -181,7 +181,7 @@ package mockolate
 			}
 			catch (error:AssertionError)
 			{
-				assertThat(error.mismatchDescription, equalTo("Flavour(flavour)./me$/; invoked 0/1 (-1) times"));
+				assertThat(error.mismatchDescription, equalTo("mockolate.sample::Flavour(flavour)./me$/; invoked 0/1 (-1) times"));
 			}	
 		}
 		
@@ -203,7 +203,7 @@ package mockolate
 			}
 			catch (error:AssertionError)
 			{
-				assertThat(error.mismatchDescription, equalTo("Flavour(flavour).liked = <true>; invoked 0/1 (-1) times"));
+				assertThat(error.mismatchDescription, equalTo("mockolate.sample::Flavour(flavour).liked = <true>; invoked 0/1 (-1) times"));
 			}
 		}
 		
@@ -219,7 +219,7 @@ package mockolate
 			}
 			catch (error:AssertionError)
 			{
-				assertThat(error.mismatchDescription, equalTo("Flavour(flavour).liked = <true>; invoked 0/1 (-1) times"));
+				assertThat(error.mismatchDescription, equalTo("mockolate.sample::Flavour(flavour).liked = <true>; invoked 0/1 (-1) times"));
 			}
 		}
 		
@@ -241,7 +241,7 @@ package mockolate
 			}
 			catch (error:AssertionError)
 			{
-				assertThat(error.mismatchDescription, equalTo("Flavour(flavour)./ike/ = <true>; invoked 0/1 (-1) times"));
+				assertThat(error.mismatchDescription, equalTo("mockolate.sample::Flavour(flavour)./ike/ = <true>; invoked 0/1 (-1) times"));
 			}
 		}
 	}

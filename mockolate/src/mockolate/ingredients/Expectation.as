@@ -17,6 +17,7 @@ package mockolate.ingredients
 	import org.hamcrest.Matcher;
 	import org.hamcrest.Description;
 	import org.hamcrest.StringDescription;
+	import org.hamcrest.SelfDescribing;
 	
 	use namespace mockolate_ingredient;
 	
@@ -29,7 +30,7 @@ package mockolate.ingredients
 	 * 
 	 * @author drewbourne
 	 */
-	public class Expectation
+	public class Expectation implements SelfDescribing
 	{
 		/**
 		 * Constructor. 
@@ -457,14 +458,65 @@ package mockolate.ingredients
 		}	
 
 		/**
+		 * Describe this Expectation to a Description.
+		 *
+		 * @example
+		 * <listing version="3.0">
+		 *	// methods
+		 * 	#example(&lt;1&gt;, &lt;2&gt;, &lt;3&gt;);
+		 *	#sneaky_namespace::accessingYourInsides(&lt;true&gt;)
+		 *
+		 * 	// setters
+		 * 	#enabled = &lt;true&gt;;
+		 *
+		 *	// getters
+		 *	#enabled;
+		 *
+		 * </listing> 
+		 */
+		public function describeTo(description:Description):void 
+		{
+			description.appendText('#');
+
+			if (namespaceURI)
+			{
+				// <namespace>::
+				description.appendText(namespaceURI)
+						   .appendText('::')
+			}
+
+			description.appendText(name);
+
+			if (isMethod)
+			{
+				// (<arg0>, [...<argN>])
+
+				description.appendText('(');
+
+				if (argsMatcher)
+				{
+					description.appendDescriptionOf(argsMatcher)
+				}
+
+				description.appendText(')');
+			}
+			else if (isSetter)
+			{
+				// = <arg0>
+
+				description.appendText(' = ')
+						   .appendDescriptionOf(argsMatcher);
+			}
+			
+			description.appendText(';');
+		}
+
+		/**
 		 * Format this Expectation as a String. 
 		 */
 		public function toString():String 
 		{
-		   return substitute(
-				isMethod ? "#{}({})" : isSetter ? "#{} = {}" : "#{}",
-				(namespaceURI ? namespaceURI + "::" : "") + name, 
-				argsMatcher ? StringDescription.toString(argsMatcher) : "");
+			return StringDescription.toString(this);
 		}
 	}
 }

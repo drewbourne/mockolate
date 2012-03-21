@@ -118,7 +118,7 @@ package mockolate
 			}
 			catch (error:VerificationError)
 			{
-				assertThat(error.message, equalTo("Expected: at least <1> invocations of combine()\n\t\tbut: Flavour.combine() invoked 0/1 (-1) times"));
+				assertThat(error.message, equalTo("Expected: at least <1> invocations of combine()\n\t\tbut: mockolate.sample::Flavour.combine() invoked 0/1 (-1) times"));
 			}
         }
 		
@@ -155,7 +155,7 @@ package mockolate
 			}
 			catch (error:VerificationError)
 			{
-				assertThat(error.message, equalTo("Expected: at least <1> invocations of combine(<[class Flavour]>)\n\t\tbut: Flavour.combine(<[class Flavour]>) invoked 0/1 (-1) times"));
+				assertThat(error.message, equalTo("Expected: at least <1> invocations of combine(<[class Flavour]>)\n\t\tbut: mockolate.sample::Flavour.combine(<[class Flavour]>) invoked 0/1 (-1) times"));
 			}
 		}
 		
@@ -174,7 +174,7 @@ package mockolate
 			}
 			catch (error:VerificationError)
 			{
-				assertThat(error.message, equalTo("Expected: at least <2> invocations of combine(<[class Flavour]>)\n\t\tbut: Flavour.combine(<[class Flavour]>) invoked 1/2 (-1) times"));
+				assertThat(error.message, equalTo("Expected: at least <2> invocations of combine(<[class Flavour]>)\n\t\tbut: mockolate.sample::Flavour.combine(<[class Flavour]>) invoked 1/2 (-1) times"));
 			}
 		}
 		
@@ -205,7 +205,7 @@ package mockolate
 			}
 			catch (error:VerificationError)
 			{
-				assertThat(error.message, equalTo("Flavour.combine([class Flavour]) invoked 3 times"));
+				assertThat(error.message, equalTo("mockolate.sample::Flavour.combine([class Flavour]) invoked 3 times"));
 			}
 		}
 		
@@ -221,7 +221,7 @@ package mockolate
 			}
 			catch (error:VerificationError)
 			{
-				assertThat(error.message, equalTo("Expected: at least <1> invocations of name;\n\t\tbut: Flavour.name; invoked 0/1 (-1) times"));
+				assertThat(error.message, equalTo("Expected: at least <1> invocations of name;\n\t\tbut: mockolate.sample::Flavour.name; invoked 0/1 (-1) times"));
 			}
 		}
 		
@@ -237,7 +237,7 @@ package mockolate
 			}
 			catch (error:VerificationError)
 			{
-				assertThat(error.message, equalTo("Expected: at least <1> invocations of liked = ?;\n\t\tbut: Flavour.liked = ?; invoked 0/1 (-1) times"));
+				assertThat(error.message, equalTo("Expected: at least <1> invocations of liked = ?;\n\t\tbut: mockolate.sample::Flavour.liked = ?; invoked 0/1 (-1) times"));
 			}
 		}
         

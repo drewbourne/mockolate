@@ -41,7 +41,7 @@ package mockolate.issues
 		}
 		
 		[Test(verify="false")]
-		public function never_shouldComplainOnInvocation():void 
+		public function never_should_should_complain_on_verification():void 
 		{
 			try
 			{
@@ -51,11 +51,14 @@ package mockolate.issues
 				
 				entity1.proxyKey = entity2.proxyKey;
 
-				fail("expecting InvocationError, no error thrown");
+				mocks.verify( entity1 );
+
+				fail("expecting ExpectationError, no error thrown");
 			}
-			catch (e:InvocationError)
+			catch (error:ExpectationError)
 			{
-				assertThat(e.message, re(/unexpected invocation/i));
+				assertThat(error.message, containsString("1 unmet Expectation\n\tmockolate.issues::Issue33_Entity(entity1)#proxyKey = ANYTHING"));
+				assertThat(error.message, containsString("should to be invoked never but was invoked <1> times"));
 			}
 		}
 		
@@ -74,9 +77,9 @@ package mockolate.issues
 					
 				fail("expecting ExpectationError, no error thrown");
 			}
-			catch (e:ExpectationError)
+			catch (error:ExpectationError)
 			{
-				assertThat(e.message, re(/unexpected invocation/i));
+				assertThat(error.message, re(/unexpected invocation/i));
 			}
 			
 		}

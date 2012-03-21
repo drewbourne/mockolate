@@ -48,6 +48,7 @@ package mockolate.ingredients
 	import org.hamcrest.core.anyOf;
 	import org.hamcrest.core.anything;
 	import org.hamcrest.core.describedAs;
+	import org.hamcrest.core.describedAsWithMismatch;
 	import org.hamcrest.date.dateEqual;
 	import org.hamcrest.number.greaterThan;
 	import org.hamcrest.number.greaterThanOrEqualTo;
@@ -626,7 +627,7 @@ package mockolate.ingredients
 		 */
 		public function times(n:int):IMockingCouverture
 		{
-			setInvokeCount(lessThanOrEqualTo(n), equalTo(n));
+			setInvokeCount(lessThanOrEqualTo(n), equalTo(n), "%0 times", n);
 			return this;
 		}
 
@@ -645,7 +646,9 @@ package mockolate.ingredients
 		 */
 		public function never():IMockingCouverture
 		{
-			setInvokeCount(greaterThanOrEqualTo(0), equalTo(0));
+			setInvokeCount(greaterThanOrEqualTo(0), equalTo(0), "never", 0);
+
+			/*
 			callsWithInvocation(function(invocation:Invocation):void {
 				var description:Description = new StringDescription();
 				
@@ -658,6 +661,8 @@ package mockolate.ingredients
 					["Unexpected invocation for {}", [description.toString()]],
 					invocation, mockolateInstance, mockolateInstance.target);
 			});
+			*/
+
 			return this;
 		}
 
@@ -739,7 +744,7 @@ package mockolate.ingredients
 		 */
 		public function atLeast(n:int):IMockingCouverture
 		{
-			setInvokeCount(greaterThanOrEqualTo(0), greaterThanOrEqualTo(n));
+			setInvokeCount(greaterThanOrEqualTo(0), greaterThanOrEqualTo(n), "at least %0 times", n);
 			return this;
 		}
 
@@ -758,7 +763,7 @@ package mockolate.ingredients
 		 */
 		public function atMost(n:int):IMockingCouverture
 		{
-			setInvokeCount(lessThanOrEqualTo(n), lessThanOrEqualTo(n));
+			setInvokeCount(lessThanOrEqualTo(n), lessThanOrEqualTo(n), "at most %0 times", n);
 			return this;
 		}
 
@@ -1134,16 +1139,23 @@ package mockolate.ingredients
 			_currentExpectation.argsMatcher = anything();
 		}
 
-		// FIXME rename setReceiveCount to something better
 		/**
 		 * @private
 		 */
 		protected function setInvokeCount(
 			eligiblityMatcher:Matcher,
-			verificationMatcher:Matcher):void
+			verificationMatcher:Matcher, 
+			description:String, 
+			value:int):void
 		{
-			_currentExpectation.invokeCountEligiblityMatcher = eligiblityMatcher;
-			_currentExpectation.invokeCountVerificationMatcher = verificationMatcher;
+			_currentExpectation.invokeCountEligiblityMatcher 
+				= new InvocationCountMatcher(
+					describedAsWithMismatch(description, "%0 times", eligiblityMatcher, value));
+			
+
+			_currentExpectation.invokeCountVerificationMatcher 
+				= new InvocationCountMatcher(
+					describedAsWithMismatch(description, "%0 times", verificationMatcher, value));
 		}
 
 		/**
@@ -1273,27 +1285,24 @@ package mockolate.ingredients
 			var unmetExpectations:Array = reject(_mockExpectations, isSatisfiedExpectation);
 			if (!empty(unmetExpectations))
 			{
-				var message:String = unmetExpectations.length.toString();
+				var description:StringDescription = new StringDescription();
 
-				message += unmetExpectations.length == 1
-					? " unmet Expectation"
-					: " unmet Expectations";
+				description.appendText(unmetExpectations.length.toString())
+						   .appendText(unmetExpectations.length == 1 ? " unmet Expectation" : " unmetExpectations")
 
 				for each (var expectation:Expectation in unmetExpectations)
 				{
-					message += "\n\t";
-					// TODO move to mockolate.targetClassName
-					message += getQualifiedClassName(this.mockolateInstance.targetClass);
-
-					if (this.mockolateInstance.name)
-						message += "<\"" + this.mockolateInstance.name + "\">";
-
-					// TODO include more description from the Expectation
-					message += expectation.toString();
+					description.appendText("\n\t")
+							   .appendDescriptionOf(this.mockolateInstance)
+							   .appendDescriptionOf(expectation)
+							   .appendText(" should ")
+							   .appendDescriptionOf(expectation.invokeCountVerificationMatcher)
+							   .appendText(" but ")
+							   .appendMismatchOf(expectation.invokeCountVerificationMatcher, expectation.invokedCount);
 				}
 
 				throw new ExpectationError(
-					message,
+					description.toString(),
 					unmetExpectations,
 					this.mockolateInstance,
 					this.mockolateInstance.target);

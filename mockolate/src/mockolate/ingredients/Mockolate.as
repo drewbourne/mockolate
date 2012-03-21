@@ -245,7 +245,7 @@ package mockolate.ingredients
 		{
 			var qname:String = getQualifiedClassName(targetClass);
 			
-			description.appendText(qname.slice(qname.lastIndexOf('::') + 2));
+			description.appendText(qname);
 			
 			if (name)
 			{

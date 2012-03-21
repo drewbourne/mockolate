@@ -24,6 +24,7 @@ package mockolate.ingredients
 	import org.hamcrest.object.hasProperty;
 	import org.hamcrest.object.isTrue;
 	import org.hamcrest.object.notNullValue;
+	import org.hamcrest.text.containsString;
 	
 	use namespace mockolate_ingredient;
 	
@@ -94,7 +95,7 @@ package mockolate.ingredients
 			}
 			catch (error:ExpectationError)
 			{
-				assertThat(error.message, equalTo("1 unmet Expectation\n\tflash.events::EventDispatcher<\"Example\">#example()"));
+				assertThat(error.message, containsString("1 unmet Expectation\n\tflash.events::EventDispatcher(Example)#example()"));
 			}
 		}
 		
@@ -128,7 +129,7 @@ package mockolate.ingredients
 			}
 			catch (error:ExpectationError)
 			{
-				assertThat(error.message, equalTo("1 unmet Expectation\n\tflash.events::EventDispatcher<\"Example\">#/^do/()"));
+				assertThat(error.message, containsString("1 unmet Expectation\n\tflash.events::EventDispatcher(Example)#/^do/()"));
 			}
 		}
 		
@@ -170,7 +171,7 @@ package mockolate.ingredients
 			}
 			catch (error:ExpectationError)
 			{
-				assertThat(error.message, equalTo("1 unmet Expectation\n\tflash.events::EventDispatcher<\"Example\">#example"));	
+				assertThat(error.message, containsString("1 unmet Expectation\n\tflash.events::EventDispatcher(Example)#example"));	
 			}
 		}
 		
@@ -204,7 +205,7 @@ package mockolate.ingredients
 			}
 			catch (error:ExpectationError)
 			{
-				assertThat(error.message, equalTo("1 unmet Expectation\n\tflash.events::EventDispatcher<\"Example\">#/^example/"));
+				assertThat(error.message, containsString("1 unmet Expectation\n\tflash.events::EventDispatcher(Example)#/^example/"));
 			}
 		}	
 		
@@ -238,7 +239,7 @@ package mockolate.ingredients
 			}
 			catch (error:ExpectationError)
 			{
-				assertThat(error.message, equalTo("1 unmet Expectation\n\tflash.events::EventDispatcher<\"Example\">#example = <true>"));
+				assertThat(error.message, containsString("1 unmet Expectation\n\tflash.events::EventDispatcher(Example)#example = <true>"));
 			}
 		}
 		
@@ -272,7 +273,7 @@ package mockolate.ingredients
 			}
 			catch (error:ExpectationError)
 			{
-				assertThat(error.message, equalTo("1 unmet Expectation\n\tflash.events::EventDispatcher<\"Example\">#/^example/ = <true>"));
+				assertThat(error.message, containsString("1 unmet Expectation\n\tflash.events::EventDispatcher(Example)#/^example/ = <true>"));
 			}
 		}
 		
@@ -291,7 +292,7 @@ package mockolate.ingredients
 			}
 			catch (error:ExpectationError)
 			{
-				assertThat(error.message, equalTo('1 unmet Expectation\n\tflash.events::EventDispatcher<"Example">#example()'));	
+				assertThat(error.message, containsString('1 unmet Expectation\n\tflash.events::EventDispatcher(Example)#example()'));	
 			}
 		}
 		
@@ -315,7 +316,7 @@ package mockolate.ingredients
 			}
 			catch (error:ExpectationError)
 			{
-				assertThat(error.message, equalTo('1 unmet Expectation\n\tflash.events::EventDispatcher<"Example">#example()'));	
+				assertThat(error.message, containsString('1 unmet Expectation\n\tflash.events::EventDispatcher(Example)#example()'));	
 			}
 		}
 		
@@ -340,7 +341,7 @@ package mockolate.ingredients
 			}
 			catch (error:ExpectationError)
 			{
-				assertThat(error.message, equalTo('1 unmet Expectation\n\tflash.events::EventDispatcher<"Example">#example()'));	
+				assertThat(error.message, containsString('1 unmet Expectation\n\tflash.events::EventDispatcher(Example)#example()'));	
 			}
 		}
 		
@@ -435,50 +436,56 @@ package mockolate.ingredients
 		}
 		
 		[Test]
-		public function never_strictMock_shouldComplain():void 
+		public function never_with_strict_mock_should_fail_verification():void 
 		{
 			try
 			{
 				this.mockolate.mockType = MockType.STRICT;
 				mocker.mock().method("example").never();
 				invoke({ name: "example" });
+				mocker.verify();
 				fail("Expecting ExpectationError");
 			}
-			catch (error:InvocationError)
+			catch (error:ExpectationError)
 			{
-				assertThat(error.message, equalTo("Unexpected invocation for EventDispatcher(Example).example()"));
+				assertThat(error.message, containsString("1 unmet Expectation\n\tflash.events::EventDispatcher(Example)#example()"));
+				assertThat(error.message, containsString("should to be invoked never but was invoked <1> times"));
 			}
 		}
 		
 		[Test]
-		public function never_niceMock_shouldComplain():void 
+		public function never_with_nice_mock_should_fail_verification():void 
 		{
 			try
 			{
 				this.mockolate.mockType = MockType.NICE;
 				mocker.mock().method("example").never();
 				invoke({ name: "example" });
+				mocker.verify();
 				fail("Expecting ExpectationError");
 			}
-			catch (error:InvocationError)
+			catch (error:ExpectationError)
 			{
-				assertThat(error.message, equalTo("Unexpected invocation for EventDispatcher(Example).example()"));
+				assertThat(error.message, containsString("1 unmet Expectation\n\tflash.events::EventDispatcher(Example)#example()"));
+				assertThat(error.message, containsString("should to be invoked never but was invoked <1> times"));
 			}
 		}
 		
 		[Test]
-		public function never_partialMock_shouldComplain():void 
+		public function never_partialMock_should_fail_verification():void 
 		{
 			try
 			{
 				this.mockolate.mockType = MockType.PARTIAL;
 				mocker.mock().method("example").never();
 				invoke({ name: "example" });
+				mocker.verify();
 				fail("Expecting ExpectationError");
 			}
-			catch (error:InvocationError)
+			catch (error:ExpectationError)
 			{
-				assertThat(error.message, equalTo("Unexpected invocation for EventDispatcher(Example).example()"));
+				assertThat(error.message, containsString("1 unmet Expectation\n\tflash.events::EventDispatcher(Example)#example()"));
+				assertThat(error.message, containsString("should to be invoked never but was invoked <1> times"));
 			}
 		}
 		
