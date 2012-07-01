@@ -6,6 +6,7 @@ package mockolate.runner.statements
 	
 	import mockolate.arg;
 	import mockolate.expect;
+	import mockolate.ingredients.InstanceRecipe;
 	import mockolate.ingredients.Mockolatier;
 	import mockolate.ingredients.mockolate_ingredient;
 	import mockolate.nice;
@@ -94,6 +95,25 @@ package mockolate.runner.statements
 			
 			assertThat('instanceRecipes has 8 InstanceRecipes, one for each [Mock] field that is not [Mock(inject="false")]', 
 				runnerData.instanceRecipes.numRecipes, equalTo(8));
+		}
+
+		[Test]
+		public function evaluate_should_populate_instanceRecipes_proxyClassFieldName():void 
+		{
+			withMockolatier();
+			
+			var runnerData:MockolateRunnerData = new MockolateRunnerData();
+			runnerData.test = new TestExampleWithProxyClassInjection();
+			runnerData.mockolatier = mockolatier;
+			
+			var token:AsyncTestToken = new AsyncTestToken();
+			var statement:IdentifyMockClasses = new IdentifyMockClasses(runnerData);
+			
+			statement.evaluate(token);
+
+			var instanceRecipe:InstanceRecipe = runnerData.instanceRecipes.toArray()[0];
+
+			assertThat('identified proxyClasssFieldName', instanceRecipe.proxyClassFieldName, equalTo('exampleProxy'));
 		}
 
 		[Test]

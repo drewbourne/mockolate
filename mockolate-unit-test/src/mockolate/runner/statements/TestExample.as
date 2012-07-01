@@ -37,7 +37,7 @@ package mockolate.runner.statements
 		
 		[Mock]
 		public var dispatcher:IEventDispatcher;
-		
+
 		public var nonMockField:Boolean;
 		
 		[Test]

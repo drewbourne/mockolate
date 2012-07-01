@@ -46,7 +46,7 @@
             <include name="flexunit*.swc" />
             <include name="hamcrest*.swc" />
           </external-library-path>
-          <keep-as3-metadata name="Mock" />
+          <keep-as3-metadata name="Mock,ProxyClass" />
           <compiler.define name="CONFIG::useFlexClasses" value="@{useFlexClasses}" />
         </compc>
       </sequential>

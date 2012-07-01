@@ -19,6 +19,7 @@ package mockolate
 	import mockolate.runner.MockolateRuleExample;
 	import mockolate.runner.MockolateRunnerExample;
 	import mockolate.runner.statements.IdentifyMockClassesTest;
+	import mockolate.runner.statements.InjectMockInstancesTest;
 	import mockolate.runner.statements.VerifyMockInstancesTest;
 
 	[Suite]
@@ -87,6 +88,7 @@ package mockolate
         public var runnerExample:MockolateRunnerExample;
 		public var ruleExample:MockolateRuleExample;
 		public var identifyMockClasses:IdentifyMockClassesTest;
+		public var injectMockInstances:InjectMockInstancesTest;
 		public var verifyMockInstances:VerifyMockInstancesTest;
 		
 		//

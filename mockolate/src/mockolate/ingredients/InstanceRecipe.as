@@ -10,6 +10,7 @@ package mockolate.ingredients
 		public var mockType:MockType;
 		public var name:String;
 		public var inject:Boolean = true;
+		public var proxyClassFieldName:String;
 		
 		public var instance:*;
 		public var mockolate:Mockolate;

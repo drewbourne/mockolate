@@ -46,6 +46,11 @@ package mockolate.runner.statements
 				
 				forEach(data.instanceRecipes.toArray(), function(instanceRecipe:InstanceRecipe):void {
 					data.test[instanceRecipe.name] = instanceRecipe.instance;
+
+					if (instanceRecipe.proxyClassFieldName) 
+					{
+						data.test[instanceRecipe.proxyClassFieldName] = instanceRecipe.classRecipe.proxyClass;
+					}
 				});
 				
 				parentToken.sendResult();
