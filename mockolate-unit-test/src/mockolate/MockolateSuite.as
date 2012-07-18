@@ -20,6 +20,7 @@ package mockolate
 	import mockolate.runner.MockolateRuleExample;
 	import mockolate.runner.MockolateRunnerExample;
 	import mockolate.runner.statements.IdentifyMockClassesTest;
+	import mockolate.runner.statements.InjectMockInstancesTest;
 	import mockolate.runner.statements.VerifyMockInstancesTest;
 
 	[Suite]
@@ -85,17 +86,16 @@ package mockolate
         // 	runner
 		//
 		// BAD
-        // public var runnerExample:MockolateRunnerExample;
+        public var runnerExample:MockolateRunnerExample;
 		public var ruleExample:MockolateRuleExample;
 		public var identifyMockClasses:IdentifyMockClassesTest;
-//		public var verifyMockInstances:VerifyMockInstancesTest;
+		public var injectMockInstances:InjectMockInstancesTest;
+		public var verifyMockInstances:VerifyMockInstancesTest;
 		
 		//
 		//	issues
 		//
-		/* BAD
 		public var mockingClassWithConstructorGetter:MockingClassWithConstructorGetter;
-		*/
 		public var classInDefaultPackageCanBeMocked:ClassInDefaultPackageCanBeMockedTest;
 		public var functionApply:FunctionApplyTest;
 		public var issue29_IncorrectCountInTestSpy:Issue29_IncorrectCountInTestSpy;
@@ -104,14 +104,11 @@ package mockolate
 		public var issue21_NamespaceSupport:Issue21_NamespaceSupportTest;
 		public var issue21_NamespaceSupport_RemoteObject:Issue21_NamespaceSupport_RemoteObjectTest;
 		public var issue21_NamespaceSupport_UsingRecordReplay:Issue21_NamespaceSupport_UsingRecordReplayTest;
-		/* BAD
 		public var issue31_EventDispatchesTwice:Issue31_EventDispatchesTwice;
-		*/
 		public var issue42_ExplicityDefineNamespaceToProxy:ExplictlyDefineNamespaceToProxyTest;
 		public var issue42_PrepareClassWithNamespaceUsingRule:PrepareClassWithNamespaceUsingRuleTest;
 		public var usingVectors:UsingVectors;		
 
-		// public var bytecodeTest:BytecodeProxyTest;
 		public var bytecodeHatesMe:BytecodeHatesMe;
 		public var bytecodeVectors:BytecodeVectors;
 		public var constructors:ObjectConstructorTest;

@@ -135,6 +135,14 @@ package mockolate.ingredients.bytecode
 			proxyFactory.addEventListener(Event.COMPLETE, function(event:Event):void {
 				trace('\t', 'COMPLETE');
 
+				for each (var classRecipe:ClassRecipe in classRecipes.toArray()) 
+				{
+					var proxyFactory:IProxyFactory = _proxyFactoryByClass[classRecipe.classToPrepare];
+
+					classRecipe.proxyClass = proxyFactory.getProxyInfoForClass(classRecipe.classToPrepare).proxyClass;
+				}
+
+
 				proxyFactory.removeEventListener(Event.COMPLETE, arguments.callee);
 				bridge.dispatchEvent(new Event(Event.COMPLETE));
 			});

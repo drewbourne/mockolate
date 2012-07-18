@@ -69,6 +69,7 @@ package mockolate.runner.statements
 }
 
 import asx.array.compact;
+import asx.array.detect;
 import asx.array.filter;
 import asx.array.map;
 import asx.array.pluck;
@@ -106,6 +107,9 @@ internal class MockolateRecipeIdentifier
 	private const SUPPORTED_ATTRIBUTES:Array = [ ARGUMENTS_ATTRIBUTE, NAMESPACES_ATTRIBUTE, INJECT_ATTRIBUTE, MOCK_TYPE_ATTRIBUTE ];
 	private const TRUE:String = "true";
 	private const FALSE:String = "false";
+
+	private const PROXYCLASS_METADATA:String = "ProxyClass";
+	private const OF_ATTRIBUTE:String = "of";
 	
 	private var _mockolatier:Mockolatier;
 	
@@ -164,6 +168,7 @@ internal class MockolateRecipeIdentifier
 	public function identifyInstanceRecipes(test:*, fromKlass:Klass, withClassRecipes:ClassRecipes, intoInstanceRecipes:InstanceRecipes):void
 	{
 		var mockFields:Array = filter(fromKlass.fields, isMockField);
+		var proxyClassFields:Array = filter(fromKlass.fields, isProxyClassField);
 		
 		for each (var field:Field in mockFields)
 		{
@@ -171,6 +176,7 @@ internal class MockolateRecipeIdentifier
 			var namespaces:Array = parseNamespacesToProxy(test, fromKlass, field, metadata);
 			var classRecipe:ClassRecipe = withClassRecipes.getRecipeFor(field.type, namespaces);
 			var injectable:Boolean = parseInject(field, metadata);
+			var proxyClassField:Field = detect(proxyClassFields, isProxyClassFieldForMockField(field)) as Field;
 			
 			if (injectable)
 			{
@@ -180,9 +186,36 @@ internal class MockolateRecipeIdentifier
 					.withMockType(parseMockType(field, metadata))
 					.withName(field.name)
 					.build();
+
+				if (proxyClassField) 
+				{
+					instanceRecipe.proxyClassFieldName = proxyClassField.name;
+				}
 					
 				intoInstanceRecipes.add(instanceRecipe);
 			}
+		}
+	}
+
+	private function isMockField(field:Field):Boolean 
+	{
+		return field.hasMetaData(MOCK_METADATA);
+	}
+
+	private function isProxyClassField(field:Field):Boolean 
+	{
+		return field.hasMetaData(PROXYCLASS_METADATA);
+	}
+
+	private function isProxyClassFieldForMockField(mockField:Field):Function 
+	{
+		return function(proxyField:Field):Boolean 
+		{
+			var metadata:MetaDataAnnotation = proxyField.getMetaData(PROXYCLASS_METADATA);
+			var of:MetaDataArgument = metadata.getArgument(OF_ATTRIBUTE);
+			var ofValue:String = (of ? of.value : "");
+
+			return mockField.name == ofValue;
 		}
 	}
 	
@@ -210,11 +243,6 @@ internal class MockolateRecipeIdentifier
 		}
 		
 		return null;
-	}
-	
-	private function isMockField(field:Field):Boolean 
-	{
-		return field.hasMetaData(MOCK_METADATA);
 	}
 	
 	private function parseNamespacesToProxy(test:*, klass:Klass, field:Field, metadata:MetaDataAnnotation):Array 
