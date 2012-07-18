@@ -14,22 +14,22 @@ package mockolate.runner
    public class MockolateRunnerExample
    {
       [Mock]
-      public var nicelyImplicitlyInjected : Example;
+      public var nicelyImplicitlyInjected:Example;
 
       [Mock(type="strict")]
-      public var strictlyImplicitlyInjected : Example;
+      public var strictlyImplicitlyInjected:Example;
 
       [Mock(type="nice", inject="true")]
-      public var nicelyExplicitlyInjected : Example;
+      public var nicelyExplicitlyInjected:Example;
       //
       [Mock(type="strict", inject="true")]
-      public var strictlyExplicitlyInjected : Example;
+      public var strictlyExplicitlyInjected:Example;
       //
       [Mock(type="nice", inject="false")]
-      public var nicelyExplicitlyNotInjected : Example;
+      public var nicelyExplicitlyNotInjected:Example;
 
       [Mock(type="strict", inject="false")]
-      public var strictlyExplicitlyNotInjected : Example;
+      public var strictlyExplicitlyNotInjected:Example;
 
       [Before]
       public function mocksShouldBeAvailableInBefore () : void

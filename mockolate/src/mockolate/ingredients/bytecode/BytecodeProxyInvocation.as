@@ -6,7 +6,6 @@ package mockolate.ingredients.bytecode
 	import mockolate.ingredients.InvocationType;
 	
 	import org.as3commons.bytecode.interception.impl.InvocationKind;
-	import org.hamcrest.Description;
 	
 	public class BytecodeProxyInvocation extends AbstractInvocation implements Invocation
 	{
@@ -98,7 +97,7 @@ package mockolate.ingredients.bytecode
 		{
 			if (_method != null)
 			{
-				returnValue = _method.apply(null, arguments);
+				returnValue = _method.apply(null, _arguments);
 			}
 		}
 		

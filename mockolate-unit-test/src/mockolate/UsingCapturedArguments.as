@@ -6,6 +6,7 @@ package mockolate
 	import mockolate.ingredients.CaptureType;
 	import mockolate.ingredients.Sequence;
 	import mockolate.sample.Flavour;
+	import mockolate.runner.MockolateRule;
 	
 	import org.flexunit.assertThat;
 	import org.flexunit.async.Async;
@@ -16,16 +17,18 @@ package mockolate
 
 	public class UsingCapturedArguments
 	{
+		[Rule]
+		public var mocks:MockolateRule = new MockolateRule();
+
+		[Mock(inject="false")]
 		public var flavourA:Flavour;
+
+		[Mock(inject="false")]
 		public var flavourB:Flavour;
+
+		[Mock(inject="false")]
 		public var flavourC:Flavour;
-		
-		[Before(async, timeout=10000)]
-		public function prepareMockolates():void
-		{
-			Async.proceedOnEvent(this, prepare(Flavour), Event.COMPLETE, 10000);
-		}
-		
+				
 		[Test(expected="mockolate.errors.CaptureError")]
 		public function shouldComplainIfNoCapturedValue():void 
 		{

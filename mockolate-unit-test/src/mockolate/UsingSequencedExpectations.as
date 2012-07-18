@@ -4,19 +4,20 @@ package mockolate
 	
 	import mockolate.ingredients.Sequence;
 	import mockolate.sample.Flavour;
+	import mockolate.runner.MockolateRule;
 	
 	import org.flexunit.async.Async;
 
 	public class UsingSequencedExpectations
 	{
+		[Rule]
+		public var mocks:MockolateRule = new MockolateRule();
+
+		[Mock]
 		public var flavourA:Flavour;
+
+		[Mock]
 		public var flavourB:Flavour;
-		
-		[Before(async, timeout=10000)]
-		public function prepareMockolates():void
-		{
-			Async.proceedOnEvent(this, prepare(Flavour), Event.COMPLETE, 10000);
-		}
 		
 		[Test]
 		public function mocks_in_sequence_should_pass_if_invoked_in_the_correct_sequence():void 

@@ -8,7 +8,7 @@ package mockolate.ingredients.bytecode
 		
 		public function get isSolid():Boolean 
 		{
-			return true;
+			return false;
 		}
 		
 		public function toString():String 

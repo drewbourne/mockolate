@@ -1,6 +1,8 @@
 package mockolate.ingredients.bytecode
 {
 	import flash.display.Sprite;
+	import flash.events.IEventDispatcher;
+	import flash.events.EventDispatcher;
 	import flash.events.Event;
 	
 	import mockolate.runner.MockolateRule;
@@ -15,14 +17,14 @@ package mockolate.ingredients.bytecode
 		[Rule]
 		public var mocks:MockolateRule = new MockolateRule();
 		
-//		[Mock(type="nice")]
+//		[Mock]
 //		public var concrete:Concrete;
-//		
-//		[Mock(type="nice")]
-//		public var ghostly:Ghostly;
 		
 		[Mock]
-		public var natively:Sprite;
+		public var ghostly:Ghostly;
+		
+//		[Mock]
+//		public var natively:Sprite;
 		
 //		[Test]
 //		public function classes():void 
@@ -34,18 +36,36 @@ package mockolate.ingredients.bytecode
 //			assertThat(concrete.toString(), equalTo('[ConcreteProxy]'));
 //			assertThat(concrete.isSolid, isFalse());
 //		}
-//		
-//		[Test]
-//		public function interfaces():void 
-//		{
-//			assertThat(ghostly, notNullValue());
-//			assertThat(ghostly.toString(), equalTo('[GhostlyProxy]'));
-//		}
+
+		[Mock]
+		public var eventDispatcher:EventDispatcher;
+
+		[Test]
+		public function eventDispatcher_should_exist():void 
+		{
+			assertThat(eventDispatcher, notNullValue());
+		}
+
+		[Mock]
+		public var ieventDispatcher:IEventDispatcher;
+
+		[Test]
+		public function ieventDispatcher_should_exist():void 
+		{
+			assertThat(ieventDispatcher, notNullValue());
+		}
 		
 		[Test]
-		public function nativeClasses():void 
+		public function interfaces():void 
 		{
-			assertThat(natively, notNullValue());
+			assertThat(ghostly, notNullValue());
+			// assertThat(ghostly.toString(), equalTo('[GhostlyProxy]'));
 		}
+		
+//		[Test]
+//		public function nativeClasses():void 
+//		{
+//			assertThat(natively, notNullValue());
+//		}
 	}
 }

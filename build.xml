@@ -30,19 +30,23 @@
           <include-file name="metadata.xml" path="${src.loc}/metadata.xml" />
           <include-sources dir="${src.loc}">
             <include name="**/*.as" />
-            <exclude name="**/Bytecode*.as" />
+            <!--<exclude name="**/Bytecode*.as" />-->
           </include-sources>
+          <!--
           <include-libraries dir="${libs.loc}">
+            <include name="*.swc" />
             <include name="FLoxy.swc" />
             <exclude name="as3-commons*.swc" />
           </include-libraries>
+          -->
           <library-path dir="${libs.loc}">
-            <include name="asx.swc" />
+            <include name="*.swc" />
           </library-path>
           <external-library-path dir="${FLEX_HOME}/frameworks/libs" append="true">
             <include name="*.swc" />
           </external-library-path>
           <external-library-path dir="${libs.loc}" append="true">
+            <include name="as3commons*.swc" />
             <include name="flexunit*.swc" />
             <include name="hamcrest*.swc" />
           </external-library-path>
@@ -138,7 +142,7 @@
         depends="compile.library.check-if-required"
         unless="compile.library.not-required">
         <compile-library output="${bin.loc}/${library.flex.swc}" useFlexClasses="true" />
-        <compile-library output="${bin.loc}/${library.as3.swc}" useFlexClasses="false" />
+        <!--<compile-library output="${bin.loc}/${library.as3.swc}" useFlexClasses="false" />-->
     </target>
     
     <target name="test" 
@@ -162,7 +166,8 @@
         unless="compile.test.not-required">
         <mxmlc file="${test.src.loc}/${test.runner}"
             target-player="${flashplayer.version}"
-            output="${bin.loc}/${test.swf}">
+            output="${bin.loc}/${test.swf}" 
+            static-rsls="true">
             <load-config filename="${FLEX_HOME}/frameworks/flex-config.xml" />
             <define name="CONFIG::useFlexClasses" value="true" />
         </mxmlc>

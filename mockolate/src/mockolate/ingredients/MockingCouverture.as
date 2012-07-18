@@ -890,7 +890,7 @@ package mockolate.ingredients
 		/**
 		 * Finds the first Expectation that returns <code>true</code> for
 		 * <code>Expectation.eligible(Invocation)</code> with the given Invocation.
-		 *
+		 * 
 		 * @private
 		 */
 		protected function findEligibleExpectation(invocation:Invocation):Expectation
@@ -909,6 +909,7 @@ package mockolate.ingredients
 			if (!expectation && invocation.uri)
 			{
 				invocation.proceed();
+				return null;
 			}
 			
 			if (!expectation)
@@ -1050,6 +1051,8 @@ package mockolate.ingredients
 		 */
 		protected function createGetterExpectation(name:String, namespaceURI:String=null):void
 		{
+			trace('createGetterExpectation', name, namespaceURI);
+
 			_currentExpectation = createExpectation(name, namespaceURI, null, InvocationType.GETTER);
 
 			addExpectation(_currentExpectation);
@@ -1074,6 +1077,8 @@ package mockolate.ingredients
 		 */
 		protected function createSetterExpectation(name:String, namespaceURI:String=null):void
 		{
+			trace('createSetterExpectation', name, namespaceURI);
+
 			_currentExpectation = createExpectation(name, namespaceURI, null, InvocationType.SETTER);
 
 			addExpectation(_currentExpectation);
@@ -1098,6 +1103,8 @@ package mockolate.ingredients
 		 */
 		protected function createMethodExpectation(name:String, namespaceURI:String=null):void
 		{
+			trace('MockingCouverture createMethodExpectation', name, namespaceURI);
+
 			_currentExpectation = createExpectation(name, namespaceURI, null, InvocationType.METHOD);
 
 			addExpectation(_currentExpectation);
@@ -1120,7 +1127,7 @@ package mockolate.ingredients
 		 */
 		protected function setArgs(args:Array):void
 		{
-			_currentExpectation.argsMatcher = new ArgumentsMatcher(args);
+			_currentExpectation.argsMatcher = args && args.length > 0 ? new ArgumentsMatcher(args) : null;
 		}
 
 		/**

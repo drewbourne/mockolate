@@ -36,17 +36,10 @@ package mockolate.runner.statements
 		[Mock(namespaces="mockolatierNamespaces")]
 		public var mockolatier:Mockolatier;
 		public var mockolatierNamespaces:Array = [ mockolate_ingredient ];
-		
-		private function withMockolatier():void 
-		{
-			expect(mockolatier.preparedClassRecipeFor(arg(anything()), arg(anything()))).returns(null);
-		}
-		
+				
 		[Test]
 		public function evaluate_shouldPopulateClassRecipesForEachPublicFieldMarkedWithMock():void 
 		{
-			withMockolatier();
-			
 			var runnerData:MockolateRunnerData = new MockolateRunnerData();
 			runnerData.test = new TestExample();
 			runnerData.mockolatier = mockolatier;
@@ -78,8 +71,6 @@ package mockolate.runner.statements
 		[Test]
 		public function evaluate_shouldPopulateInstanceRecipesForEachPublicFieldMarkedWithMock():void 
 		{
-			withMockolatier();
-			
 			var runnerData:MockolateRunnerData = new MockolateRunnerData();
 			runnerData.test = new TestExample();
 			runnerData.mockolatier = mockolatier;

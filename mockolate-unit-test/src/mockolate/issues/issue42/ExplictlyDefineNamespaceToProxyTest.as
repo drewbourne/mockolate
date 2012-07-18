@@ -19,9 +19,10 @@ package mockolate.issues.issue42
 		public var proxiedWithNamespaces:ClassWithNamespaces;
 		
 		[Test]
-		public function proxied_shouldNotInterceptProxiedNamespaces():void 
+		public function proxied_shouldNotInterceptNonProxiedNamespaces():void 
 		{
 			proxied.isNamespacedMethodProxied();
+
 			assertThat(proxied, received().nsMethod(issue_namespace_1, "isNamespacedMethodProxied").never());			
 		}
 		
@@ -29,6 +30,7 @@ package mockolate.issues.issue42
 		public function proxiedWithNamespaces_shouldInterceptProxiedNamespaces():void 
 		{
 			proxiedWithNamespaces.isNamespacedMethodProxied();
+			
 			assertThat(proxiedWithNamespaces, received().nsMethod(issue_namespace_1, "isNamespacedMethodProxied").once());
 		}
 	}

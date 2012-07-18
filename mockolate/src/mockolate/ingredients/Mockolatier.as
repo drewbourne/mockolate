@@ -13,6 +13,7 @@ package mockolate.ingredients
 	import flash.system.ApplicationDomain;
 	import flash.utils.Dictionary;
 	import flash.utils.setTimeout;
+	import flash.utils.getQualifiedClassName;
 	
 	import mockolate.errors.MockolateError;
 	import mockolate.ingredients.bytecode.BytecodeProxyMockolateFactory;
@@ -41,8 +42,8 @@ package mockolate.ingredients
 		private var _mockolatesByTarget:Dictionary;
 		private var _mockolateFactory:IMockolateFactory;
 		private var _lastInvocation:Invocation;
-		private var _preparingClassRecipes:ClassRecipes;
-		private var _preparedClassRecipes:ClassRecipes;
+		private static var _preparingClassRecipes:ClassRecipes;
+		private static var _preparedClassRecipes:ClassRecipes;
 		
 		/**
 		 * Constructor.
@@ -54,10 +55,11 @@ package mockolate.ingredients
 			_applicationDomain = ApplicationDomain.currentDomain;
 			_mockolates = [];
 			_mockolatesByTarget = new Dictionary();
-			_mockolateFactory = new FloxyMockolateFactory(this, _applicationDomain);
+			// _mockolateFactory = new FloxyMockolateFactory(this, _applicationDomain);
+            _mockolateFactory = new BytecodeProxyMockolateFactory(this, _applicationDomain);
 			
-			_preparingClassRecipes = new ClassRecipes();
-			_preparedClassRecipes = new ClassRecipes();
+			_preparingClassRecipes ||= new ClassRecipes();
+			_preparedClassRecipes ||= new ClassRecipes();
 		}
 		
 		public function get applicationDomain():ApplicationDomain
@@ -114,6 +116,18 @@ package mockolate.ingredients
 		{
 			var dispatcher:IEventDispatcher;
 			var classRecipesToPrepare:ClassRecipes = classRecipes.without(_preparingClassRecipes).without(_preparedClassRecipes);
+
+			trace('Mockolatier prepareClassRecipes');
+			for each (var classRecipe:ClassRecipe in classRecipesToPrepare.toArray()) 
+			{
+				trace('\t', classRecipe.classToPrepare);
+			}
+
+			trace('Mockolatier prepareClassRecipes preparing');
+			for each (var classRecipe:ClassRecipe in _preparingClassRecipes.toArray()) 
+			{
+				trace('\t', classRecipe.classToPrepare);
+			}
 			
 			if (classRecipesToPrepare.numRecipes == 0)
 			{
@@ -133,6 +147,12 @@ package mockolate.ingredients
 		private function addToPreparingClassRecipes(classRecipes:ClassRecipes):void 
 		{
 			forEach(classRecipes.toArray(), _preparingClassRecipes.add);
+
+			trace('Mockolatier addToPreparingClassRecipes');
+			for each (var classRecipe:ClassRecipe in classRecipes.toArray()) 
+			{
+				trace('\t', classRecipe.classToPrepare);
+			}
 		}
 		
 		private function addToPreparedClassRecipes(classRecipes:ClassRecipes):Function 
@@ -141,6 +161,12 @@ package mockolate.ingredients
 			{
 				forEach(classRecipes.toArray(), _preparingClassRecipes.remove);
 				forEach(classRecipes.toArray(), _preparedClassRecipes.add);
+				trace('Mockolatier prepareClassRecipes COMPLETE');
+
+				for each (var classRecipe:ClassRecipe in classRecipes.toArray()) 
+				{
+					trace('\t', classRecipe.classToPrepare);
+				}
 			}
 		}
 		
@@ -379,7 +405,7 @@ package mockolate.ingredients
 			if (!mockolate)
 			{
 				throw new MockolateError(
-					["No Mockolate for that target, received:{}", [target]], 
+					["No Mockolate for that target, received:{}", [getQualifiedClassName(target)]], 
 					null, target);
 			}
 			
@@ -399,10 +425,22 @@ package mockolate.ingredients
 			{
 				return;
 			}
-			
+
+			// TODO add a hook for defining expectations for methods/accessors used in constructors.  
+			// FIXME this sucks. 
+			// If no mockolate exists we are probably still in the constructor.
+			// Proceed with the super call instead. 
+			var mockolate:Mockolate = _mockolatesByTarget[invocation.target];
+			if (!mockolate) 
+			{
+				invocation.proceed();
+				return;
+			}
+
+			// Record the last invocation to allow expectations to be created from it. 
 			_lastInvocation = invocation;
 
-			mockolateByTarget(invocation.target).invoked(invocation);
+			mockolate.invoked(invocation);
 		}
 	}
 }

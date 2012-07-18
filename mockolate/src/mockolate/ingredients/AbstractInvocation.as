@@ -26,11 +26,13 @@ package mockolate.ingredients
 		{
 			var invocation:Invocation = (this as Invocation);
 			
+			/*
 			if (invocation.uri)
 			{
 				description.appendText(invocation.uri);
 				description.appendText('::');
 			}
+			*/
 			
 			description.appendText(invocation.name);
 			

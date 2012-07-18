@@ -290,7 +290,7 @@ package mockolate.ingredients
 		 */
 		public function eligible(invocation:Invocation):Boolean 
 		{
-			return eligibleByInvocationType(invocation.invocationType) 
+			return eligibleByInvocationType(invocation.invocationType)
 				&& eligibleByNamespaceURI(invocation.uri)
 				&& eligibleByName(invocation.name)
 				&& eligibleByArguments(invocation.arguments)
@@ -345,9 +345,9 @@ package mockolate.ingredients
 		/**
 		 * Determines if this Expectation is eligible for the given arguments.
 		 */		
-		internal function eligibleByArguments(arguments:Array):Boolean 
+		internal function eligibleByArguments(args:Array):Boolean 
 		{
-			return !argsMatcher || argsMatcher.matches(arguments);
+			return !argsMatcher || argsMatcher.matches(args);
 		}
 
 		/**

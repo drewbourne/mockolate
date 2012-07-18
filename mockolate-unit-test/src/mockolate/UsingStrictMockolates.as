@@ -7,6 +7,7 @@ package mockolate
     import mockolate.ingredients.Mockolate;
     import mockolate.sample.DarkChocolate;
     import mockolate.sample.Flavour;
+    import mockolate.runner.MockolateRule;
     
     import org.flexunit.async.Async;
     import org.hamcrest.assertThat;
@@ -18,20 +19,15 @@ package mockolate
     
     public class UsingStrictMockolates
     {
-        // shorthands
-        public function proceedWhen(target:IEventDispatcher, eventName:String, timeout:Number=30000, timeoutHandler:Function=null):void
-        {
-            Async.proceedOnEvent(this, target, eventName, timeout, timeoutHandler);
-        }
-        
-        [Before(async, timeout=30000)]
-        public function prepareMockolates():void
-        {
-            proceedWhen(
-                prepare(Flavour, DarkChocolate),
-                Event.COMPLETE);
-        }
-        
+        [Rule]
+        public var mocks:MockolateRule = new MockolateRule();
+
+        [Mock(inject="false")]
+        public var flavour:Flavour;
+
+        [Mock(inject="false")]
+        public var darkChocolate:DarkChocolate;
+
         /*
            Strict Mocks
          */

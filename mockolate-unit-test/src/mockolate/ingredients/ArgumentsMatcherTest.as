@@ -46,6 +46,14 @@ package mockolate.ingredients
 			assertThat("should match RegExp", 
 				[ 1, Event, "testing" ], matcher);
 		}
+
+		[Test]
+		public function should_match_empty_args():void 
+		{
+			matcher = new ArgumentsMatcher([]);
+
+			assertThat("should match empty args", [], matcher);
+		}
 	}	
 }
 

@@ -13,7 +13,7 @@ package mockolate.runner.statements
 			runnerData.test = new TestExample();
 			
 			var token:AsyncTestToken = new AsyncTestToken();
-			var statement:PrepareMockClasses = new PrepareMockClasses();
+			var statement:PrepareMockClasses = new PrepareMockClasses(runnerData);
 		}
 	}
 }

@@ -11,6 +11,16 @@ package mockolate.issues
 		{
 			super();
 		}
+
+		public function getProperty(name:String):Object
+		{
+			return null;
+		}
+
+		override flash_proxy function callProperty(name:*, ...rest):*
+		{
+			return null;
+		}
 		
 		override flash_proxy function getProperty(name:*):*
 		{
@@ -68,12 +78,12 @@ package mockolate.issues
 		{
 			return 42;
 		}
-		
+
 		test_namespace function getProperty(name:String):Object
 		{
 			return null;
 		}
-		
+
 		public function publicMethod():Boolean 
 		{
 			return false;

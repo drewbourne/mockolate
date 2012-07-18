@@ -1,6 +1,7 @@
 package mockolate.ingredients
 {
 	import mockolate.errors.MockolateError;
+	import mockolate.sample.DarkChocolate;
 	import mockolate.sample.Flavour;
 	import mockolate.sample.for_sample_only;
 	
@@ -23,7 +24,7 @@ package mockolate.ingredients
 		}
 		
 		[Test]
-		public function withNamespaces_shouldSetClassToPrepare():void 
+		public function withNamespaces_shouldSetNamespacesToProxy():void 
 		{
 			var classRecipe:ClassRecipe 
 				= aClassRecipe()

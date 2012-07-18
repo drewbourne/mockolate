@@ -168,8 +168,14 @@ package mockolate.issues
 		{
 			// in this case we have added a getProperty method to the ClassWithNamespace that would 
 			// shadow the flash_proxy getProperty if we were only checking the method names. 
+			mock(instance).method("getProperty").args("public").returns({ name: "public" });
 			mock(instance).nsMethod(test_namespace, "getProperty").args("test").returns({ name: "test" });
 			mock(instance).nsMethod(flash_proxy, "getProperty").args("proxy").returns({ name: "proxy" });
+
+			trace('\n\n\n');
+			trace('instance.test_namespace::getProperty("test")', instance.test_namespace::getProperty('test'));
+			trace('instance.flash_proxy::getProperty("proxy")', instance.flash_proxy::getProperty('proxy'));
+			trace('\n\n\n');
 			
 			assertThat(instance.test_namespace::getProperty("test"), hasProperties({ name: "test" }));
 			assertThat(instance.flash_proxy::getProperty("proxy"), hasProperties({ name: "proxy" }));

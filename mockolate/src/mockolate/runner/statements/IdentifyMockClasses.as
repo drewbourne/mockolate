@@ -152,15 +152,10 @@ internal class MockolateRecipeIdentifier
 			var metadata:MetaDataAnnotation = field.getMetaData(MOCK_METADATA);
 			var classToPrepare:Class = field.type;
 			var namespacesToProxy:Array = parseNamespacesToProxy(test, fromKlass, field, metadata);
-			var classRecipe:ClassRecipe = _mockolatier.preparedClassRecipeFor(classToPrepare, namespacesToProxy);
-			
-			if (!classRecipe)
-			{
-				classRecipe = aClassRecipe()
-					.withClassToPrepare(classToPrepare)
-					.withNamespacesToProxy(namespacesToProxy)
-					.build();
-			}
+			var classRecipe:ClassRecipe = aClassRecipe()
+				.withClassToPrepare(classToPrepare)
+				.withNamespacesToProxy(namespacesToProxy)
+				.build();
 			
 			intoClassRecipes.add(classRecipe);
 		}

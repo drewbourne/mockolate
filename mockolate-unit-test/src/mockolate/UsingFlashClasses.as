@@ -3,6 +3,8 @@ package mockolate
     import flash.display.MovieClip;
     import flash.display.Sprite;
     import flash.events.Event;
+
+    import mockolate.runner.MockolateRule;
     
     import org.flexunit.assertThat;
     import org.flexunit.async.Async;
@@ -13,15 +15,14 @@ package mockolate
     
     public class UsingFlashClasses
     {        
-        [Test(async, timeout=10000)]
-        public function prepareMovieClip():void 
-        {
-            Async.handleEvent(this, 
-                prepare(Sprite), 
-                Event.COMPLETE, prepareComplete, 10000); 
-        }
+        [Rule]
+        public var mocks:MockolateRule = new MockolateRule();
+
+        [Mock(inject="false")]
+        public var sprite:Sprite;
         
-        public function prepareComplete(event:Event, data:Object):void 
+        [Test]
+        public function sprite_should_be_proxiable():void 
         {
             var sprite:Sprite = nice(Sprite);
             assertThat(sprite, not(nullValue()));

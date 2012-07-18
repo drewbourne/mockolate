@@ -1,7 +1,7 @@
 package mockolate.ingredients.bytecode
 {
-	import asx.array.filter;
 	import asx.array.forEach;
+	import asx.array.repeat;
 	
 	import flash.events.Event;
 	import flash.events.EventDispatcher;
@@ -12,21 +12,29 @@ package mockolate.ingredients.bytecode
 	import flash.utils.setTimeout;
 	
 	import mockolate.ingredients.AbstractMockolateFactory;
-	import mockolate.ingredients.MockType;
+	import mockolate.ingredients.ClassRecipe;
+	import mockolate.ingredients.ClassRecipes;
+	import mockolate.ingredients.IMockolateFactory;
+	import mockolate.ingredients.InstanceRecipe;
+	import mockolate.ingredients.InstanceRecipes;
 	import mockolate.ingredients.Mockolate;
 	import mockolate.ingredients.Mockolatier;
 	import mockolate.ingredients.mockolate_ingredient;
 	
 	import org.as3commons.bytecode.interception.IMethodInvocationInterceptor;
-	import org.as3commons.bytecode.proxy.IClassProxyInfo;
 	import org.as3commons.bytecode.proxy.IProxyFactory;
+	import org.as3commons.bytecode.proxy.IClassProxyInfo;
+	import org.as3commons.bytecode.proxy.ProxyScope;
 	import org.as3commons.bytecode.proxy.event.ProxyFactoryEvent;
 	import org.as3commons.bytecode.proxy.impl.ProxyFactory;
 	import org.as3commons.bytecode.reflect.ByteCodeType;
+	import org.as3commons.logging.api.LOGGER_FACTORY;
+	import org.as3commons.logging.setup.*;
+	import org.as3commons.logging.setup.target.*;
 	
 	use namespace mockolate_ingredient;
 
-	public class BytecodeProxyMockolateFactory extends AbstractMockolateFactory // implements IMockolateFactory
+	public class BytecodeProxyMockolateFactory extends AbstractMockolateFactory implements IMockolateFactory
 	{
 		private static function getDefinitionByNameSafely(name:String):Object 
 		{
@@ -42,6 +50,8 @@ package mockolate.ingredients.bytecode
 			return null;
 		} 
 
+		private static var _applicationDomain:ApplicationDomain;
+
 		// this is gross. -drew
 		// this is really gross -drew, 20110512
 		private static const loaded:Boolean = (function():Boolean 
@@ -50,7 +60,9 @@ package mockolate.ingredients.bytecode
 			var FlexGlobals:Object = getDefinitionByNameSafely("mx.core.FlexGlobals");
 			if (FlexGlobals)
 			{
-				ByteCodeType.fromLoader(FlexGlobals.topLevelApplication.loaderInfo);
+				_applicationDomain = FlexGlobals.topLevelApplication.loaderInfo.applicationDomain;
+
+				ByteCodeType.fromLoader(FlexGlobals.topLevelApplication.loaderInfo, _applicationDomain);
 				return true;
 			}
 			
@@ -58,17 +70,20 @@ package mockolate.ingredients.bytecode
 			var Application:Object = getDefinitionByNameSafely("mx.core.Application");
 			if (Application)
 			{
-				ByteCodeType.fromLoader(Application.application.loaderInfo);
+				_applicationDomain = Application.application.loaderInfo.applicationDomain;
+
+				ByteCodeType.fromLoader(Application.application.loaderInfo, _applicationDomain);
 				return true;
 			}
 			
 			return false;
 		})();
 		
-		private var _proxyFactory:IProxyFactory;
 		private var _mockolatier:Mockolatier;
-		private var _applicationDomain:ApplicationDomain;
-		private var _preparedClasses:Dictionary;
+		private var _proxyInfoByClassRecipe:Dictionary;
+		private var _classRecipeByProxyInfo:Dictionary;
+		private var _proxyFactoryByClass:Dictionary;
+		private var _proxyFactory:IProxyFactory;
 		
 		/**
 		 * Constructor.
@@ -78,88 +93,94 @@ package mockolate.ingredients.bytecode
 			super();
 			
 			_mockolatier = mockolatier;
-			_applicationDomain = applicationDomain || new ApplicationDomain(ApplicationDomain.currentDomain);
+			_proxyInfoByClassRecipe = new Dictionary();
+			_proxyFactoryByClass = new Dictionary();
 			_proxyFactory = new ProxyFactory();
-			_preparedClasses = new Dictionary();
-		}
-		
-		/**
-		 * @inheritDoc
-		 */
-		public function prepare(...rest):IEventDispatcher
-		{
-			var classesToPrepare:Array = filter(rest, function(classReference:Class):Boolean { 
-				return _preparedClasses[classReference] == null;
-			});
-			
-			forEach(classesToPrepare, function(classReference:Class):void {
-				var proxyInfo:IClassProxyInfo = _proxyFactory.defineProxy(classReference, BytecodeProxyInterceptor);
-				_preparedClasses[classReference] = proxyInfo;				
-			});
 
-			if (classesToPrepare.length > 0)
-			{
-				_proxyFactory.generateProxyClasses();
-				_proxyFactory.loadProxyClasses(_applicationDomain);
-				return _proxyFactory;
-			}
-			else 
-			{
-				var eventDispatcher:IEventDispatcher = new EventDispatcher();
-				setTimeout(eventDispatcher.dispatchEvent, 0, new Event(Event.COMPLETE));
-				return eventDispatcher;  				
-			}
+			LOGGER_FACTORY.setup = new SimpleTargetSetup( new TraceTarget );			
 		}
 		
-		public function prepareClasses(toPrepare:Array):IEventDispatcher
+		public function prepareClasses(classRecipes:ClassRecipes):IEventDispatcher
 		{
-			throw new Error("prepareClasses not implemented");	
-		}
-		
-		public function prepareClassWithNamespaces(classReference:Class, namespacesToProxy:Array):IEventDispatcher
-		{
-			throw new Error("prepareClassWithNamespaces not implemented");	
-		}
-		
-		public function preparedClassFor(classReference:Class, proxiedNamespaces:Array = null):Class
-		{
-			throw new Error("prepareClassWithNamespaces not implemented");	
-		}
-		
-		/**
-		 * @inheritDoc
-		 */
-		public function create(mockType:MockType, classReference:Class, constructorArgs:Array=null, name:String=null):Mockolate
-		{
-			var mockolateInstance:BytecodeProxyMockolate = createMockolate(name);
-			mockolateInstance.mockType = mockType;
-			mockolateInstance.targetClass = classReference;
+			var bridge:IEventDispatcher = new EventDispatcher();
 			
-			function injectInterceptor(event:ProxyFactoryEvent):void 
+			if (classRecipes.numRecipes == 0)
 			{
-				event.methodInvocationInterceptor = mockolateInstance.interceptor;				
+				setTimeout(bridge.dispatchEvent, 0, new Event(Event.COMPLETE));
+				return bridge;
+			}
+
+			var proxyFactory:IProxyFactory = new ProxyFactory();
+			
+			trace('BytecodeProxyMockolateFactory prepareClasses');
+
+			for each (var classRecipe:ClassRecipe in classRecipes.toArray())
+			{
+				trace('\t', classRecipe.classToPrepare);
+				trace('\t', (classRecipe.namespacesToProxy || []).join(', ') );
+
+				_proxyFactoryByClass[classRecipe.classToPrepare] = proxyFactory;
+
+				var proxyInfo:IClassProxyInfo = proxyFactory.defineProxy(classRecipe.classToPrepare, BytecodeProxyInterceptor, _applicationDomain);
+				// default to only proxy public methods and accessors.
+				proxyInfo.proxyMethodScopes = ProxyScope.PUBLIC;
+				proxyInfo.proxyAccessorScopes = ProxyScope.PUBLIC;
+				// also proxy namespace methods and accessors if namespaces we given.
+				if (classRecipe.namespacesToProxy) {
+					proxyInfo.proxyMethodNamespaces = classRecipe.namespacesToProxy.slice();
+					proxyInfo.proxyAccessorNamespaces = classRecipe.namespacesToProxy.slice();
+				}
 			}
 			
-			_proxyFactory.addEventListener(ProxyFactoryEvent.GET_METHOD_INVOCATION_INTERCEPTOR, injectInterceptor);
-			mockolateInstance.target = _proxyFactory.createProxy(classReference, constructorArgs || []);
-			_proxyFactory.removeEventListener(ProxyFactoryEvent.GET_METHOD_INVOCATION_INTERCEPTOR, injectInterceptor);
-			return mockolateInstance;
+			proxyFactory.addEventListener(Event.COMPLETE, function(event:Event):void {
+				trace('\t', 'COMPLETE');
+
+				proxyFactory.removeEventListener(Event.COMPLETE, arguments.callee);
+				bridge.dispatchEvent(new Event(Event.COMPLETE));
+			});
+			
+			try 
+			{
+				proxyFactory.generateProxyClasses();
+				proxyFactory.loadProxyClasses(_applicationDomain);
+			}
+			catch (error:Error)
+			{
+				trace('\t', 'ERROR', error, error.getStackTrace());
+				setTimeout(bridge.dispatchEvent, 0, new Event(Event.COMPLETE));
+			}
+			
+			return bridge;
 		}
 		
-		/**
-		 * @private 
-		 */
-		public function createWithProxyClass(mockType:MockType, classReference:Class, proxyClass:Class, constructorArgs:Array=null, name:String=null):Mockolate
+		public function prepareInstances(instanceRecipes:InstanceRecipes):IEventDispatcher
 		{
-			throw new Error("Not implemented");
+			var bridge:IEventDispatcher = new EventDispatcher();
+			
+			forEach(instanceRecipes.toArray(), prepareInstance);
+			
+			setTimeout(bridge.dispatchEvent, 0, new Event(Event.COMPLETE));
+			
+			return bridge;
 		}
 		
-		/**
-		 * @private 
-		 */
-		protected function createMockolate(name:String=null):BytecodeProxyMockolate
+		public function prepareInstance(instanceRecipe:InstanceRecipe):InstanceRecipe
 		{
-			var mockolateInstance:BytecodeProxyMockolate = new BytecodeProxyMockolate(name);
+			if (instanceRecipe)
+			{
+				instanceRecipe.mockolate = createMockolate(instanceRecipe);
+				instanceRecipe.instance = createInstance(instanceRecipe);
+				instanceRecipe.mockolate.target = instanceRecipe.instance;
+				instanceRecipe.mockolate.targetClass = instanceRecipe.classRecipe.classToPrepare;
+			}
+			
+			return instanceRecipe;
+		}
+		
+		private function createMockolate(instanceRecipe:InstanceRecipe):Mockolate
+		{
+			var mockolateInstance:BytecodeProxyMockolate = new BytecodeProxyMockolate(instanceRecipe.name);
+			mockolateInstance.mockType = instanceRecipe.mockType;
 			mockolateInstance.interceptor = createInterceptor(mockolateInstance);
 			mockolateInstance.recorder = createRecorder(mockolateInstance);
 			mockolateInstance.mocker = createMocker(mockolateInstance);
@@ -168,12 +189,57 @@ package mockolate.ingredients.bytecode
 			return mockolateInstance;
 		}
 		
-		/**
-		 * @private 
-		 */
-		protected function createInterceptor(mockolate:Mockolate):IMethodInvocationInterceptor
+		private function createInstance(instanceRecipe:InstanceRecipe):*
+		{
+			var proxyFactory:IProxyFactory = _proxyFactoryByClass[instanceRecipe.classRecipe.classToPrepare];
+
+			function injectInterceptor(event:ProxyFactoryEvent):void 
+			{
+				event.methodInvocationInterceptor = createInterceptor(instanceRecipe.mockolate);
+
+				proxyFactory.removeEventListener(ProxyFactoryEvent.GET_METHOD_INVOCATION_INTERCEPTOR, injectInterceptor);
+			}
+
+			trace('BytecodeProxyMockolateFactory createInstance', instanceRecipe);
+			
+			proxyFactory.addEventListener(ProxyFactoryEvent.GET_METHOD_INVOCATION_INTERCEPTOR, injectInterceptor);
+
+			var targetInstance:* = proxyFactory.createProxy(instanceRecipe.classRecipe.classToPrepare, constructorArgumentsFor(instanceRecipe));
+			
+			return targetInstance;
+		}
+		
+		private function createInterceptor(mockolate:Mockolate):IMethodInvocationInterceptor
 		{
 			return new BytecodeProxyInterceptor(mockolate, _mockolatier);
+		}
+		
+		private function constructorArgumentsFor(instanceRecipe:InstanceRecipe):Array 
+		{
+			var constructorArgs:Array;
+			
+			if (instanceRecipe.constructorArgsFunction is Function)
+			{
+				constructorArgs = instanceRecipe.constructorArgsFunction() as Array;
+			}
+			else if (instanceRecipe.constructorArgs is Array)
+			{
+				constructorArgs = instanceRecipe.constructorArgs;
+			}
+			
+			if (!constructorArgs)
+			{
+				var instanceClassRecipe:ClassRecipe = instanceRecipe.classRecipe;
+				var classToPrepare:Class = instanceClassRecipe.classToPrepare;
+				var bytecodeType:ByteCodeType = ByteCodeType.forClass(classToPrepare, _applicationDomain);
+				var constructor:* = bytecodeType.constructor;
+				var parameters:* = constructor.parameters;
+				var numParameters:* = parameters.length;
+
+				constructorArgs = repeat(null, numParameters);
+			}
+			
+			return constructorArgs;
 		}
 	}
 }

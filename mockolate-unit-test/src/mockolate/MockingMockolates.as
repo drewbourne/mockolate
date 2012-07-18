@@ -75,7 +75,7 @@ package mockolate
 		[Test]
 		public function mockingGetter():void 
 		{
-			var instance:Flavour = nice(Flavour);
+			var instance:Flavour = strict(Flavour);
 			var result:Object = "Butterscotch";
 			
 			mock(instance).getter("name").returns(result);

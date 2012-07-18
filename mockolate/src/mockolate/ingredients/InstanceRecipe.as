@@ -2,6 +2,8 @@ package mockolate.ingredients
 {
 	import asx.string.formatToString;
 
+	use namespace mockolate_ingredient;
+
 	public class InstanceRecipe
 	{
 		public var classRecipe:ClassRecipe;
